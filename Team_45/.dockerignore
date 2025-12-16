@@ -1,0 +1,22 @@
+# Ignore Vercel leftovers
+api/
+.vercel/
+vercel.json
+
+# Ignore heavy data (kept for panel review only)
+*.mp4
+*.avi
+videos/
+sample_videos/
+notebooks/
+*.ipynb
+dataset.json
+labels*.csv
+
+# Python files to ignore
+__pycache__/
+*.pyc
+
+# Ignore all model files except the main one
+*.pth
+!cnnbigru_model.pth

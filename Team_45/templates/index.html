@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Yoga Pose Classifier</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+    <h1>Yoga Pose Classifier</h1>
+
+    <div class="container">
+        <h3>Upload Video File (.mp4 format)</h3>
+        <form id="uploadForm" enctype="multipart/form-data">
+            <div class="upload-area">
+                <input type="file" id="fileInput" name="file" accept=".mp4" required>
+                <p>Select a .mp4 file containing yoga pose video</p>
+                <input type="number" id="frame_start" name="frame_start" step="0.01" required>
+                <p>Enter the start frame for analysis</p>
+                <input type="number" id="frame_end" name="frame_end" step="0.01" required>
+                <p>Enter the end frame for analysis</p>
+            </div>
+            <button type="submit">Classify Pose</button>
+        </form>
+    </div>
+
+    <div id="result"></div>
+
+    <div class="container">
+        <h3>About</h3>
+        <p>This system uses a CNN + Bidirectional GRU model to classify yoga poses from MediaPipe keypoints.</p>
+        <p><strong>Expected format:</strong> Video containing Yoga Pose</p>
+        <p><strong>Supported poses:</strong> {{ pose_classes|join(', ') }}</p>
+    </div>
+
+    <script>
+        document.getElementById('uploadForm').onsubmit = async function (e) {
+            e.preventDefault();
+            const formData = new FormData();
+
+            formData.append('frame_start', document.getElementById('frame_start').value);
+            formData.append('frame_end', document.getElementById('frame_end').value);
+            formData.append('file', document.getElementById('fileInput').files[0]);
+
+            document.getElementById('result').innerHTML = '<p>Processing...</p>';
+            try {
+                const response = await fetch('/predict', { method: 'POST', body: formData });
+                const data = await response.json();
+                displayResult(data);
+            } catch (error) {
+                document.getElementById('result').innerHTML =
+                    `<div class="error">Error: ${error.message}</div>`;
+            }
+        };
+
+        function displayResult(data) {
+            let html = '';
+            if (data.error) {
+                html = `<div class="error">Error: ${data.error}</div>`;
+            } else {
+                html = `
+                    <div class="result">
+                        <h3>Prediction Result</h3>
+                        <p><strong>Detected Pose:</strong> ${data.predicted_pose}</p>
+                    </div>
+                `;
+            }
+            document.getElementById('result').innerHTML = html;
+        }
+    </script>
+</body>
+
+</html>

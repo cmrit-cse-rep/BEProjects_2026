@@ -1,0 +1,54 @@
+body {
+    font-family: Arial, sans-serif;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+.container {
+    background: #f5f5f5;
+    padding: 20px;
+    border-radius: 10px;
+    margin: 20px 0;
+}
+.result {
+    background: #e8f5e8;
+    padding: 15px;
+    border-radius: 5px;
+    margin: 10px 0;
+}
+.error {
+    background: #ffe6e6;
+    padding: 15px;
+    border-radius: 5px;
+    margin: 10px 0;
+}
+.upload-area {
+    border: 2px dashed #ccc;
+    padding: 20px;
+    text-align: center;
+    margin: 20px 0;
+}
+button {
+    background: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+button:hover {
+    background: #45a049;
+}
+.confidence {
+    font-weight: bold;
+    color: #2196F3;
+}
+.top3 {
+    margin-top: 10px;
+}
+.prediction-item {
+    margin: 5px 0;
+    padding: 5px;
+    background: white;
+    border-radius: 3px;
+}
