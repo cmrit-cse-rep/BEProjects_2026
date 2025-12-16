@@ -1,4 +1,4 @@
-# AI-Based Pothole Detection and Safe Route Planning System
+# AI-Based Pothole Detection and Analysis using YOLOv11 and MiDaS
 
 ## 📌 Overview
 This project implements an AI-driven system to detect potholes from road images or videos and recommend safer travel routes by avoiding high-severity pothole zones. The system uses deep learning–based computer vision techniques for pothole detection and depth estimation, combined with map-based routing APIs for safe route planning.  
