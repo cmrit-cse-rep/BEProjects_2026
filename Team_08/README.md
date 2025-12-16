@@ -6,7 +6,7 @@
 <body>
 
 <div align="center">
-  <h1>🏀 CourtVision: AI Basketball Analytics</h1>
+  <h1>🏀 CourtVision: AI Powered Basketball Insights</h1>
 
   <p>
     <img src="https://img.shields.io/badge/Python-3.11-blue?style=for-the-badge&logo=python" alt="Python 3.11">
