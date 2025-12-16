@@ -1,0 +1,1252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FineGuard - Gaming & Finance Dashboard</title>
+  <style>
+    :root {
+      --bg-dark: #0a0e27;
+      --bg-light: #f8fafc;
+      --text-dark: #ffffff;
+      --text-light: #1a202c;
+      --card-dark: rgba(30, 41, 82, 0.4);
+      --card-light: rgba(226, 232, 240, 0.8);
+      --accent-primary: #10b981;
+      --accent-secondary: #3b82f6;
+      --accent-tertiary: #8b5cf6;
+      --accent-danger: #ef4444;
+      --border-dark: rgba(148, 163, 184, 0.2);
+      --border-light: rgba(51, 65, 85, 0.15);
+      --shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+      --shadow-light: 0 8px 24px rgba(0, 0, 0, 0.08);
+      --gradient-primary: linear-gradient(135deg, #10b981 0%, #3b82f6 100%);
+      --gradient-secondary: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-dark);
+      transition: background 0.5s cubic-bezier(0.4, 0, 0.2, 1), color 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    body.light-mode {
+      background: var(--bg-light);
+      color: var(--text-light);
+    }
+
+    /* ============= HEADER ============= */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      height: 90px;
+      padding: 0 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(10, 14, 39, 0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border-dark);
+      transition: all 0.3s ease;
+    }
+
+    body.light-mode header {
+      background: rgba(248, 250, 252, 0.85);
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    header h2 {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.8px;
+      background: var(--gradient-primary);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .nav-buttons {
+      display: flex;
+      gap: 15px;
+    }
+
+    .nav-btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .nav-btn.budget {
+      background: var(--gradient-primary);
+      color: #000;
+    }
+
+    .nav-btn.budget:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+    }
+
+    .nav-btn.stock {
+      background: var(--gradient-secondary);
+      color: #fff;
+    }
+
+    .nav-btn.stock:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+    }
+
+    .theme-toggle {
+      padding: 12px 20px;
+      border: 2px solid var(--border-dark);
+      border-radius: 12px;
+      background: transparent;
+      color: var(--text-dark);
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 15px;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .theme-toggle:hover {
+      background: var(--card-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15);
+    }
+
+    body.light-mode .theme-toggle {
+      border-color: var(--border-light);
+      color: var(--text-light);
+    }
+
+    /* ============= MAIN CONTAINER ============= */
+    .container {
+      max-width: 100%;
+      margin: 0 auto;
+      padding: 50px 40px;
+      min-height: calc(100vh - 90px);
+    }
+
+    .section-header {
+      margin-bottom: 50px;
+      text-align: center;
+    }
+
+    .section-header h1 {
+      font-size: 42px;
+      font-weight: 900;
+      margin-bottom: 12px;
+      letter-spacing: -1.5px;
+      background: var(--gradient-primary);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .section-header p {
+      font-size: 16px;
+      opacity: 0.6;
+      max-width: 600px;
+      margin: 0 auto;
+      font-weight: 500;
+    }
+
+    body.light-mode .section-header p {
+      opacity: 0.55;
+    }
+
+    /* ============= FLOATING ACTION BUTTONS ============= */
+    .floating-actions {
+      position: sticky;
+      top: 90px;
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      padding: 30px 40px;
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.08), rgba(59, 130, 246, 0.08));
+      border-bottom: 2px solid var(--border-dark);
+      z-index: 999;
+      margin-bottom: 40px;
+    }
+
+    body.light-mode .floating-actions {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.04), rgba(59, 130, 246, 0.04));
+      border-bottom-color: var(--border-light);
+    }
+
+    .action-btn {
+      padding: 30px;
+      border: none;
+      border-radius: 16px;
+      font-size: 18px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: var(--shadow-light);
+      text-align: center;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .action-btn.primary {
+      background: var(--gradient-primary);
+      color: #000;
+      box-shadow: 0 12px 35px rgba(16, 185, 129, 0.35);
+    }
+
+    .action-btn.primary:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 18px 45px rgba(16, 185, 129, 0.45);
+    }
+
+    .action-btn.secondary {
+      background: var(--gradient-secondary);
+      color: #fff;
+      box-shadow: 0 12px 35px rgba(59, 130, 246, 0.35);
+    }
+
+    .action-btn.secondary:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 18px 45px rgba(59, 130, 246, 0.45);
+    }
+
+    /* ============= GAMES CAROUSEL ============= */
+    .games-container {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 25px;
+      justify-content: center;
+      padding-left: 22.5%;
+      padding-right: 22.5%;
+      width: 100%;
+      margin-top: 30px;
+    }
+
+    .games-track {
+      display: flex;
+      gap: 20px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      padding: 20px 0;
+      scroll-behavior: smooth;
+      scroll-snap-type: x mandatory;
+      width: calc(100% - 120px);
+      border-radius: 16px;
+      scrollbar-width: none;
+    }
+
+    .games-track::-webkit-scrollbar {
+      display: none;
+    }
+
+    .carousel-btn {
+      width: 50px;
+      height: 50px;
+      border: none;
+      border-radius: 50%;
+      background: var(--gradient-primary);
+      color: #fff;
+      font-size: 24px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      box-shadow: var(--shadow-light);
+      flex-shrink: 0;
+    }
+
+    .carousel-btn:hover:not(:disabled) {
+      transform: scale(1.2);
+      box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
+    }
+
+    .carousel-btn:active:not(:disabled) {
+      transform: scale(0.95);
+    }
+
+    .carousel-btn:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    /* ============= GAME CARDS ============= */
+    .game-card {
+      background: var(--card-dark);
+      border: 1px solid var(--border-dark);
+      border-radius: 18px;
+      padding: 28px;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: default;
+      display: flex;
+      flex-direction: column;
+      min-width: 100%;
+      width: 100%;
+      flex-shrink: 0;
+      scroll-snap-align: start;
+      scroll-snap-stop: always;
+      backdrop-filter: blur(10px);
+      animation: slideInUp 0.6s ease-out forwards;
+    }
+
+    body.light-mode .game-card {
+      background: var(--card-light);
+      border-color: var(--border-light);
+    }
+
+    .game-card:hover {
+      transform: translateY(-12px);
+      box-shadow: var(--shadow);
+      border-color: var(--accent-secondary);
+    }
+
+    .game-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid var(--border-dark);
+    }
+
+    .game-card h3 {
+      font-size: 24px;
+      font-weight: 800;
+      margin: 0;
+      letter-spacing: -0.5px;
+    }
+
+    .difficulty-badge {
+      display: inline-block;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      background: rgba(16, 185, 129, 0.2);
+      color: var(--accent-primary);
+    }
+
+    .difficulty-badge.medium {
+      background: rgba(59, 130, 246, 0.2);
+      color: var(--accent-secondary);
+    }
+
+    .difficulty-badge.hard {
+      background: rgba(239, 68, 68, 0.2);
+      color: var(--accent-danger);
+    }
+
+    .game-description {
+      font-size: 14px;
+      opacity: 0.65;
+      margin-bottom: 18px;
+      line-height: 1.6;
+      font-weight: 500;
+    }
+
+    .game-canvas {
+      background: #0f1419;
+      border-radius: 14px;
+      margin-bottom: 20px;
+      display: block;
+      width: 100%;
+      height: auto;
+      box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    body.light-mode .game-canvas {
+      background: #fafafa;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+    }
+
+    /* ============= GAME CONTROLS ============= */
+    .game-controls {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 12px 20px;
+      border: none;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      flex: 1;
+      min-width: 90px;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+
+    .btn-primary {
+      background: var(--gradient-primary);
+      color: #000;
+      box-shadow: 0 4px 15px rgba(16, 185, 129, 0.25);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(16, 185, 129, 0.35);
+    }
+
+    .btn-primary:active {
+      transform: scale(0.98);
+    }
+
+    .btn-secondary {
+      background: rgba(148, 163, 184, 0.15);
+      color: var(--text-dark);
+      border: 1.5px solid var(--border-dark);
+    }
+
+    body.light-mode .btn-secondary {
+      background: rgba(51, 65, 85, 0.08);
+      color: var(--text-light);
+      border-color: var(--border-light);
+    }
+
+    .btn-secondary:hover {
+      background: var(--accent-secondary);
+      color: #fff;
+      border-color: var(--accent-secondary);
+      transform: translateY(-2px);
+    }
+
+    /* ============= TIC TAC TOE ============= */
+    .ttt-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .ttt-cell {
+      aspect-ratio: 1;
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(59, 130, 246, 0.12));
+      border: 2px solid var(--accent-secondary);
+      border-radius: 14px;
+      font-size: 36px;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      min-height: 80px;
+    }
+
+    .ttt-cell:hover {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(59, 130, 246, 0.2));
+      transform: scale(1.08);
+      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+    }
+
+    .ttt-cell:active {
+      transform: scale(0.96);
+    }
+
+    /* ============= MEMORY GAME ============= */
+    .memory-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .memory-card {
+      aspect-ratio: 1;
+      background: var(--gradient-primary);
+      border: none;
+      border-radius: 14px;
+      font-size: 32px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      min-height: 80px;
+      position: relative;
+      box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+      color: transparent;
+      user-select: none;
+    }
+
+    .memory-card:hover:not(.matched) {
+      transform: translateY(-4px) scale(1.08);
+      box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+    }
+
+    .memory-card:active:not(.matched) {
+      transform: scale(0.96);
+    }
+
+    .memory-card.flipped {
+      color: #fff;
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.4), rgba(59, 130, 246, 0.4));
+      border: 2px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .memory-card.matched {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.6), rgba(16, 185, 129, 0.6));
+      cursor: default;
+      box-shadow: inset 0 4px 12px rgba(0, 0, 0, 0.2);
+      color: #fff;
+    }
+
+    /* ============= ANIMATIONS ============= */
+    @keyframes slideInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+
+    /* ============= RESPONSIVE ============= */
+    @media (max-width: 1024px) {
+      .container {
+        padding: 35px 25px;
+      }
+
+      .floating-actions {
+        padding: 20px 25px;
+        gap: 15px;
+      }
+
+      .action-btn {
+        padding: 20px;
+        font-size: 16px;
+      }
+
+      .section-header h1 {
+        font-size: 32px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      header {
+        padding: 15px 20px;
+        height: 75px;
+      }
+
+      header h2 {
+        font-size: 20px;
+      }
+
+      .theme-toggle {
+        padding: 8px 14px;
+        font-size: 12px;
+      }
+
+      .nav-btn {
+        padding: 10px 16px;
+        font-size: 12px;
+      }
+
+      .floating-actions {
+        grid-template-columns: 1fr;
+        padding: 15px 20px;
+        gap: 12px;
+      }
+
+      .action-btn {
+        padding: 18px;
+        font-size: 14px;
+      }
+
+      .container {
+        padding: 25px 15px;
+      }
+
+      .section-header h1 {
+        font-size: 24px;
+      }
+
+      .section-header p {
+        font-size: 14px;
+      }
+
+      .game-card {
+        min-width: 100%;
+        padding: 20px;
+      }
+
+      .game-card h3 {
+        font-size: 20px;
+      }
+
+      .game-description {
+        font-size: 12px;
+      }
+
+      .memory-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+
+      .ttt-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .carousel-btn {
+        width: 45px;
+        height: 45px;
+        font-size: 20px;
+      }
+
+      .games-container {
+        gap: 15px;
+      }
+
+      .games-track {
+        width: calc(100% - 90px);
+      }
+    }
+
+    @media (max-width: 480px) {
+      header {
+        height: 65px;
+        padding: 10px 15px;
+      }
+
+      header h2 {
+        font-size: 16px;
+      }
+
+      .theme-toggle {
+        display: none;
+      }
+
+      .nav-buttons {
+        gap: 8px;
+      }
+
+      .nav-btn {
+        padding: 8px 12px;
+        font-size: 11px;
+      }
+
+      .section-header h1 {
+        font-size: 18px;
+      }
+
+      .game-card {
+        padding: 16px;
+      }
+
+      .memory-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .ttt-grid {
+        gap: 8px;
+      }
+
+      .ttt-cell {
+        min-height: 60px;
+        font-size: 28px;
+      }
+
+      .memory-card {
+        min-height: 60px;
+        font-size: 24px;
+      }
+
+      .btn {
+        padding: 10px 14px;
+        font-size: 11px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h2>💰 FineGuard</h2>
+  <div class="header-controls">
+    <div class="nav-buttons">
+
+      <a href="https://deeksheo.github.io/Fin_assis/">
+        <button id="budgetBtn" class="nav-btn budget">📊 Budget</button>
+      </a>
+
+      <a href="https://singhdushyant-11.github.io/MajorPro/">
+        <button id="budgetBtn" class="nav-btn budget">📈 Stock</button>
+      </a>
+
+    </div>
+    <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+  </div>
+</header>
+
+<div class="container">
+  <div class="floating-actions">
+
+    <a href="https://deeksheo.github.io/Fin_assis/" 
+   id="stockAction" 
+   class="action-btn secondary">
+    📊 Budget Management
+    </a>
+
+    <a href="https://singhdushyant-11.github.io/MajorPro/" 
+   id="stockAction" 
+   class="action-btn secondary">
+    📈 Stock Prediction
+    </a>
+  </div>
+
+  <div class="section-header">
+    <h1>🎮 Gaming Lounge</h1>
+    <p>Take a strategic break with engaging games while mastering your finances</p>
+  </div>
+
+  <div class="games-container">
+    <button class="carousel-btn" id="prevBtn" onclick="scrollGames(-1)">❮</button>
+
+    <div class="games-track" id="gamesTrack">
+
+    <!-- ========== TIC TAC TOE ========== -->
+    <div class="game-card">
+      <div class="game-card-header">
+        <h3>❌⭕ Tic Tac Toe</h3>
+        <span class="difficulty-badge medium">Medium</span>
+      </div>
+      <p class="game-description">Challenge the AI in a classic strategic battle. Get three in a row to win!</p>
+      <div id="tttGrid" class="ttt-grid"></div>
+      <div class="game-controls">
+        <button class="btn btn-primary" onclick="initTTT()">▶ Start Game</button>
+        <button class="btn btn-secondary" onclick="resetTTT()">🔄 Reset</button>
+      </div>
+    </div>
+
+    <!-- ========== MEMORY GAME ========== -->
+    <div class="game-card">
+      <div class="game-card-header">
+        <h3>🧠 Memory Master</h3>
+        <span class="difficulty-badge">Easy</span>
+      </div>
+      <p class="game-description">Flex your memory muscles! Match all pairs to complete the challenge.</p>
+      <div id="memoryGrid" class="memory-grid"></div>
+      <div class="game-controls">
+        <button class="btn btn-primary" onclick="initMemory()">▶ Start Game</button>
+        <button class="btn btn-secondary" onclick="initMemory()">🔄 Reset</button>
+      </div>
+    </div>
+
+    <!-- ========== DINO GAME ========== -->
+    <div class="game-card">
+      <div class="game-card-header">
+        <h3>🦕 Dino Runner</h3>
+        <span class="difficulty-badge">Easy</span>
+      </div>
+      <p class="game-description">Classic endless runner! Jump to dodge obstacles and rack up points.</p>
+      <canvas id="dino" class="game-canvas" width="160" height="90"></canvas>
+      <div class="game-controls">
+        <button class="btn btn-primary" onclick="startDino()">▶ Start</button>
+        <button class="btn btn-secondary" onclick="stopDino()">⏸ Pause</button>
+        <button class="btn btn-secondary" onclick="resetDino()">🔄 Reset</button>
+      </div>
+    </div>
+
+    <!-- ========== FLAPPY BIRD ========== -->
+    <div class="game-card">
+      <div class="game-card-header">
+        <h3>🐦 Flappy Bird</h3>
+        <span class="difficulty-badge medium">Medium</span>
+      </div>
+      <p class="game-description">Test your reflexes! Navigate through pipes without colliding.</p>
+      <canvas id="flappy" class="game-canvas" width="160" height="100"></canvas>
+      <div class="game-controls">
+        <button class="btn btn-primary" onclick="startFlappy()">▶ Start</button>
+        <button class="btn btn-secondary" onclick="stopFlappy()">⏸ Pause</button>
+        <button class="btn btn-secondary" onclick="resetFlappy()">🔄 Reset</button>
+      </div>
+    </div>
+
+    <!-- ========== SNAKE ========== -->
+    <div class="game-card">
+      <div class="game-card-header">
+        <h3>🐍 Snake Game</h3>
+        <span class="difficulty-badge hard">Hard</span>
+      </div>
+      <p class="game-description">Strategy-based gameplay! Eat food to grow, but don't hit walls or yourself.</p>
+      <canvas id="snake" class="game-canvas" width="160" height="150"></canvas>
+      <div class="game-controls">
+        <button class="btn btn-primary" onclick="startSnake()">▶ Start</button>
+        <button class="btn btn-secondary" onclick="stopSnake()">⏸ Pause</button>
+        <button class="btn btn-secondary" onclick="resetSnake()">🔄 Reset</button>
+      </div>
+    </div>
+
+    </div>
+    <button class="carousel-btn" id="nextBtn" onclick="scrollGames(1)">❯</button>
+  </div>
+</div>
+
+<script>
+/* ============= CAROUSEL FUNCTIONALITY ============= */
+let currentGameIndex = 0;
+const gameCards = document.querySelectorAll('.game-card');
+const totalGames = gameCards.length;
+const gamesTrack = document.getElementById('gamesTrack');
+
+function scrollGames(direction) {
+  currentGameIndex += direction;
+  currentGameIndex = Math.max(0, Math.min(currentGameIndex, totalGames - 1));
+
+  const targetCard = gameCards[currentGameIndex];
+  targetCard.scrollIntoView({
+    behavior: 'smooth',
+    block: 'nearest',
+    inline: 'start'
+  });
+
+  updateCarouselButtons();
+}
+
+function updateCarouselButtons() {
+  document.getElementById('prevBtn').disabled = currentGameIndex === 0;
+  document.getElementById('nextBtn').disabled = currentGameIndex === totalGames - 1;
+}
+
+window.addEventListener('load', () => updateCarouselButtons());
+
+/* ============= THEME TOGGLE ============= */
+function toggleTheme() {
+  const isDark = document.body.classList.toggle('light-mode');
+  localStorage.setItem('theme', isDark ? 'light' : 'dark');
+}
+
+window.addEventListener('load', () => {
+  const savedTheme = localStorage.getItem('theme');
+  if (savedTheme === 'light') {
+    document.body.classList.add('light-mode');
+  }
+});
+
+/* ============= NAVIGATION ============= */
+/*
+document.getElementById("budgetBtn").onclick = () => alert("💰 Budget Management Module - Coming Soon!");
+document.getElementById("budgetAction").onclick = () => alert("💰 Budget Management Module - Coming Soon!");
+document.getElementById("stockBtn").onclick = () => alert("📈 Stock Prediction Module - Coming Soon!");
+document.getElementById("stockAction").onclick = () => alert("📈 Stock Prediction Module - Coming Soon!");
+*/
+
+/* ============= DINO GAME ============= */
+let dinoCtx = document.getElementById("dino").getContext("2d");
+let dinoX = 15, cactusX = 150, jump = 0, dinoLoop;
+let dinoScore = 0, dinoRunning = false;
+
+function drawDino() {
+  dinoCtx.fillStyle = "#0a0e27";
+  dinoCtx.fillRect(0, 0, 160, 90);
+
+  dinoCtx.strokeStyle = "#10b981";
+  dinoCtx.lineWidth = 2;
+  dinoCtx.beginPath();
+  dinoCtx.moveTo(0, 65);
+  dinoCtx.lineTo(160, 65);
+  dinoCtx.stroke();
+
+  dinoCtx.fillStyle = "#fbbf24";
+  dinoCtx.fillRect(dinoX, 55 - jump, 12, 10);
+  dinoCtx.fillRect(dinoX + 10, 50 - jump, 4, 6);
+  dinoCtx.fillRect(dinoX + 1, 65, 4, 5);
+  dinoCtx.fillRect(dinoX + 7, 65, 4, 5);
+  dinoCtx.fillStyle = "#000";
+  dinoCtx.fillRect(dinoX + 12, 51 - jump, 2, 2);
+
+  dinoCtx.fillStyle = "#ef4444";
+  dinoCtx.fillRect(cactusX, 57, 7, 10);
+  dinoCtx.fillRect(cactusX - 4, 60, 3, 5);
+  dinoCtx.fillRect(cactusX + 7, 60, 3, 5);
+
+  cactusX -= 3;
+  if (cactusX < -10) {
+    cactusX = 160;
+    dinoScore += 10;
+  }
+
+  if (jump > 0) jump -= 3;
+
+  if (cactusX > dinoX - 8 && cactusX < dinoX + 12 && jump === 0) {
+    stopDino();
+    alert(`🎮 Game Over! Score: ${dinoScore}`);
+  }
+}
+
+function startDino() {
+  if (dinoRunning) return;
+  dinoRunning = true;
+  dinoScore = 0;
+  cactusX = 160;
+  dinoLoop = setInterval(drawDino, 35);
+}
+
+function stopDino() {
+  clearInterval(dinoLoop);
+  dinoRunning = false;
+}
+
+function resetDino() {
+  clearInterval(dinoLoop);
+  dinoRunning = false;
+  dinoX = 15;
+  cactusX = 150;
+  jump = 0;
+  dinoScore = 0;
+  dinoCtx.clearRect(0, 0, 160, 90);
+}
+
+window.addEventListener("keydown", (e) => {
+  if (dinoRunning && jump === 0) jump = 20;
+});
+
+/* ============= FLAPPY BIRD ============= */
+let fCtx = document.getElementById("flappy").getContext("2d");
+let birdY = 50, pipeX = 175, flapLoop;
+let flapScore = 0, flapRunning = false;
+
+function drawFlappy() {
+  const gradient = fCtx.createLinearGradient(0, 0, 0, 100);
+  gradient.addColorStop(0, '#0369a1');
+  gradient.addColorStop(1, '#06b6d4');
+  fCtx.fillStyle = gradient;
+  fCtx.fillRect(0, 0, 160, 100);
+
+  fCtx.fillStyle = '#fbbf24';
+  fCtx.beginPath();
+  fCtx.arc(20, birdY, 5, 0, Math.PI * 2);
+  fCtx.fill();
+
+  fCtx.fillStyle = '#ef4444';
+  fCtx.beginPath();
+  fCtx.moveTo(25, birdY);
+  fCtx.lineTo(30, birdY - 2);
+  fCtx.lineTo(30, birdY + 2);
+  fCtx.fill();
+
+  fCtx.fillStyle = '#000';
+  fCtx.beginPath();
+  fCtx.arc(23, birdY - 1, 1.2, 0, Math.PI * 2);
+  fCtx.fill();
+
+  const pipeGradient = fCtx.createLinearGradient(pipeX, 0, pipeX + 12, 0);
+  pipeGradient.addColorStop(0, '#10b981');
+  pipeGradient.addColorStop(1, '#059669');
+  fCtx.fillStyle = pipeGradient;
+  fCtx.fillRect(pipeX, 0, 12, 35);
+  fCtx.fillRect(pipeX, 65, 12, 100);
+
+  pipeX -= 2.5;
+  if (pipeX < -15) {
+    pipeX = 160;
+    flapScore += 10;
+  }
+
+  birdY += 1.2;
+
+  if (birdY - 5 < 35 && pipeX < 25 && pipeX + 12 > 15) {
+    stopFlappy();
+    alert(`🎮 Game Over! Score: ${flapScore}`);
+  }
+  if (birdY + 5 > 65 && pipeX < 25 && pipeX + 12 > 15) {
+    stopFlappy();
+    alert(`🎮 Game Over! Score: ${flapScore}`);
+  }
+  if (birdY > 100) {
+    stopFlappy();
+    alert(`🎮 Game Over! Score: ${flapScore}`);
+  }
+}
+
+function startFlappy() {
+  if (flapRunning) return;
+  flapRunning = true;
+  flapScore = 0;
+  birdY = 50;
+  pipeX = 175;
+  flapLoop = setInterval(drawFlappy, 35);
+}
+
+function stopFlappy() {
+  clearInterval(flapLoop);
+  flapRunning = false;
+}
+
+function resetFlappy() {
+  clearInterval(flapLoop);
+  flapRunning = false;
+  birdY = 50;
+  pipeX = 175;
+  flapScore = 0;
+  fCtx.clearRect(0, 0, 160, 100);
+}
+
+window.addEventListener("keydown", (e) => {
+  if (flapRunning && birdY > 7) birdY -= 15;
+});
+
+/* ============= SNAKE GAME ============= */
+let sCtx = document.getElementById("snake").getContext("2d");
+let snake = [{x: 75, y: 75}];
+let dx = 5, dy = 0, food = {x: 50, y: 50}, snakeLoop;
+let snakeScore = 0, snakeRunning = false;
+
+function drawSnake() {
+  sCtx.fillStyle = "#0a0e27";
+  sCtx.fillRect(0, 0, 150, 150);
+
+  sCtx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+  sCtx.lineWidth = 0.5;
+  for (let i = 0; i <= 150; i += 5) {
+    sCtx.beginPath();
+    sCtx.moveTo(i, 0);
+    sCtx.lineTo(i, 150);
+    sCtx.stroke();
+    sCtx.beginPath();
+    sCtx.moveTo(0, i);
+    sCtx.lineTo(150, i);
+    sCtx.stroke();
+  }
+
+  let head = {x: snake[0].x + dx, y: snake[0].y + dy};
+  snake.unshift(head);
+
+  if (head.x === food.x && head.y === food.y) {
+    food = {x: Math.floor(Math.random() * 30) * 5, y: Math.floor(Math.random() * 30) * 5};
+    snakeScore += 10;
+  } else {
+    snake.pop();
+  }
+
+  snake.forEach((segment, index) => {
+    sCtx.fillStyle = index === 0 ? "#4ade80" : "#10b981";
+    sCtx.fillRect(segment.x, segment.y, 5, 5);
+    sCtx.strokeStyle = "#059669";
+    sCtx.lineWidth = 1;
+    sCtx.strokeRect(segment.x, segment.y, 5, 5);
+  });
+
+  sCtx.fillStyle = "#ef4444";
+  sCtx.beginPath();
+  sCtx.arc(food.x + 2.5, food.y + 2.5, 2.5, 0, Math.PI * 2);
+  sCtx.fill();
+
+  if (head.x < 0 || head.x >= 150 || head.y < 0 || head.y >= 150) {
+    stopSnake();
+    alert(`🎮 Game Over! Score: ${snakeScore}`);
+  }
+
+  for (let i = 1; i < snake.length; i++) {
+    if (head.x === snake[i].x && head.y === snake[i].y) {
+      stopSnake();
+      alert(`🎮 Game Over! Score: ${snakeScore}`);
+    }
+  }
+}
+
+function startSnake() {
+  if (snakeRunning) return;
+  snakeRunning = true;
+  snakeScore = 0;
+  snake = [{x: 75, y: 75}];
+  dx = 5;
+  dy = 0;
+  snakeLoop = setInterval(drawSnake, 100);
+}
+
+function stopSnake() {
+  clearInterval(snakeLoop);
+  snakeRunning = false;
+}
+
+function resetSnake() {
+  clearInterval(snakeLoop);
+  snakeRunning = false;
+  snake = [{x: 75, y: 75}];
+  dx = 5;
+  dy = 0;
+  snakeScore = 0;
+  food = {x: 50, y: 50};
+  sCtx.clearRect(0, 0, 150, 150);
+}
+
+window.addEventListener("keydown", (e) => {
+  if (!snakeRunning) return;
+  if (e.key === "w" && dy === 0) {dx = 0; dy = -5;}
+  if (e.key === "s" && dy === 0) {dx = 0; dy = 5;}
+  if (e.key === "a" && dx === 0) {dx = -5; dy = 0;}
+  if (e.key === "d" && dx === 0) {dx = 5; dy = 0;}
+});s
+
+/* ============= TIC TAC TOE ============= */
+let tttGrid = document.getElementById("tttGrid");
+let tttCells = [];
+let tttTurn = "X";
+let tttGameActive = false;
+const winConditions = [
+  [0, 1, 2], [3, 4, 5], [6, 7, 8],
+  [0, 3, 6], [1, 4, 7], [2, 5, 8],
+  [0, 4, 8], [2, 4, 6]
+];
+
+function initTTT() {
+  tttGrid.innerHTML = "";
+  tttCells = [];
+  tttTurn = "X";
+  tttGameActive = true;
+
+  for (let i = 0; i < 9; i++) {
+    let cell = document.createElement("div");
+    cell.className = "ttt-cell";
+    cell.dataset.index = i;
+    cell.onclick = () => {
+      if (!tttGameActive || cell.textContent) return;
+      cell.textContent = tttTurn;
+      checkTTTWin();
+      if (tttGameActive) {
+        tttTurn = tttTurn === "X" ? "O" : "X";
+        if (tttTurn === "O") setTimeout(aiMove, 500);
+      }
+    };
+    tttGrid.appendChild(cell);
+    tttCells.push(cell);
+  }
+}
+
+function checkTTTWin() {
+  for (let condition of winConditions) {
+    const [a, b, c] = condition;
+    if (tttCells[a].textContent && 
+        tttCells[a].textContent === tttCells[b].textContent && 
+        tttCells[a].textContent === tttCells[c].textContent) {
+      tttGameActive = false;
+      setTimeout(() => alert(`${tttCells[a].textContent} Wins! 🎉`), 100);
+      return;
+    }
+  }
+  if (tttCells.every(c => c.textContent)) {
+    tttGameActive = false;
+    setTimeout(() => alert("It's a Draw! 🤝"), 100);
+  }
+}
+
+function aiMove() {
+  let emptyCells = tttCells.filter(c => !c.textContent);
+  if (emptyCells.length === 0) return;
+  let randomCell = emptyCells[Math.floor(Math.random() * emptyCells.length)];
+  randomCell.textContent = "O";
+  checkTTTWin();
+  if (tttGameActive) tttTurn = "X";
+}
+
+function resetTTT() {
+  tttGameActive = false;
+  tttGrid.innerHTML = "";
+  tttCells = [];
+}
+
+/* ============= MEMORY GAME ============= */
+let memoryGrid = document.getElementById("memoryGrid");
+let memoryCards = [];
+let flipped = [];
+let matched = 0;
+const symbols = ["🍎", "🍌", "🍇", "🍉", "🍓", "🍊", "🥝", "🍒"];
+
+function initMemory() {
+  memoryGrid.innerHTML = "";
+  memoryCards = [];
+  flipped = [];
+  matched = 0;
+
+  let cardPairs = [...symbols, ...symbols].sort(() => Math.random() - 0.5);
+
+  cardPairs.forEach((symbol, index) => {
+    let card = document.createElement("div");
+    card.className = "memory-card";
+    card.dataset.symbol = symbol;
+    card.dataset.index = index;
+    card.textContent = symbol;
+    card.onclick = () => flipMemoryCard(card);
+    memoryGrid.appendChild(card);
+    memoryCards.push(card);
+  });
+}
+
+function flipMemoryCard(card) {
+  if (card.classList.contains("flipped") || card.classList.contains("matched") || flipped.length >= 2) return;
+
+  card.classList.add("flipped");
+  flipped.push(card);
+
+  if (flipped.length === 2) {
+    if (flipped[0].dataset.symbol === flipped[1].dataset.symbol) {
+      flipped[0].classList.add("matched");
+      flipped[1].classList.add("matched");
+      matched += 2;
+      flipped = [];
+      if (matched === memoryCards.length) {
+        setTimeout(() => alert("You Won! 🎉 All pairs matched!"), 300);
+      }
+    } else {
+      setTimeout(() => {
+        flipped[0].classList.remove("flipped");
+        flipped[1].classList.remove("flipped");
+        flipped = [];
+      }, 800);
+    }
+  }
+}
+</script>
+
+</body>
+</html>
