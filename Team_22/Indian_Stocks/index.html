@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ExpenseAI - Smart Budget Tracker for India</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Login Page -->
+    <div id="login-page" class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h1>💰 ExpenseAI</h1>
+                <p>Smart Budget Tracker for India</p>
+            </div>
+            
+            <form id="login-form" class="auth-form">
+                <div class="form-group">
+                    <label class="form-label" for="login-email">Email</label>
+                    <input type="email" id="login-email" class="form-control" placeholder="Enter your email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="login-password">Password</label>
+                    <input type="password" id="login-password" class="form-control" placeholder="Enter your password" required>
+                </div>
+                
+                <button type="submit" class="btn btn--primary btn--full-width">Login</button>
+                
+                <div class="auth-divider">
+                    <span>or</span>
+                </div>
+                
+                <button type="button" id="show-signup" class="btn btn--outline btn--full-width">Create New Account</button>
+                
+                <div class="demo-credentials">
+                    <p><strong>Demo Account:</strong></p>
+                    <p>Email: demo@expenseai.com</p>
+                    <p>Password: demo123</p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Sign Up Page -->
+    <div id="signup-page" class="auth-container hidden">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h1>💰 ExpenseAI</h1>
+                <p>Create Your Account</p>
+            </div>
+            
+            <form id="signup-form" class="auth-form">
+                <div class="form-group">
+                    <label class="form-label" for="signup-name">Full Name</label>
+                    <input type="text" id="signup-name" class="form-control" placeholder="Enter your full name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="signup-email">Email</label>
+                    <input type="email" id="signup-email" class="form-control" placeholder="Enter your email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="signup-password">Password</label>
+                    <input type="password" id="signup-password" class="form-control" placeholder="Create a password" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="signup-confirm">Confirm Password</label>
+                    <input type="password" id="signup-confirm" class="form-control" placeholder="Confirm your password" required>
+                </div>
+                
+                <button type="submit" class="btn btn--primary btn--full-width">Create Account</button>
+                
+                <button type="button" id="show-login" class="btn btn--outline btn--full-width">Back to Login</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main Application -->
+    <div id="main-app" class="app-container hidden">
+        <!-- Top Header -->
+        <header class="app-header">
+            <div class="header-left">
+                <h2>💰 ExpenseAI</h2>
+            </div>
+            <div class="header-right">
+                <span class="welcome-message">Welcome, <span id="user-name">User</span>!</span>
+                <button id="logout-btn" class="btn btn--outline btn--sm">Logout</button>
+            </div>
+        </header>
+
+        <div class="app-body">
+            <!-- Sidebar Navigation -->
+            <nav class="sidebar">
+                <ul class="nav-menu">
+                    <li><a href="#dashboard" class="nav-link active" data-section="dashboard">📊 Dashboard</a></li>
+                    <li><a href="#expenses" class="nav-link" data-section="expenses">💳 Add Expense</a></li>
+                    <li><a href="#budget" class="nav-link" data-section="budget">📈 Budget</a></li>
+                    <li><a href="#reports" class="nav-link" data-section="reports">📋 Reports</a></li>
+                    <li><a href="#settings" class="nav-link" data-section="settings">⚙️ Settings</a></li>
+                </ul>
+            </nav>
+
+            <!-- Main Content -->
+            <main class="main-content">
+                <!-- Dashboard Section -->
+                <section id="dashboard" class="section active">
+                    <div class="section-header">
+                        <h1>Dashboard</h1>
+                        <p class="text-secondary">Overview of your spending this month</p>
+                    </div>
+
+                    <!-- Quick Stats -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon">💰</div>
+                            <div class="stat-content">
+                                <h3 id="total-spent">₹0</h3>
+                                <p>Total Spent</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">📊</div>
+                            <div class="stat-content">
+                                <h3 id="budget-remaining">₹0</h3>
+                                <p>Budget Remaining</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">🎯</div>
+                            <div class="stat-content">
+                                <h3 id="savings-rate">0%</h3>
+                                <p>Savings Rate</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">📈</div>
+                            <div class="stat-content">
+                                <h3 id="transactions-count">0</h3>
+                                <p>Transactions</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Add Expense -->
+                    <div class="quick-expense">
+                        <div class="card">
+                            <div class="card__header">
+                                <h3>Quick Add Expense</h3>
+                            </div>
+                            <div class="card__body">
+                                <form id="quick-expense-form" class="quick-form">
+                                    <div class="quick-form-row">
+                                        <input type="number" id="quick-amount" class="form-control" placeholder="Amount (₹)" required>
+                                        <input type="text" id="quick-description" class="form-control" placeholder="Description" required>
+                                        <select id="quick-category" class="form-control" required>
+                                            <option value="">Category</option>
+                                        </select>
+                                        <button type="submit" class="btn btn--primary">Add</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Charts -->
+                    <div class="charts-grid">
+                        <div class="chart-container">
+                            <h3>Monthly Spending Trend</h3>
+                            <div style="position: relative; height: 300px;">
+                                <canvas id="spending-trend-chart"></canvas>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <h3>Category Breakdown</h3>
+                            <div style="position: relative; height: 300px;">
+                                <canvas id="category-chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Transactions -->
+                    <div class="card">
+                        <div class="card__header">
+                            <h3>Recent Transactions</h3>
+                        </div>
+                        <div class="card__body">
+                            <div id="recent-transactions" class="transactions-list"></div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Add Expense Section -->
+                <section id="expenses" class="section">
+                    <div class="section-header">
+                        <h1>Add Expense</h1>
+                        <p class="text-secondary">Track your spending with AI-powered categorization</p>
+                    </div>
+
+                    <div class="expense-form-container">
+                        <form id="expense-form" class="expense-form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label" for="expense-amount">Amount (₹)</label>
+                                    <input type="number" id="expense-amount" class="form-control" step="0.01" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="expense-date">Date</label>
+                                    <input type="date" id="expense-date" class="form-control" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="expense-description">Description</label>
+                                <input type="text" id="expense-description" class="form-control" 
+                                       placeholder="e.g., Swiggy Order - Biryani" required>
+                                <div class="ai-suggestion" id="ai-suggestion" style="display: none;">
+                                    <span class="ai-icon">🤖</span>
+                                    <span class="suggestion-text">AI suggests: <strong></strong></span>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label" for="expense-category">Category</label>
+                                    <select id="expense-category" class="form-control" required>
+                                        <option value="">Select category...</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="expense-payment">Payment Mode</label>
+                                    <select id="expense-payment" class="form-control" required>
+                                        <option value="">Select payment...</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="quick-categories">
+                                <h4>Quick Categories</h4>
+                                <div class="category-icons" id="category-icons"></div>
+                            </div>
+
+                            <button type="submit" class="btn btn--primary btn--full-width">
+                                💾 Add Expense
+                            </button>
+                        </form>
+
+                        <div class="receipt-upload">
+                            <div class="upload-placeholder">
+                                <div class="upload-icon">📄</div>
+                                <p>Receipt Upload</p>
+                                <small>Coming soon - AI receipt scanning</small>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Budget Section -->
+                <section id="budget" class="section">
+                    <div class="section-header">
+                        <h1>Budget Management</h1>
+                        <p class="text-secondary">Set and track your monthly budgets</p>
+                    </div>
+
+                    <!-- Income Setup -->
+                    <div class="budget-setup">
+                        <div class="card">
+                            <div class="card__header">
+                                <h3>Monthly Income & Budget Setup</h3>
+                            </div>
+                            <div class="card__body">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label" for="monthly-income">Monthly Income (₹)</label>
+                                        <input type="number" id="monthly-income" class="form-control" step="1000">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" for="income-bracket">Income Bracket</label>
+                                        <select id="income-bracket" class="form-control">
+                                            <option value="">Select bracket...</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <button id="apply-smart-budget" class="btn btn--primary">Apply Smart Budget</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Budget Categories -->
+                    <div class="budget-categories">
+                        <div class="card">
+                            <div class="card__header">
+                                <h3>Category Budgets</h3>
+                            </div>
+                            <div class="card__body">
+                                <div id="budget-sliders" class="budget-sliders"></div>
+                                <div class="budget-summary">
+                                    <div class="summary-item">
+                                        <span>Total Budget:</span>
+                                        <span id="total-budget">₹0</span>
+                                    </div>
+                                    <div class="summary-item">
+                                        <span>Remaining:</span>
+                                        <span id="remaining-income">₹0</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Budget Progress -->
+                    <div class="budget-progress">
+                        <h3>Budget vs Actual</h3>
+                        <div id="budget-progress-bars" class="progress-bars"></div>
+                    </div>
+                </section>
+
+                <!-- Reports Section -->
+                <section id="reports" class="section">
+                    <div class="section-header">
+                        <h1>Reports & Analytics</h1>
+                        <p class="text-secondary">Analyze your spending patterns and trends</p>
+                    </div>
+
+                    <!-- Time Period Selector -->
+                    <div class="report-controls">
+                        <div class="time-selector">
+                            <button class="btn btn--outline active" data-period="week">This Week</button>
+                            <button class="btn btn--outline" data-period="month">This Month</button>
+                            <button class="btn btn--outline" data-period="quarter">This Quarter</button>
+                            <button class="btn btn--outline" data-period="year">This Year</button>
+                        </div>
+                    </div>
+
+                    <!-- Report Cards -->
+                    <div class="reports-grid">
+                        <div class="card">
+                            <div class="card__header">
+                                <h3>Spending Insights</h3>
+                            </div>
+                            <div class="card__body">
+                                <div id="spending-insights" class="insights-list"></div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card__header">
+                                <h3>Payment Mode Analysis</h3>
+                            </div>
+                            <div class="card__body">
+                                <div id="payment-analysis" class="payment-stats"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Export Section -->
+                    <div class="card">
+                        <div class="card__header">
+                            <h3>Export Data</h3>
+                        </div>
+                        <div class="card__body">
+                            <div class="export-options">
+                                <button class="btn btn--outline">📊 Export to Excel</button>
+                                <button class="btn btn--outline">📄 Generate PDF Report</button>
+                                <button class="btn btn--outline">📈 Export Charts</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Settings Section -->
+                <section id="settings" class="section">
+                    <div class="section-header">
+                        <h1>Settings</h1>
+                        <p class="text-secondary">Customize your expense tracking experience</p>
+                    </div>
+
+                    <div class="settings-grid">
+                        <div class="card">
+                            <div class="card__header">
+                                <h3>Account Settings</h3>
+                            </div>
+                            <div class="card__body">
+                                <div class="form-group">
+                                    <label class="form-label">Name</label>
+                                    <input type="text" id="user-name-setting" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Email</label>
+                                    <input type="email" id="user-email-setting" class="form-control" readonly>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card__header">
+                                <h3>Currency & Language</h3>
+                            </div>
+                            <div class="card__body">
+                                <div class="form-group">
+                                    <label class="form-label" for="currency">Currency</label>
+                                    <select id="currency" class="form-control">
+                                        <option value="INR" selected>INR (₹)</option>
+                                        <option value="USD">USD ($)</option>
+                                        <option value="EUR">EUR (€)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="language">Language</label>
+                                    <select id="language" class="form-control">
+                                        <option value="en" selected>English</option>
+                                        <option value="hi">हिंदी (Hindi)</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card__header">
+                                <h3>Notifications</h3>
+                            </div>
+                            <div class="card__body">
+                                <div class="notification-setting">
+                                    <label>
+                                        <input type="checkbox" id="budget-alerts" checked>
+                                        Budget overspending alerts
+                                    </label>
+                                </div>
+                                <div class="notification-setting">
+                                    <label>
+                                        <input type="checkbox" id="daily-reminders">
+                                        Daily expense reminders
+                                    </label>
+                                </div>
+                                <div class="notification-setting">
+                                    <label>
+                                        <input type="checkbox" id="weekly-reports" checked>
+                                        Weekly spending reports
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
