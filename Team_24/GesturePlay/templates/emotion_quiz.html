@@ -1,0 +1,195 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+  <h2>🧠 Emotion Quiz</h2>
+  <p style="font-size: 1.2em;">{{ question.text }}</p>
+  <img src="{{ url_for('static', filename=question.image) }}" alt="Question Image" width="200" style="margin-bottom: 20px;">
+
+  <form id="emotion-form" action="/quiz/emotion/submit" method="POST">
+    {% for option in question.options %}
+      <button type="submit" name="answer" value="{{ option }}" class="btn emotion-option">{{ option }}</button>
+    {% endfor %}
+  </form>
+
+  <br>
+  <button onclick="startGestureMode()" class="btn">🖐 Start Gesture Mode</button>
+  <button onclick="stopGestureMode()" class="btn">✋ Stop Gesture Mode</button>
+
+  <div style="margin-top: 20px;">
+    <video id="input_video" style="display: none;" playsinline></video>
+    <canvas class="output_canvas" width="640" height="480"></canvas>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
+
+<script>
+  let camera;
+  let gestureLock = false;
+  const correctAnswer = "{{ question.answer }}";
+
+  const hands = new Hands({ locateFile: file => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}` });
+  hands.setOptions({
+    maxNumHands: 1,
+    modelComplexity: 1,
+    minDetectionConfidence: 0.7,
+    minTrackingConfidence: 0.7
+  });
+  hands.onResults(onResults);
+
+  const videoElement = document.getElementById('input_video');
+  const canvasElement = document.querySelector('.output_canvas');
+  const canvasCtx = canvasElement.getContext('2d');
+
+  function startGestureMode() {
+    camera = new Camera(videoElement, {
+      onFrame: async () => await hands.send({ image: videoElement }),
+      width: 640,
+      height: 480
+    });
+    camera.start();
+  }
+
+  function stopGestureMode() {
+    if (camera) {
+      camera.stop();
+      canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
+    }
+  }
+
+  function onResults(results) {
+    if (!results.multiHandLandmarks || results.multiHandLandmarks.length === 0) return;
+
+    canvasCtx.save();
+    canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
+    canvasCtx.drawImage(results.image, 0, 0, canvasElement.width, canvasElement.height);
+    for (const landmarks of results.multiHandLandmarks) {
+      drawConnectors(canvasCtx, landmarks, HAND_CONNECTIONS, { color: '#00FF00', lineWidth: 3 });
+      drawLandmarks(canvasCtx, landmarks, { color: '#FF0000', lineWidth: 2 });
+    }
+    canvasCtx.restore();
+
+    const fingerCount = countFingers(results.multiHandLandmarks[0]);
+    if (fingerCount >= 1 && fingerCount <= 4 && !gestureLock) {
+      gestureLock = true;
+      handleGestureAnswer(fingerCount - 1); // map 1-4 fingers to index 0-3
+    }
+  }
+
+  function countFingers(landmarks) {
+    const tips = [8, 12, 16, 20]; // Index to pinky
+    let count = 0;
+    for (let tip of tips) {
+      if (landmarks[tip].y < landmarks[tip - 2].y) count++;
+    }
+    return count;
+  }
+
+  function handleGestureAnswer(index) {
+    const buttons = document.querySelectorAll('.emotion-option');
+    const selectedValue = buttons[index]?.value;
+
+    if (!selectedValue) {
+      gestureLock = false;
+      return;
+    }
+
+    showAnswerFeedback(selectedValue, () => {
+      const form = document.getElementById("emotion-form");
+      const input = document.createElement("input");
+      input.type = "hidden";
+      input.name = "answer";
+      input.value = selectedValue;
+      form.appendChild(input);
+      form.submit();
+    });
+  }
+
+  function showAnswerFeedback(selectedValue, onCorrectSubmit) {
+    const resultText = document.createElement("p");
+    resultText.style.fontSize = "1.4em";
+    resultText.style.fontWeight = "bold";
+    resultText.style.marginTop = "20px";
+
+    const star = document.createElement("div");
+    star.innerHTML = "⭐";
+    star.style.fontSize = "4em";
+    star.style.animation = "fadeUp 1.5s ease-out forwards";
+    star.style.position = "absolute";
+    star.style.left = "50%";
+    star.style.top = "40%";
+    star.style.transform = "translate(-50%, -50%)";
+    document.body.appendChild(star);
+
+    if (selectedValue === correctAnswer) {
+      new Audio("/static/sounds/star.mp3").play();
+      resultText.textContent = "✅ Correct!";
+      resultText.style.color = "green";
+    } else {
+      resultText.textContent = "❌ Try Again!";
+      resultText.style.color = "red";
+      star.remove();
+    }
+
+    document.querySelector(".container").appendChild(resultText);
+
+    setTimeout(() => {
+      if (selectedValue === correctAnswer) {
+        onCorrectSubmit();
+      } else {
+        resultText.remove();
+        gestureLock = false;
+      }
+    }, 1500);
+  }
+
+  // Handle button clicks instead of default form behavior
+  document.addEventListener("DOMContentLoaded", () => {
+    speakQuestion();
+
+    const buttons = document.querySelectorAll(".emotion-option");
+    buttons.forEach(button => {
+      button.addEventListener("click", (e) => {
+        e.preventDefault();
+        const selectedValue = button.value;
+        showAnswerFeedback(selectedValue, () => {
+          const form = document.getElementById("emotion-form");
+          const input = document.createElement("input");
+          input.type = "hidden";
+          input.name = "answer";
+          input.value = selectedValue;
+          form.appendChild(input);
+          form.submit();
+        });
+      });
+    });
+  });
+
+  // Narrate the question
+  const speakQuestion = () => {
+    const questionText = "{{ question.text }}";
+    const utterance = new SpeechSynthesisUtterance(questionText);
+    utterance.lang = 'en-US';
+    utterance.pitch = 1;
+    utterance.rate = 0.95;
+    utterance.volume = 1;
+    speechSynthesis.speak(utterance);
+  };
+</script>
+
+<style>
+  @keyframes fadeUp {
+    0% {
+      opacity: 0;
+      transform: translate(-50%, 50%);
+    }
+    100% {
+      opacity: 1;
+      transform: translate(-50%, -50%);
+    }
+  }
+</style>
+
+{% endblock %}

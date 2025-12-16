@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Math Quiz with Gestures</title>
+  <style>
+    body {
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      background: linear-gradient(to right, #ffecd2, #fcb69f);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .quiz-container {
+      background: #fff;
+      border-radius: 20px;
+      padding: 30px;
+      width: 420px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+      text-align: center;
+      border: 4px solid #ffb74d;
+    }
+    h2 { font-size: 1.8rem; margin-bottom: 18px; color: #ff7043; font-weight: bold; }
+    #options-container { display: flex; flex-direction: column; gap: 12px; margin-bottom: 10px; }
+    #options-container button {
+      background: #ffcc80;
+      color: #4e342e;
+      border: none;
+      border-radius: 14px;
+      padding: 12px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 4px #e6a956;
+      transition: transform .12s ease, background .12s;
+    }
+    #options-container button:hover { transform: scale(1.02); background: #ffb74d; }
+    #result-msg { margin-top: 14px; font-size: 1.15rem; font-weight: bold; min-height: 1.4em; }
+    .gesture-controls { margin-top: 12px; }
+    .gesture-controls button {
+      margin: 6px;
+      padding: 8px 14px;
+      border-radius: 10px;
+      border: none;
+      background: #ffcc80;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    canvas { margin-top: 12px; border-radius: 10px; background: #f6f6f6; }
+    .small-note { margin-top: 8px; font-size: 0.9rem; color: #666; }
+  </style>
+</head>
+<body>
+  <div class="quiz-container">
+    <h2 id="question-text">Loading question...</h2>
+    <div id="options-container"></div>
+    <p id="result-msg"></p>
+
+    <div class="gesture-controls">
+      <button id="startBtn" onclick="startGestureMode()">🖐 Start Gesture Mode</button>
+      <button id="stopBtn" onclick="stopGestureMode()">✋ Stop Gesture Mode</button>
+    </div>
+
+    <!-- hidden video feed, we render to canvas -->
+    <video id="input_video" style="display:none;" playsinline></video>
+    <canvas id="output_canvas" width="320" height="240"></canvas>
+    <p class="small-note">Show 1–4 fingers to choose options 1–4 (hold steady for 0.5s).</p>
+  </div>
+
+  <!-- MediaPipe libs -->
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
+
+  <script>
+    // ----- Config -----
+    const RESOLUTION = { width: 320, height: 240 };
+    const STABLE_FRAMES = 6;        // how many consecutive frames the same finger count must be seen (approx 6*frame_interval)
+    const GESTURE_LOCK_MS = 1200;   // after selecting, lock further gestures for this ms
+
+    // ----- State -----
+    let correctAnswer = null;
+    let camera = null;
+    let lastCount = 0;
+    let stableCount = 0;
+    let gestureLock = false;
+
+    // fetch and render question
+    function loadQuestion(questionData) {
+      document.getElementById('question-text').innerText = questionData.question;
+      correctAnswer = questionData.correct_answer;
+
+      const optionsContainer = document.getElementById('options-container');
+      optionsContainer.innerHTML = '';
+      questionData.options.forEach(opt => {
+        const btn = document.createElement('button');
+        // normalize: show option as text exactly, but store value as numeric if possible
+        btn.innerText = String(opt);
+        btn.onclick = () => handleAnswer(opt);
+        optionsContainer.appendChild(btn);
+      });
+
+      document.getElementById('result-msg').innerText = '';
+    }
+
+    function handleAnswer(option) {
+      // numeric comparison robust to strings/numbers
+      const optNum = Number(option);
+      const correctNum = Number(correctAnswer);
+      if (!isNaN(optNum) && !isNaN(correctNum)) {
+        if (optNum === correctNum) {
+          document.getElementById('result-msg').innerText = "✅ Correct! Loading next question...";
+          // small delay so user sees the "Correct!" message
+          setTimeout(fetchNewQuestion, 900);
+        } else {
+          document.getElementById('result-msg').innerText = "❌ Try again!";
+        }
+      } else {
+        // fallback: string compare
+        if (String(option).trim() === String(correctAnswer).trim()) {
+          document.getElementById('result-msg').innerText = "✅ Correct! Loading next question...";
+          setTimeout(fetchNewQuestion, 900);
+        } else {
+          document.getElementById('result-msg').innerText = "❌ Try again!";
+        }
+      }
+    }
+
+    function fetchNewQuestion() {
+      fetch('/api/new_math_question')
+        .then(r => r.json())
+        .then(data => loadQuestion(data))
+        .catch(err => {
+          console.error(err);
+          document.getElementById('result-msg').innerText = 'Error loading question. Refresh page.';
+        });
+    }
+
+    // ----- MediaPipe Hands setup -----
+    const hands = new Hands({ locateFile: file => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}` });
+    hands.setOptions({
+      maxNumHands: 1,
+      modelComplexity: 0,            // lighter model -> less lag
+      minDetectionConfidence: 0.6,
+      minTrackingConfidence: 0.5
+    });
+    hands.onResults(onResults);
+
+    const videoElement = document.getElementById('input_video');
+    const canvasElement = document.getElementById('output_canvas');
+    const canvasCtx = canvasElement.getContext('2d');
+
+    function startGestureMode() {
+      if (camera) { return; } // already started
+      // start camera
+      camera = new Camera(videoElement, {
+        onFrame: async () => {
+          // do not await excessively here; media pipe handles internal queue
+          await hands.send({ image: videoElement });
+        },
+        width: RESOLUTION.width,
+        height: RESOLUTION.height
+      });
+
+      camera.start().then(() => {
+        console.log('Camera started');
+      }).catch(err => {
+        console.error('Error starting camera:', err);
+        alert('Camera error: ' + err.message);
+      });
+
+      document.getElementById('startBtn').disabled = true;
+      document.getElementById('stopBtn').disabled = false;
+    }
+
+    function stopGestureMode() {
+      if (camera) {
+        camera.stop();
+        camera = null;
+      }
+      // clear overlay
+      canvasCtx.clearRect(0,0,canvasElement.width,canvasElement.height);
+      lastCount = 0; stableCount = 0; gestureLock = false;
+      document.getElementById('startBtn').disabled = false;
+      document.getElementById('stopBtn').disabled = true;
+    }
+
+    // count extended fingers (index/middle/ring/pinky)
+    function countFingers(landmarks) {
+      // tips and corresponding pip indices for the 4 fingers (not thumb)
+      const tips = [8, 12, 16, 20];
+      const pips = [6, 10, 14, 18];
+      let count = 0;
+      for (let i = 0; i < tips.length; i++) {
+        const tip = landmarks[tips[i]];
+        const pip = landmarks[pips[i]];
+        // finger considered up if tip is above pip (smaller y)
+        if (tip.y < pip.y - 0.02) { // small tolerance
+          count++;
+        }
+      }
+      return count; // 0..4
+    }
+
+    function onResults(results) {
+      // draw camera frame
+      canvasCtx.save();
+      canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
+      if (results.image) {
+        // maintain aspect fit
+        canvasCtx.drawImage(results.image, 0, 0, canvasElement.width, canvasElement.height);
+      }
+
+      if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
+        // draw landmarks for feedback
+        for (const landmarks of results.multiHandLandmarks) {
+          drawConnectors(canvasCtx, landmarks, HAND_CONNECTIONS, { color: '#00FF00', lineWidth: 2 });
+          drawLandmarks(canvasCtx, landmarks, { color: '#FF0000', lineWidth: 1 });
+        }
+
+        const landmarks = results.multiHandLandmarks[0];
+        const fingerCount = countFingers(landmarks); // 0..4 (thumb not counted)
+
+        // stable-frame logic:
+        if (fingerCount === lastCount) {
+          stableCount++;
+        } else {
+          stableCount = 1;
+          lastCount = fingerCount;
+        }
+
+        // we only accept 1..4 (user maps 1->option0 ... 4->option3)
+        if (!gestureLock && fingerCount >= 1 && fingerCount <= 4 && stableCount >= STABLE_FRAMES) {
+          // map 1 -> optionIndex 0
+          const optionIndex = fingerCount - 1;
+          const buttons = document.querySelectorAll('#options-container button');
+          const chosenBtn = buttons[optionIndex];
+          if (chosenBtn) {
+            // Visual cue - briefly highlight selected button
+            chosenBtn.style.transform = 'scale(0.98)';
+            setTimeout(()=> chosenBtn.style.transform = '', 200);
+
+            // pick the option value and handle answer (numbers or strings)
+            const valueText = chosenBtn.innerText.trim();
+            // Try numeric parse first
+            const numeric = Number(valueText);
+            const valueToSend = isNaN(numeric) ? valueText : numeric;
+
+            // Lock further gestures briefly and process
+            gestureLock = true;
+            handleAnswer(valueToSend);
+            setTimeout(() => { gestureLock = false; }, GESTURE_LOCK_MS);
+          }
+        }
+      } else {
+        // no hand -> reset counters (so user has to re-hold)
+        lastCount = 0;
+        stableCount = 0;
+      }
+
+      canvasCtx.restore();
+    }
+
+    // start with first question
+    window.addEventListener('load', () => {
+      fetchNewQuestion();
+      // control button initial states
+      document.getElementById('stopBtn').disabled = true;
+    });
+  </script>
+</body>
+</html>

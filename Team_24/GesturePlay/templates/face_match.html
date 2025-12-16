@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+  <h2>🧠 Face Matching Game</h2>
+  <p>Drag each face and drop it on the correct emotion word.</p>
+
+  {% if badge %}
+  <div class="badge-section">
+    <p class="badge-msg">🏅 You've unlocked the Emotion Master badge!</p>
+  </div>
+{% endif %}
+
+
+  <div class="match-game">
+    <div class="match-imgs">
+      {% for item in images %}
+        <img src="{{ url_for('static', filename=item.image) }}" id="img-{{ loop.index }}" class="match-img" draggable="true" ondragstart="drag(event)" data-answer="{{ item.name }}">
+      {% endfor %}
+    </div>
+
+    <div class="match-words">
+      {% for item in words %}
+        <div class="drop-zone" ondrop="drop(event)" ondragover="allowDrop(event)" data-name="{{ item }}">
+          {{ item }}
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <p id="match-result" class="result-text"></p>
+  <a href="/games/face-match" class="retry-btn">🔄 Try Again</a>
+</div>
+
+<script src="{{ url_for('static', filename='js/face_match.js') }}"></script>
+{% endblock %}

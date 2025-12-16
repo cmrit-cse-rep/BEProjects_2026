@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="container">
+    <h2>Select an Activity</h2>
+    <div class="card-grid">
+      <div class="card">
+        <img src="{{ url_for('static', filename='images/emotions.png') }}" alt="Emotions">
+        <p>Emotions</p>
+      </div>
+      <div class="card">
+        <img src="{{ url_for('static', filename='images/bodyparts.png') }}" alt="Body Parts">
+        <p>Body Parts</p>
+      </div>
+      <div class="card">
+        <img src="{{ url_for('static', filename='images/routines.png') }}" alt="Daily Routines">
+        <p>Daily Routines</p>
+      </div>
+    </div>
+  </div>
+{% endblock %}

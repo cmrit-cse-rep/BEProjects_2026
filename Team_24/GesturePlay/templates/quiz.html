@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+  <h2>Quiz Time</h2>
+  <form id="quizForm">
+    <!-- Question 1 -->
+    <div class="question">
+      <p>1. What emotion is this?</p>
+      <img src="{{ url_for('static', filename='images/happy_face.png') }}" alt="Happy Face" class="quiz-img">
+      <input type="radio" name="q1" value="Happy"> Happy<br>
+      <input type="radio" name="q1" value="Sad"> Sad<br>
+      <input type="radio" name="q1" value="Angry"> Angry<br>
+    </div><br>
+
+    <!-- Question 2 -->
+    <div class="question">
+      <p>2. Which of these is a body part?</p>
+      <input type="radio" name="q2" value="Car"> Car<br>
+      <input type="radio" name="q2" value="Hand"> Hand<br>
+      <input type="radio" name="q2" value="Tree"> Tree<br>
+    </div><br>
+
+    <button type="submit" class="btn">Submit Quiz</button>
+  </form>
+
+  <p id="quizResult" class="result-text"></p>
+</div>
+
+<script>
+    document.getElementById("quizForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+    
+      const q1 = document.querySelector('input[name="q1"]:checked')?.value;
+      const q2 = document.querySelector('input[name="q2"]:checked')?.value;
+    
+      fetch("/submit_quiz", {
+        method: "POST",
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ q1, q2 })
+      })
+      .then(res => res.json())
+      .then(data => {
+        const score = data.score;
+        const result = document.getElementById("quizResult");
+        if (score === 2) {
+          result.textContent = `🎉 Perfect! Score: ${score}/2`;
+          new Audio('/static/sounds/star.mp3').play(); 
+          speechSynthesis.speak(new SpeechSynthesisUtterance("Perfect! You earned a star!"));
+        } else {
+          result.textContent = `👍 Your Score: ${score}/2`;
+        }
+        speechSynthesis.speak(new SpeechSynthesisUtterance(`Your score is ${score} out of 2`));
+      });
+    });
+</script>
+    
+{% endblock %}

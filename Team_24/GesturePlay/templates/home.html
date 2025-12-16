@@ -1,0 +1,176 @@
+<!-- templates/home.html -->
+{% extends "base.html" %}
+{% block content %}
+<style>
+  .hero {
+    max-width: 1100px;
+    margin: 18px auto;
+    padding: 18px;
+  }
+
+  .hero h2 {
+    margin: 0 0 6px 0;
+    font-size: 1.8rem;
+    color: #333;
+  }
+  .hero p {
+    margin: 0 0 18px 0;
+    color: #555;
+  }
+
+  .activity-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 18px;
+    align-items: stretch;
+  }
+
+  .activity-card {
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border-radius: 12px;
+    padding: 14px;
+    text-decoration: none;
+    color: inherit;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.06);
+    transition: transform .15s ease, box-shadow .15s ease;
+    min-height: 190px;
+  }
+
+  .activity-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 14px 40px rgba(0,0,0,0.09);
+  }
+
+  .activity-card img {
+    width: 64px;
+    height: 64px;
+    object-fit: contain;
+    border-radius: 8px;
+    background: #fff;
+    margin-bottom: 12px;
+  }
+
+  .activity-card h3 {
+    margin: 0 0 8px 0;
+    color: #ff7043;
+    font-size: 1.05rem;
+  }
+
+  .activity-card p {
+    margin: 0;
+    color: #444;
+    font-size: 0.95rem;
+    flex: 1 1 auto;
+  }
+
+  .card-footer {
+    margin-top: 12px;
+    display:flex;
+    justify-content:flex-end;
+  }
+
+  .play-btn {
+    background: #ffb74d;
+    color: #2e1f16;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-weight: 800;
+    text-decoration: none;
+  }
+
+  @media (max-width: 640px) {
+    .hero h2 { font-size: 1.4rem; }
+    .activity-card { padding: 12px; min-height: 160px; }
+  }
+</style>
+
+<div class="hero">
+  <h2>🎓 Welcome to LearnWithGestures!</h2>
+  <p>Select an activity below to get started 👇</p>
+
+  <div class="activity-grid">
+    <!-- Emotion Quiz -->
+    <a href="/quiz/emotion" class="activity-card" aria-label="Emotion Quiz">
+      <img src="{{ url_for('static', filename='images/quiz.png') }}" alt="Emotion Quiz icon">
+      <h3>Emotion Quiz</h3>
+      <p>Learn to recognise emotions with pictures, sounds and gesture controls.</p>
+      <div class="card-footer">
+        <span class="play-btn">Play</span>
+      </div>
+    </a>
+
+    <!-- Math Quiz -->
+    <a href="/games/math_quiz" class="activity-card" aria-label="Math Quiz">
+      <img src="{{ url_for('static', filename='images/mathquiz.jpeg') }}" alt="Math Quiz icon">
+      <h3>Math Quiz</h3>
+      <p>Practice basic arithmetic with touch or gestures — perfect for quick practice.</p>
+      <div class="card-footer">
+        <span class="play-btn">Play</span>
+      </div>
+    </a>
+
+    <!-- Sketch Game -->
+    <a href="/sketch" class="activity-card" aria-label="Sketch Game">
+      <img src="{{ url_for('static', filename='images/sketch.jpg') }}" alt="Sketch Game icon">
+      <h3>Sketch Game</h3>
+      <p>Draw shapes in the air using your hand — the app recognizes and redraws them cleanly.</p>
+      <div class="card-footer">
+        <span class="play-btn">Play</span>
+      </div>
+    </a>
+
+    <!-- Face Matching -->
+    <a href="/games/face-match" class="activity-card" aria-label="Face Matching">
+      <img src="{{ url_for('static', filename='images/emotions/angry.png') }}" alt="Face Match icon">
+      <h3>Face Matching</h3>
+      <p>Match faces to emotions and improve recognition skills in a game format.</p>
+      <div class="card-footer">
+        <span class="play-btn">Play</span>
+      </div>
+    </a>
+
+    <!-- Color Match -->
+    <a href="/games/color-match" class="activity-card" aria-label="Color Match Game">
+      <img src="{{ url_for('static', filename='images/fun.png') }}" alt="Color Match icon">
+      <h3>Color Match Game</h3>
+      <p>Match colors quickly and build attention to detail with a fun game.</p>
+      <div class="card-footer">
+        <span class="play-btn">Play</span>
+      </div>
+    </a>
+
+    <!-- Memory Match Game -->
+     <a href="{{ url_for('memory_game') }}" class="activity-card">
+      <img src="{{ url_for('static', filename='images/memory.png') }}" alt="Memory Game">
+      <h3>Memory Game</h3>
+      <p>Flip the cards get the match to train working memory and focus.</p>
+      <div class="card-footer">
+        <span class="play-btn">Play</span>
+      </div>
+    </a>
+
+    <!--Learn Gestures -->
+    <a href="{{ url_for('simon_says') }}" class="activity-card">
+      <img src="{{ url_for('static', filename='images/simon.jpg') }}" alt="Simon Says">
+      <h3>Gesture Simon Says</h3>
+      <p>Learn and copy the gestures.</p>
+      <div class="card-footer">
+        <span class="play-btn">Learn</span>
+      </div>
+    </a>
+
+
+    <!-- Progress -->
+    <a href="/progress" class="activity-card" aria-label="My Progress">
+      <img src="{{ url_for('static', filename='images/progress.png') }}" alt="Progress icon">
+      <h3>My Progress</h3>
+      <p>View earned stars, badges and recent activity for the child.</p>
+      <div class="card-footer">
+        <span class="play-btn">Open</span>
+      </div>
+    </a>
+  </div>
+</div>
+{% endblock %}

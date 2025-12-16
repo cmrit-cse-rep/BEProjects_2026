@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+  <h2>Gesture Learning</h2>
+  <p>Follow the gesture shown and click "Detect".</p>
+
+  <div class="gesture-box">
+    <img src="{{ url_for('static', filename='images/wave.png') }}" alt="Waving Gesture" class="gesture-img">
+    <p class="instruction">Try waving your hand!</p>
+    <button id="detectBtn" class="btn">Detect Gesture</button>
+    <p id="resultText" class="result-text"></p>
+  </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/gesture.js') }}"></script>
+{% endblock %}

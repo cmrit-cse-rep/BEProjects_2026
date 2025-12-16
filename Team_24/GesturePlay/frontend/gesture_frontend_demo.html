@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Gesture Games — Demo (MediaPipe + Canvas)</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#F7F9FF; --accent:#ff6b6b; --card:#ffffff; --muted:#7b8aa3;
+    }
+    body{background:linear-gradient(180deg,#f0f7ff 0%, #fdf7fb 100%);font-family:Inter, system-ui, Arial, sans-serif}
+    .hero{padding:20px 12px;text-align:center}
+    .game-card{border-radius:18px;box-shadow:0 8px 30px rgba(16,24,40,0.08);padding:18px;background:var(--card)}
+    #output_canvas{border-radius:12px;background:#000;display:block;margin:0 auto}
+    .big-btn{font-size:1.1rem;padding:12px 18px;border-radius:12px}
+    .badge-happy{background:linear-gradient(90deg,#ffd166,#ff6b6b);color:#fff;padding:10px 14px;border-radius:12px}
+    .controls{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+    .feedback-emoji{font-size:4rem}
+    .small-muted{color:var(--muted);font-size:.9rem}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="hero mt-3">
+      <h1 style="font-weight:700">Gesture Games — Fun Friendly Demo</h1>
+      <p class="small-muted">Playful UI for children — live hand skeleton (red), landmarks, and backend prediction.</p>
+    </div>
+
+    <div class="row gx-3">
+      <div class="col-md-7">
+        <div class="game-card">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <div>
+              <strong id="gameTitle">Gesture Learning</strong>
+              <div class="small-muted">Make a gesture and get instant feedback</div>
+            </div>
+            <div class="text-end">
+              <div class="badge-happy">Level: Play</div>
+            </div>
+          </div>
+
+          <div style="text-align:center">
+            <video id="input_video" style="display:none" playsinline></video>
+            <canvas id="output_canvas" width="640" height="480"></canvas>
+          </div>
+
+          <div class="mt-3 controls">
+            <select id="gameSelect" class="form-select" style="width:220px">
+              <option value="gesture_learning">Gesture Learning</option>
+              <option value="emotion_quiz">Emotion Quiz</option>
+              <option value="math_quiz">Math Quiz</option>
+              <option value="face_match">Face Matching</option>
+            </select>
+
+            <input id="labelInput" class="form-control" placeholder="Enter gesture label" style="width:220px" />
+            
+            <button id="startBtn" class="btn btn-primary big-btn">Start</button>
+            <label>
+            <input type="checkbox" id="collectToggle"> Collect Mode
+            </label>
+
+            <button id="stopBtn" class="btn btn-outline-secondary big-btn">Stop</button>
+          </div>
+          <div id="collectProgress" class="small-muted">Samples: 0</div>
+
+          <div class="d-flex justify-content-between align-items-center mt-3">
+            <div>
+              <div class="small-muted">Prediction</div>
+              <div id="predictionText" style="font-weight:700;font-size:1.25rem">—</div>
+            </div>
+            <div style="text-align:right">
+              <div class="small-muted">Confidence</div>
+              <div id="confText">—</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="col-md-5">
+        <div class="game-card">
+          <h5 style="margin-bottom:10px">Playful UI & Feedback</h5>
+          <div style="display:flex;align-items:center;gap:12px">
+            <div class="feedback-emoji" id="emoji">🙂</div>
+            <div>
+              <div id="message" style="font-weight:600">Make the target gesture!</div>
+              <div class="small-muted">Use the dropdown to switch game mode and optional label input for auto-scoring.</div>
+            </div>
+          </div>
+
+          <hr />
+          <div>
+            <h6>Quick controls</h6>
+            <ul>
+              <li class="small-muted">Red skeleton shows hand connections while playing — looks friendly & clear for kids.</li>
+              <li class="small-muted">Results are sent to the backend endpoint <code>/api/gesture/predict</code> (adjust host as needed).</li>
+              <li class="small-muted">This demo does MediaPipe in the browser (fast & private) and sends only tiny landmark arrays to server.</li>
+            </ul>
+          </div>
+
+          <hr />
+          <div>
+            <h6>Sample actions & rewards</h6>
+            <ol>
+              <li>Correct gesture → cheerful sound + confetti (you can add Lottie or Canvas confetti).</li>
+              <li>Wrong gesture → friendly hint and retry.</li>
+              <li>Progress badges unlocked after N correct attempts.</li>
+            </ol>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <footer class="mt-4 text-center small-muted">Demo: MediaPipe Hands + Canvas overlay • Integrates with Flask backend</footer>
+  </div>
+
+
+  <!-- MediaPipe (via jsDelivr) -->
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+
+  <script>
+  // --- UI elements
+  const videoElement = document.getElementById('input_video');
+  const canvasElement = document.getElementById('output_canvas');
+  const ctx = canvasElement.getContext('2d');
+  const startBtn = document.getElementById('startBtn');
+  const stopBtn = document.getElementById('stopBtn');
+  const predictionText = document.getElementById('predictionText');
+  const confText = document.getElementById('confText');
+  const emoji = document.getElementById('emoji');
+  const message = document.getElementById('message');
+  const labelInput = document.getElementById('labelInput');
+  const gameSelect = document.getElementById('gameSelect');
+
+  // --- Global settings
+  let camera = null;
+  let lastSent = 0;
+  const SEND_INTERVAL = 1000; // ms (≈4 samples/sec)
+  const BACKEND_URL = "http://localhost:5000"; // Flask backend
+
+  // --- Dataset collection settings
+  let collectMode = false;
+  let collectedCount = 0;
+  const MAX_SAMPLES = 200; // how many samples per gesture in one take
+
+  const collectToggle = document.getElementById('collectToggle');
+  collectToggle.addEventListener('change', (e) => {
+      collectMode = e.target.checked;
+      collectedCount = 0; // reset when toggled
+      document.getElementById("collectProgress").textContent = "Samples: 0";
+  });
+
+  // --- MediaPipe Hands setup
+  const hands = new Hands({
+    locateFile: (file) => {
+      return `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`;
+    }
+  });
+
+  hands.setOptions({
+    maxNumHands: 1,
+    modelComplexity: 1,
+    minDetectionConfidence: 0.6,
+    minTrackingConfidence: 0.6
+  });
+
+  hands.onResults(onResults);
+
+  // --- Start / Stop buttons
+  startBtn.onclick = async () => {
+    startBtn.disabled = true;
+    stopBtn.disabled = false;
+    message.textContent = 'Starting camera...';
+    camera = new Camera(videoElement, {
+      onFrame: async () => { await hands.send({image: videoElement}); },
+      width: 640,
+      height: 480
+    });
+    await camera.start();
+    message.textContent = 'Show a gesture — red skeleton will appear.';
+  };
+
+  stopBtn.onclick = () => {
+  console.log("🛑 Stop button manually clicked"); // debug log
+  if (camera) {
+    try { camera.stop(); } catch(e) { console.warn("Camera stop error", e); }
+  }
+  startBtn.disabled = false;
+  stopBtn.disabled = true;
+  ctx.clearRect(0,0,canvasElement.width, canvasElement.height);
+  predictionText.textContent = '—'; 
+  confText.textContent = '—'; 
+  emoji.textContent = '🙂';
+  message.textContent = 'Stopped.';
+};
+
+
+  // --- Drawing & sending
+  function onResults(results){
+    console.log("Frame processed: ", new Date().toLocaleTimeString()); // debug
+
+    // draw the camera frame
+    ctx.save();
+    ctx.clearRect(0,0,canvasElement.width, canvasElement.height);
+    ctx.drawImage(results.image, 0, 0, canvasElement.width, canvasElement.height);
+
+    if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0){
+      const lm = results.multiHandLandmarks[0];
+      // draw red skeleton (connectors)
+      drawConnectors(ctx, lm, HAND_CONNECTIONS, {color: '#ff3b3b', lineWidth: 6});
+      // draw landmarks as small white dots
+      drawLandmarks(ctx, lm, {color: 'white', lineWidth: 2, radius: 4});
+
+      // prepare flat landmarks list [x,y,z,...]
+      const flat = [];
+      lm.forEach(p => { flat.push(p.x, p.y, p.z); });
+
+      // throttle backend calls
+      const now = performance.now();
+      if (now - lastSent > SEND_INTERVAL){
+        lastSent = now;
+        sendToBackend(flat).catch(e => console.warn('send err', e));
+      }
+    }
+
+    ctx.restore();
+  }
+
+  // --- Send landmarks to backend
+  async function sendToBackend(flatLandmarks){
+    if (!flatLandmarks || flatLandmarks.length===0) return;
+
+    const payload = {
+      landmarks: flatLandmarks,
+      game_type: gameSelect.value,
+      target_label: labelInput.value || null,
+    };
+
+    try{
+      // ---- Prediction fetch ----
+      const res = await fetch(BACKEND_URL + '/api/gesture/predict', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+
+      if (data && data.prediction){
+        const pred = data.prediction.label || '—';
+        const scores = data.prediction.scores || {};
+        predictionText.textContent = pred;
+        const conf = scores[pred] ? Math.round(scores[pred]*100) + '%' : '—';
+        confText.textContent = conf;
+
+        // playful feedback
+        if (payload.target_label && pred === payload.target_label){
+          emoji.textContent = '🎉';
+          message.textContent = 'Great job! Keep going 😊';
+        } else {
+          emoji.textContent = '🤔';
+          message.textContent = 'Try again — make the target gesture.';
+        }
+      }
+    }catch(e){
+      console.warn('backend error', e);
+    }
+
+    // ---- Dataset collection (continuous & safe) ----
+if (collectMode && labelInput.value) {
+  if (collectedCount < MAX_SAMPLES) {
+    collectedCount++;
+    console.log(`📸 Attempting save #${collectedCount} for: ${labelInput.value}`);
+
+    fetch(BACKEND_URL + '/api/data/save', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        label: labelInput.value,
+        landmarks: flatLandmarks
+      })
+    })
+    .then(r => r.json())
+    .then(resp => {
+      console.log("✅ Saved:", resp);
+      document.getElementById("collectProgress").textContent =
+        `Samples: ${collectedCount}/${MAX_SAMPLES}`;
+    })
+    .catch(err => {
+      console.error("❌ Save failed:", err);
+    });
+
+    if (collectedCount >= MAX_SAMPLES) {
+  message.textContent = `✅ Collected ${MAX_SAMPLES} samples for ${labelInput.value}`;
+  collectMode = false;          // stop collecting
+  collectToggle.checked = false;
+  console.log("ℹ️ Finished collecting, camera still running...");
+  // ⚠️ do NOT stop camera here
+}
+
+  }
+}
+}
+
+  // disable stop by default
+  stopBtn.disabled = true;
+  setInterval(() => {
+  if (camera) {
+    console.log("📷 Camera status:", camera);
+  } else {
+    console.log("⚠️ Camera object is null!");
+  }
+}, 2000);
+
+</script>
+
+</body>
+</html>

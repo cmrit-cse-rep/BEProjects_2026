@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Gesture Simon Says</title>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; background: #fff7e6; }
+    #gestureText { font-size: 1.5rem; margin: 15px; color: #ff5722; }
+    #canvas { border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+    #result { font-size: 1.3rem; font-weight: bold; margin: 10px; }
+    #score { font-size: 1.3rem; color: green; }
+  </style>
+</head>
+<body>
+  <h2>🖐 Gesture Simon Says</h2>
+  <p>Copy the gesture shown on the screen!</p>
+  <h3 id="gestureText">Press Start Game</h3>
+
+  <video id="video" autoplay playsinline muted width="640" height="480" style="display:none;"></video>
+  <canvas id="canvas" width="640" height="480"></canvas>
+
+  <p id="result"></p>
+  <p id="score">Score: 0</p>
+
+  <button onclick="startGame()">▶ Start Game</button>
+  <button onclick="nextRound()">🔄 Next Gesture</button>
+
+  <!-- ✅ Use tasks-vision (pre-bundled models) -->
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.8/vision_bundle.js"></script>
+
+  <script>
+    let video = document.getElementById("video");
+    let canvas = document.getElementById("canvas");
+    let ctx = canvas.getContext("2d");
+    let detector, targetGesture, score = 0;
+
+    const gestures = [
+      { name: "One finger", check: fs => fs.index && !fs.middle && !fs.ring && !fs.pinky, text: "☝ Show 1 finger" },
+      { name: "Two fingers", check: fs => fs.index && fs.middle && !fs.ring && !fs.pinky, text: "✌ Show 2 fingers" },
+      { name: "Fist", check: fs => !fs.index && !fs.middle && !fs.ring && !fs.pinky, text: "✊ Make a fist" },
+      { name: "Open hand", check: fs => fs.index && fs.middle && fs.ring && fs.pinky, text: "🖐 Show open hand" }
+    ];
+
+    async function init() {
+      const vision = await FilesetResolver.forVisionTasks(
+        "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.8/wasm"
+      );
+      detector = await HandLandmarker.createFromOptions(vision, {
+        baseOptions: { modelAssetPath: `https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task` },
+        numHands: 1,
+        runningMode: "VIDEO"
+      });
+    }
+
+    async function startGame() {
+      await init();
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      video.srcObject = stream;
+      video.onloadeddata = () => { detectHands(); };
+      nextRound();
+    }
+
+    function nextRound() {
+      targetGesture = gestures[Math.floor(Math.random() * gestures.length)];
+      document.getElementById("gestureText").innerText = targetGesture.text;
+      document.getElementById("result").innerText = "";
+    }
+
+    function getFingerStates(landmarks) {
+      const tips = [4,8,12,16,20];
+      const pips = [2,6,10,14,18];
+      let states = [];
+      for (let i=0; i<5; i++) {
+        states.push(landmarks[tips[i]].y < landmarks[pips[i]].y);
+      }
+      return { thumb: states[0], index: states[1], middle: states[2], ring: states[3], pinky: states[4] };
+    }
+
+    async function detectHands() {
+      if (!detector) return;
+      const result = await detector.detectForVideo(video, performance.now());
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+      if (result.landmarks && result.landmarks.length > 0) {
+        const lm = result.landmarks[0];
+        ctx.fillStyle = "red";
+        lm.forEach(pt => ctx.fillRect(pt.x*canvas.width, pt.y*canvas.height, 5, 5));
+
+        const fs = getFingerStates(lm.map(p => ({x: p.x, y: p.y})));
+        if (targetGesture && targetGesture.check(fs)) {
+          document.getElementById("result").innerText = "✅ Correct!";
+          score++;
+          document.getElementById("score").innerText = "Score: " + score;
+          setTimeout(nextRound, 1500);
+        }
+      }
+      requestAnimationFrame(detectHands);
+    }
+  </script>
+</body>
+</html>

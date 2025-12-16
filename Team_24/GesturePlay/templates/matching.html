@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+  <h2>Matching Game</h2>
+  <p>Drag the correct word to the face!</p>
+
+  <div class="match-game">
+    <div class="drop-zone" ondrop="drop(event)" ondragover="allowDrop(event)">
+      <img src="{{ url_for('static', filename='images/happy_face.png') }}" id="happy" class="match-img">
+    </div>
+    <div class="drop-zone" ondrop="drop(event)" ondragover="allowDrop(event)">
+      <img src="{{ url_for('static', filename='images/sad_face.png') }}" id="sad" class="match-img">
+    </div>
+  </div>
+
+  <div class="drag-items">
+    <div draggable="true" ondragstart="drag(event)" id="Happy" class="drag-word">Happy</div>
+    <div draggable="true" ondragstart="drag(event)" id="Sad" class="drag-word">Sad</div>
+  </div>
+
+  <p id="matchResult" class="result-text"></p>
+</div>
+
+<script>
+    function allowDrop(ev) {
+      ev.preventDefault();
+    }
+    
+    function drag(ev) {
+      ev.dataTransfer.setData("text", ev.target.id);
+    }
+    
+    function drop(ev) {
+      ev.preventDefault();
+      const word = ev.dataTransfer.getData("text");
+      const face = ev.target.id;
+      const resultBox = document.getElementById("matchResult");
+    
+      if ((word === "Happy" && face === "happy") || (word === "Sad" && face === "sad")) {
+        resultBox.textContent = `✅ Great match! You earned a star!`;
+        speechSynthesis.speak(new SpeechSynthesisUtterance("Great match! You earned a star!"));
+    
+        // Play reward sound
+        new Audio('/static/sounds/star.mp3').play();
+    
+        // Send request to Flask to save star
+        fetch("/matching_star", {
+          method: "POST"
+        });
+    
+      } else {
+        resultBox.textContent = `❌ Try again!`;
+        speechSynthesis.speak(new SpeechSynthesisUtterance("Oops, try again!"));
+      }
+    }
+</script>
+    
+{% endblock %}

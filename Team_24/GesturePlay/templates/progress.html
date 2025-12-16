@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+  <h2>🌟 Your Progress</h2>
+  <div class="progress-card">
+    <p>✅ Last Activity: {{ user.get('last_activity', 'None') }}</p>
+<p>📊 Quiz Score: {{ user.get('quiz_score', 0) }}/2</p>
+<p>⭐ Stars Earned: 
+  {% for i in range(user.get('stars', 0)) %}
+    <span style="font-size: 1.5em;">⭐</span>
+  {% endfor %}
+</p>
+
+
+    {% if user.get('badge_unlocked', False) %}
+      <div class="badge-section">
+        <h3>🏅 Badge Unlocked!</h3>
+        <img src="{{ url_for('static', filename='images/badge.png') }}" alt="Badge" width="150">
+        <p class="badge-msg">You’ve earned your first learning badge. Great job!</p>
+      </div>
+      {% else %}
+      <p>🕒 Earn <strong>{{ 5 - user.get('stars', 0) }}</strong> more stars to unlock your badge!</p>
+    {% endif %}
+<p>🎉 Keep up the great work and continue to improve your skills!</p>    
+  </div>
+</div>
+{% endblock %}

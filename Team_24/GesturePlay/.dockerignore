@@ -1,0 +1,14 @@
+venv
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.env
+.git
+*.h5
+models/
+model/
+data/
+*.log
+.DS_Store
+.vscode

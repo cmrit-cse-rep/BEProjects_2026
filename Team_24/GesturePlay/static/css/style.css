@@ -1,0 +1,610 @@
+/*
+body {
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #f2f6fa;
+}
+
+header, footer {
+    background-color: #2d89ef;
+    color: white;
+    padding: 1rem;
+    text-align: center;
+}
+
+nav a {
+    color: white;
+    margin: 0 1rem;
+    text-decoration: none;
+}
+
+.container {
+    padding: 2rem;
+    text-align: center;
+}
+
+.card-grid {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+}
+
+.card {
+    border: 1px solid #ccc;
+    padding: 1rem;
+    background: white;
+    border-radius: 12px;
+    width: 150px;
+}
+
+.btn {
+    background: #2d89ef;
+    color: white;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.result-text {
+    font-size: 1.2rem;
+    color: green;
+    margin-top: 1rem;
+}
+
+.match-game {
+    display: flex;
+    justify-content: space-around;
+    gap: 50px;
+    margin-top: 30px;
+}
+
+.match-imgs, .match-words {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.match-img {
+    width: 100px;
+    height: 100px;
+    border-radius: 12px;
+    border: 2px solid #ccc;
+    cursor: grab;
+}
+
+.drag-items {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+}
+
+.drag-word {
+    background: #2d89ef;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: grab;
+}
+
+.badge-section {
+    margin-top: 20px;
+    padding: 15px;
+    border: 2px dashed #FFD700;
+    background-color: #fffbe6;
+    text-align: center;
+    border-radius: 12px;
+}
+
+.badge-msg {
+    font-size: 1.1em;
+    color: #333;
+}
+
+.activity-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.activity-card {
+    background-color: #f4f4f4;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    padding: 10px;
+    text-align: center;
+    text-decoration: none;
+    color: #333;
+    transition: transform 0.2s;
+}
+
+.activity-card:hover {
+    transform: scale(1.05);
+    background-color: #e0ffe0;
+}
+
+.activity-card img {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+    margin-bottom: 10px;
+}
+
+.color-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.color-btn {
+    width: 80px;
+    height: 80px;
+    border: 3px solid #333;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.color-btn:hover {
+    transform: scale(1.1);
+}
+
+.retry-btn {
+    margin-top: 20px;
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #008CBA;
+    color: white;
+    border-radius: 8px;
+    text-decoration: none;
+}
+
+.drop-zone {
+    padding: 15px;
+    background-color: #f0f0f0;
+    border: 2px dashed #aaa;
+    border-radius: 8px;
+    min-width: 120px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.quiz-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    max-width: 500px;
+    margin: auto;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.quiz-img {
+    width: 100%;
+    max-height: 250px;
+    object-fit: contain;
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
+
+.audio-btn {
+    background-color: #FFD700;
+    color: black;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1.1em;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    cursor: pointer;
+}
+
+.option-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.option-btn {
+    background-color: #2d89ef;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1em;
+    cursor: pointer;
+}
+
+@keyframes fadeUp {
+    0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+    50% { opacity: 1; transform: translate(-50%, -60%) scale(1.2); }
+    100% { opacity: 0; transform: translate(-50%, -70%) scale(1); }
+}
+
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+}
+*/
+
+/* Math Quiz Question Style */
+/*
+#math-quiz {
+    margin: 20px;
+}
+
+.question {
+    font-size: 4vw;
+    margin-bottom: 20px;
+}
+*/
+/* Emotion Quiz Options (Improved for children) */
+/*
+.options {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.option {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 15px;
+    width: 80%;
+    max-width: 500px;
+    padding: 20px;
+    font-size: 1.5rem;
+    background-color: #c0e8ff;
+    border: 3px solid #007acc;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: transform 0.2s, background-color 0.3s;
+}
+
+.option:hover {
+    background-color: #90d8ff;
+    transform: scale(1.03);
+    color: #000;
+}
+
+.option-number {
+    font-size: 1.6rem;
+    font-weight: bold;
+    color: #007acc;
+}
+*/
+/* Feedback states */
+/*
+.selected {
+    background-color: #ffed8b !important;
+    border-color: #ffcc00;
+}
+
+.correct {
+    background-color: #b6fcb6 !important;
+    border-color: #3bb143;
+}
+
+.wrong {
+    background-color: #ffb3b3 !important;
+    border-color: #cc0000;
+}
+*/
+/* Emotion Quiz Video Styling */
+/*
+video {
+    margin-top: 20px;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+}
+*/
+
+body {
+    font-family: 'Comic Sans MS', 'Segoe UI', sans-serif; /* Fun, friendly font */
+    margin: 0;
+    padding: 0;
+    background: #f2f6fa;
+}
+
+/* Bigger, playful header/footer */
+header, footer {
+    background-color: #2d89ef;
+    color: white;
+    padding: 1.2rem;
+    text-align: center;
+    font-size: 1.5rem;
+    border-radius: 0 0 15px 15px;
+}
+
+nav a {
+    color: white;
+    margin: 0 1rem;
+    text-decoration: none;
+    font-size: 1.2rem;
+}
+
+.container {
+    padding: 2rem;
+    text-align: center;
+    font-size: 1.2rem;
+}
+
+.card-grid {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+}
+
+.card {
+    border: 3px solid #ffcc00;
+    padding: 1.2rem;
+    background: #fff6cc;
+    border-radius: 20px;
+    width: 170px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    font-size: 1.1rem;
+}
+
+.btn {
+    background: #ff9900;
+    color: white;
+    padding: 0.6rem 1.2rem;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.btn:hover {
+    transform: scale(1.05);
+    background: #ff7700;
+}
+
+.result-text {
+    font-size: 1.4rem;
+    color: green;
+    margin-top: 1rem;
+}
+
+.match-game {
+    display: flex;
+    justify-content: space-around;
+    gap: 50px;
+    margin-top: 30px;
+}
+
+.match-imgs, .match-words {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.match-img {
+    width: 90px; /* Medium-sized icons */
+    height: 90px;
+    border-radius: 15px;
+    border: 3px solid #ffcc00;
+    cursor: grab;
+    background-color: #fff9e6;
+    padding: 5px;
+}
+
+/* Increase spacing for written letters in face matching */
+.drag-items {
+    display: flex;
+    justify-content: center;
+    gap: 2.5rem; /* More gap for clearer separation */
+}
+
+.drag-word {
+    background: #2d89ef;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-size: 1.3rem;
+    cursor: grab;
+}
+
+.badge-section {
+    margin-top: 20px;
+    padding: 15px;
+    border: 3px dashed #FFD700;
+    background-color: #fffbe6;
+    text-align: center;
+    border-radius: 15px;
+}
+
+.badge-msg {
+    font-size: 1.3em;
+    color: #333;
+}
+
+.activity-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.activity-card {
+    background-color: #f4f4f4;
+    border: 3px solid #ffcc00;
+    border-radius: 15px;
+    padding: 15px;
+    text-align: center;
+    text-decoration: none;
+    color: #333;
+    font-size: 1.2rem;
+    transition: transform 0.2s, background-color 0.3s;
+}
+
+.activity-card:hover {
+    transform: scale(1.07);
+    background-color: #fff4b3;
+}
+
+.activity-card img {
+    width: 90px; /* Medium icons */
+    height: 90px;
+    object-fit: contain;
+    margin-bottom: 10px;
+}
+
+.color-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.color-btn {
+    width: 80px;
+    height: 80px;
+    border: 3px solid #333;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.color-btn:hover {
+    transform: scale(1.1);
+}
+
+.retry-btn {
+    margin-top: 20px;
+    display: inline-block;
+    padding: 12px 24px;
+    background-color: #008CBA;
+    color: white;
+    border-radius: 10px;
+    text-decoration: none;
+    font-size: 1.1rem;
+}
+
+.drop-zone {
+    padding: 18px;
+    background-color: #f0f0f0;
+    border: 3px dashed #aaa;
+    border-radius: 10px;
+    min-width: 140px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.quiz-card {
+    background: #fff;
+    border-radius: 15px;
+    padding: 25px;
+    max-width: 500px;
+    margin: auto;
+    box-shadow: 0 0 12px rgba(0,0,0,0.1);
+}
+
+.quiz-img {
+    width: 100%;
+    max-height: 250px;
+    object-fit: contain;
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
+
+.audio-btn {
+    background-color: #FFD700;
+    color: black;
+    border: none;
+    padding: 12px 24px;
+    font-size: 1.2em;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    cursor: pointer;
+}
+
+.option-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.option-btn {
+    background-color: #2d89ef;
+    color: white;
+    padding: 14px;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.2em;
+    cursor: pointer;
+}
+
+@keyframes fadeUp {
+    0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+    50% { opacity: 1; transform: translate(-50%, -60%) scale(1.2); }
+    100% { opacity: 0; transform: translate(-50%, -70%) scale(1); }
+}
+
+/* Math Quiz */
+.question {
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+/* Emotion Quiz Options */
+.options {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 22px;
+    margin-top: 20px;
+}
+
+.option {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    width: 80%;
+    max-width: 500px;
+    padding: 22px;
+    font-size: 1.4rem;
+    background-color: #c0e8ff;
+    border: 3px solid #007acc;
+    border-radius: 18px;
+    cursor: pointer;
+    transition: transform 0.2s, background-color 0.3s;
+}
+
+.option:hover {
+    background-color: #90d8ff;
+    transform: scale(1.05);
+}
+
+.option-number {
+    font-size: 1.6rem;
+    font-weight: bold;
+    color: #007acc;
+}
+
+.selected {
+    background-color: #ffed8b !important;
+    border-color: #ffcc00;
+}
+
+.correct {
+    background-color: #b6fcb6 !important;
+    border-color: #3bb143;
+}
+
+.wrong {
+    background-color: #ffb3b3 !important;
+    border-color: #cc0000;
+}
+
+video {
+    margin-top: 20px;
+    border: 3px solid #ccc;
+    border-radius: 12px;
+}

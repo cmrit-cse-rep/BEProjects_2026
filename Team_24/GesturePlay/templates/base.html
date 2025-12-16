@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %}GesturePlay{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <style>
+    :root { --brand: #ff7043; --accent: #ffb74d; --muted: #f7efe6; --text: #333; }
+    * { box-sizing: border-box; }
+    body { margin:0; font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif; color:var(--text);
+           background: linear-gradient(180deg,#fffaf0,#fff6e8); min-height:100vh; }
+
+    header { display:flex; align-items:center; justify-content:space-between; gap:18px;
+             padding:12px 20px; background:linear-gradient(90deg, rgba(255,183,77,0.12), rgba(255,183,77,0.06));
+             border-bottom:1px solid rgba(0,0,0,0.03); position:sticky; top:0; z-index:50; }
+
+    .brand { display:flex; align-items:center; gap:10px; text-decoration:none; color:inherit; }
+    .brand h1 { margin:0; font-size:1.25rem; color:var(--brand); }
+    .brand small { display:block; font-size:0.78rem; color:#6b4b3a; margin-top:-4px; }
+
+    nav { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+    nav a { display:inline-block; padding:8px 12px; text-decoration:none; color:#5b3a2b;
+            border-radius:8px; font-weight:600; transition: background .12s, transform .08s; font-size:0.95rem; }
+    nav a:hover { transform: translateY(-2px); background: var(--muted); }
+
+    nav a.active { background: linear-gradient(90deg,var(--accent),#ffcc80); color:#2e1f16;
+                   box-shadow: 0 6px 18px rgba(255,183,77,0.14); }
+
+    main { padding:18px; max-width:1180px; margin:18px auto; }
+    footer { margin-top:28px; padding:14px; text-align:center; color:white; font-size:0.92rem; }
+
+    @media (max-width:700px) {
+      header { padding:10px; }
+      nav { gap:6px; }
+      nav a { padding:8px 10px; font-size:0.9rem; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a class="brand" href="{{ url_for('index') }}">
+      <h1>GesturePlay</h1>
+      <small>Learn • Draw • Play</small>
+    </a>
+
+    <nav aria-label="Main navigation">
+      <a href="{{ url_for('index') }}" class="{% if request.path == '/' %}active{% endif %}">Home</a>
+
+      <!-- use url_for where we are confident the endpoint exists -->
+      <a href="{{ url_for('emotion_quiz') }}" class="{% if '/quiz/emotion' in request.path %}active{% endif %}">Emotion Quiz</a>
+      <a href="{{ url_for('math_quiz') }}" class="{% if request.path.startswith('/games/math_quiz') %}active{% endif %}">Math Quiz</a>
+
+      <!-- use literal path for routes that may not have matching endpoint names -->
+      <!--<a href="/gesture" class="{% if request.path.startswith('/gesture') %}active{% endif %}">Learn Gesture</a>
+
+      <a href="{{ url_for('activities') }}" class="{% if request.path.startswith('/activities') %}active{% endif %}">Activities</a>-->
+    
+      <!-- literal path for progress to avoid BuildError until you confirm endpoint name -->
+      <a href="/progress" class="{% if request.path.startswith('/progress') %}active{% endif %}">Progress</a>
+    </nav>
+  </header>
+
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer>
+    <p>&copy; 2025 GesturePlay. Made with ❤️ for kids with superpowers.</p>
+  </footer>
+</body>
+</html>

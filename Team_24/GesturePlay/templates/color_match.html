@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container" style="text-align: center;">
+  <h2>🎨 Color Match Game</h2>
+  <p>Select the button that matches the word: <strong>{{ target.name }}</strong></p>
+
+  <div class="color-buttons">
+    {% for color in options %}
+      <button
+        class="color-btn"
+        style="background-color: {{ color.code|e }};"
+        onclick="checkAnswer('{{ color.name }}')">
+      </button>
+    {% endfor %}
+  </div>
+
+  <p id="result" style="font-size: 1.2em; margin-top: 20px;"></p>
+
+  <a href="/games/color-match" class="retry-btn">🔄 Play Again</a>
+</div>
+
+<script>
+  const correct = "{{ target.name }}";
+
+  function checkAnswer(choice) {
+    const result = document.getElementById("result");
+    if (choice === correct) {
+      result.innerHTML = "✅ Correct! Well done!";
+      new Audio("/static/sounds/star.mp3").play();
+    } else {
+      result.innerHTML = "❌ Oops! Try again.";
+    }
+  }
+</script>
+{% endblock %}

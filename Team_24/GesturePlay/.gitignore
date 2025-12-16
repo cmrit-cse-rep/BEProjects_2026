@@ -1,0 +1,46 @@
+# Byte-compiled / cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+env/
+
+# Environment variables
+.env
+
+# Flask session & database files
+*.db
+instance/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# VS Code & other editor settings
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# Compiled media and temporary files
+*.swp
+*.bak
+*.tmp
+
+# Python egg metadata
+*.egg-info/
+dist/
+build/
+
+# Uploads and generated assets
+static/uploads/
+progress.json
+
+# Ignore Jupyter/IPython notebooks
+*.ipynb_checkpoints/
+
+# Ignore any credentials or sensitive files
+secrets.json

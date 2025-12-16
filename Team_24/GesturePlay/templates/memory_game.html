@@ -1,0 +1,161 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+  <h2>🃏 Memory Matching Game</h2>
+  <p>Flip the cards to find matching pairs!</p>
+
+  <div id="game-board" class="board"></div>
+  <p id="status">Matches: 0</p>
+</div>
+
+<!-- Win overlay -->
+<div id="win-overlay" class="overlay">
+  <div class="win-box">
+    <h1>🎉 You Win! 🎉</h1>
+    <button onclick="setupBoard()">Play Again</button>
+  </div>
+</div>
+
+<style>
+  .board {
+    display: grid;
+    grid-template-columns: repeat(4, 100px);
+    grid-gap: 15px;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  .card {
+    width: 100px; height: 100px;
+    background: #ffcc80;
+    border-radius: 12px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2rem; font-weight: bold;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    transition: transform 0.3s, background 0.3s;
+  }
+  .card span {
+    display: none;
+  }
+  .card.flipped {
+    background: #fff;
+    transform: rotateY(180deg);
+  }
+  .card.flipped span {
+    display: block;
+  }
+
+  /* Win overlay */
+  .overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.6);
+    justify-content: center;
+    align-items: center;
+  }
+  .win-box {
+    background: #fff;
+    padding: 30px;
+    border-radius: 16px;
+    text-align: center;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+    animation: pop 0.5s ease-out;
+  }
+  .win-box h1 {
+    font-size: 2rem;
+    color: #ff7043;
+  }
+  .win-box button {
+    margin-top: 15px;
+    padding: 10px 20px;
+    background: #ffcc80;
+    border: none;
+    border-radius: 10px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  .win-box button:hover {
+    background: #ffb74d;
+  }
+
+  @keyframes pop {
+    from { transform: scale(0.7); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+</style>
+
+<script>
+  const images = [
+    "🍎","🍎","🐶","🐶",
+    "🚗","🚗","⭐","⭐",
+    "🎈","🎈","🐱","🐱",
+    "🍌","🍌","⚽","⚽"
+  ];
+
+  let firstCard = null;
+  let lock = false;
+  let matches = 0;
+
+  function shuffle(array) {
+    return array.sort(() => Math.random() - 0.5);
+  }
+
+  function setupBoard() {
+    const board = document.getElementById("game-board");
+    const overlay = document.getElementById("win-overlay");
+    overlay.style.display = "none"; // hide overlay
+    board.innerHTML = "";
+    shuffle(images).forEach(symbol => {
+      const card = document.createElement("div");
+      card.classList.add("card");
+      card.innerHTML = `<span>${symbol}</span>`;
+      card.onclick = () => flipCard(card, symbol);
+      board.appendChild(card);
+    });
+    matches = 0;
+    document.getElementById("status").innerText = `Matches: ${matches}`;
+    firstCard = null;
+    lock = false;
+  }
+
+  function flipCard(card, symbol) {
+    if (lock || card.classList.contains("flipped")) return;
+    card.classList.add("flipped");
+
+    if (!firstCard) {
+      firstCard = {card, symbol};
+    } else {
+      if (firstCard.symbol === symbol) {
+        matches++;
+        document.getElementById("status").innerText = `Matches: ${matches}`;
+        firstCard = null;
+
+        // Check win
+        if (matches === images.length / 2) {
+          setTimeout(showWin, 500);
+        }
+      } else {
+        lock = true;
+        setTimeout(() => {
+          card.classList.remove("flipped");
+          firstCard.card.classList.remove("flipped");
+          firstCard = null;
+          lock = false;
+        }, 1000);
+      }
+    }
+  }
+
+  function showWin() {
+    document.getElementById("win-overlay").style.display = "flex";
+
+    // Play win sound if available
+    const winSound = new Audio("/static/sounds/win.mp3");
+    winSound.play().catch(()=>{});
+  }
+
+  window.onload = setupBoard;
+</script>
+{% endblock %}
