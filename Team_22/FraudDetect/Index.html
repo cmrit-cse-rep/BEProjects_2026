@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Fraud Detector</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-container">
+            <h1 class="app-title">Stock Fraud Detector</h1>
+            <nav class="nav">
+                <button class="nav-btn active" data-page="dashboard">Dashboard</button>
+                <button class="nav-btn" data-page="fraud-types">Fraud Types</button>
+                <button class="nav-btn" data-page="recent-cases">Recent Cases</button>
+                <button class="nav-btn" data-page="fraud-news">Fraud News</button>
+                <button class="nav-btn" data-page="detection-methods">Detection Methods</button>
+                <button class="nav-btn" data-page="alert-system">Alert System</button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <!-- Dashboard Page -->
+        <section id="dashboard" class="page active">
+            <div class="container">
+                <h2 class="page-title">Fraud Detection Dashboard</h2>
+                
+                <div class="stats-grid">
+                    <div class="stat-card" style="background: var(--color-bg-1);">
+                        <div class="stat-icon">📊</div>
+                        <div class="stat-value">886</div>
+                        <div class="stat-label">Total Fraud Cases Tracked</div>
+                        <div class="stat-meta">SEBI Apr 2024 - Jun 2025</div>
+                    </div>
+                    <div class="stat-card" style="background: var(--color-bg-4);">
+                        <div class="stat-icon">💰</div>
+                        <div class="stat-value">₹4,636 Cr</div>
+                        <div class="stat-label">Total Financial Losses</div>
+                        <div class="stat-meta">India 2024</div>
+                    </div>
+                    <div class="stat-card" style="background: var(--color-bg-3);">
+                        <div class="stat-icon">🔔</div>
+                        <div class="stat-value">175</div>
+                        <div class="stat-label">Fraud Alerts in System</div>
+                        <div class="stat-meta">FY24</div>
+                    </div>
+                    <div class="stat-card" style="background: var(--color-bg-2);">
+                        <div class="stat-icon">⚠️</div>
+                        <div class="stat-value">₹173 Cr</div>
+                        <div class="stat-label">Latest Major Case</div>
+                        <div class="stat-meta">IEX Insider Trading</div>
+                    </div>
+                </div>
+
+                <div class="dashboard-sections">
+                    <div class="fraud-summary-section">
+                        <h3>Major Fraud Types - Risk Assessment</h3>
+                        <div class="fraud-summary-grid" id="fraud-summary"></div>
+                    </div>
+
+                    <div class="recent-alerts-section">
+                        <h3>Recent Alerts</h3>
+                        <div class="alerts-list" id="recent-alerts"></div>
+                    </div>
+                </div>
+
+                <div class="quick-links">
+                    <h3>Quick Access</h3>
+                    <div class="quick-links-grid">
+                        <button class="quick-link-btn" onclick="navigateTo('fraud-types')">
+                            <span class="quick-link-icon">🎯</span>
+                            <span>Learn About Fraud Types</span>
+                        </button>
+                        <button class="quick-link-btn" onclick="navigateTo('recent-cases')">
+                            <span class="quick-link-icon">📋</span>
+                            <span>View Recent Cases</span>
+                        </button>
+                        <button class="quick-link-btn" onclick="navigateTo('fraud-news')">
+                            <span class="quick-link-icon">📰</span>
+                            <span>Latest Fraud News</span>
+                        </button>
+                        <button class="quick-link-btn" onclick="navigateTo('alert-system')">
+                            <span class="quick-link-icon">🔔</span>
+                            <span>Set Up Alerts</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Fraud Types Page -->
+        <section id="fraud-types" class="page">
+            <div class="container">
+                <h2 class="page-title">Fraud Types &amp; Detection</h2>
+                <div class="search-bar">
+                    <input type="text" id="fraud-search" placeholder="Search fraud types..." class="form-control">
+                </div>
+                <div class="fraud-types-grid" id="fraud-types-grid"></div>
+            </div>
+        </section>
+
+        <!-- Recent Cases Page -->
+        <section id="recent-cases" class="page">
+            <div class="container">
+                <h2 class="page-title">Recent Fraud Cases</h2>
+                
+                <div class="filters-section">
+                    <div class="filter-group">
+                        <label class="form-label">Fraud Type</label>
+                        <select id="filter-type" class="form-control">
+                            <option value="">All Types</option>
+                            <option value="Insider Trading">Insider Trading</option>
+                            <option value="Stock Market Investment Fraud">Investment Fraud</option>
+                            <option value="Pump-and-Dump">Pump-and-Dump</option>
+                            <option value="WhatsApp">WhatsApp Scams</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="form-label">Location</label>
+                        <select id="filter-location" class="form-control">
+                            <option value="">All Locations</option>
+                            <option value="Mumbai">Mumbai</option>
+                            <option value="Delhi">Delhi</option>
+                            <option value="Hyderabad">Hyderabad</option>
+                            <option value="Ahmedabad">Ahmedabad</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="form-label">Search Cases</label>
+                        <input type="text" id="case-search" placeholder="Search by location, type..." class="form-control">
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table class="cases-table" id="cases-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Location</th>
+                                <th>Type of Fraud</th>
+                                <th>Amount Lost</th>
+                                <th>Victims</th>
+                                <th>Status</th>
+                                <th>Details</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cases-tbody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Fraud News Page -->
+        <section id="fraud-news" class="page">
+            <div class="container">
+                <h2 class="page-title">Latest Fraud News</h2>
+                
+                <div class="filters-section">
+                    <div class="filter-group">
+                        <label class="form-label">Category</label>
+                        <select id="news-category" class="form-control">
+                            <option value="">All Categories</option>
+                            <option value="Regulatory Action">Regulatory Action</option>
+                            <option value="Insider Trading">Insider Trading</option>
+                            <option value="Market Manipulation">Market Manipulation</option>
+                            <option value="Cyber Fraud">Cyber Fraud</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="form-label">Severity</label>
+                        <select id="news-severity" class="form-control">
+                            <option value="">All Severities</option>
+                            <option value="CRITICAL">Critical</option>
+                            <option value="HIGH">High</option>
+                            <option value="MEDIUM">Medium</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="form-label">Search News</label>
+                        <input type="text" id="news-search" placeholder="Search headlines..." class="form-control">
+                    </div>
+                </div>
+
+                <div class="news-grid" id="news-grid"></div>
+            </div>
+        </section>
+
+        <!-- Detection Methods Page -->
+        <section id="detection-methods" class="page">
+            <div class="container">
+                <h2 class="page-title">Fraud Detection Methods</h2>
+                
+                <div class="detection-intro">
+                    <p>Advanced technologies and methodologies used to detect and prevent stock market fraud.</p>
+                </div>
+
+                <div class="method-category">
+                    <h3>Machine Learning Algorithms</h3>
+                    <div class="methods-grid" id="ml-methods"></div>
+                </div>
+
+                <div class="method-category">
+                    <h3>Real-time Detection Techniques</h3>
+                    <div class="detection-indicators">
+                        <div class="indicator-card">
+                            <h4>Order Book Analysis</h4>
+                            <p>Monitors order placement-to-cancellation ratios to detect spoofing patterns and market manipulation.</p>
+                            <div class="indicator-tags">
+                                <span class="tag">High Cancellation Rates</span>
+                                <span class="tag">Ping-pong Patterns</span>
+                            </div>
+                        </div>
+                        <div class="indicator-card">
+                            <h4>Behavioral Anomaly Detection</h4>
+                            <p>Identifies unusual trading patterns that deviate significantly from historical norms and expected behavior.</p>
+                            <div class="indicator-tags">
+                                <span class="tag">Volume Spikes</span>
+                                <span class="tag">Pattern Changes</span>
+                            </div>
+                        </div>
+                        <div class="indicator-card">
+                            <h4>Sentiment Analysis</h4>
+                            <p>Analyzes social media and forums for coordinated messaging campaigns and manipulation signals.</p>
+                            <div class="indicator-tags">
+                                <span class="tag">Social Media Monitoring</span>
+                                <span class="tag">Multilingual Analysis</span>
+                            </div>
+                        </div>
+                        <div class="indicator-card">
+                            <h4>Network Analysis</h4>
+                            <p>Detects coordinated trading activity and connections between suspicious accounts.</p>
+                            <div class="indicator-tags">
+                                <span class="tag">Relationship Mapping</span>
+                                <span class="tag">Coordinated Activity</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="method-category">
+                    <h3>Key Detection Indicators</h3>
+                    <div class="indicators-list">
+                        <div class="indicator-item">
+                            <span class="indicator-bullet">🔴</span>
+                            <span>High order cancellation rates (spoofing indicators)</span>
+                        </div>
+                        <div class="indicator-item">
+                            <span class="indicator-bullet">🔴</span>
+                            <span>Repetitive order patterns (ping-pong effect)</span>
+                        </div>
+                        <div class="indicator-item">
+                            <span class="indicator-bullet">🔴</span>
+                            <span>Sudden price spikes without fundamental news</span>
+                        </div>
+                        <div class="indicator-item">
+                            <span class="indicator-bullet">🔴</span>
+                            <span>Coordinated messaging patterns on social media</span>
+                        </div>
+                        <div class="indicator-item">
+                            <span class="indicator-bullet">🔴</span>
+                            <span>Unusual trading volume without market drivers</span>
+                        </div>
+                        <div class="indicator-item">
+                            <span class="indicator-bullet">🔴</span>
+                            <span>Trading activity before major announcements</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Alert System Page -->
+        <section id="alert-system" class="page">
+            <div class="container">
+                <h2 class="page-title">Fraud Alert System</h2>
+                
+                <div class="alert-setup-section">
+                    <h3>Set Up New Alert</h3>
+                    <div class="alert-form">
+                        <div class="form-group">
+                            <label class="form-label">Stock Ticker / Company Name</label>
+                            <input type="text" id="alert-stock" placeholder="e.g., INFY, Infosys" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Keywords to Monitor</label>
+                            <input type="text" id="alert-keywords" placeholder="e.g., insider trading, fraud, manipulation" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Alert Type</label>
+                            <select id="alert-type" class="form-control">
+                                <option value="Price Spike">Price Spike</option>
+                                <option value="Volume Spike">Volume Spike</option>
+                                <option value="News Mention">News Mention</option>
+                                <option value="Regulatory Action">Regulatory Action</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Alert Frequency</label>
+                            <select id="alert-frequency" class="form-control">
+                                <option value="Real-time">Real-time</option>
+                                <option value="Daily">Daily Digest</option>
+                                <option value="Weekly">Weekly Summary</option>
+                            </select>
+                        </div>
+                        <button class="btn btn--primary" onclick="addAlert()">Create Alert</button>
+                    </div>
+                </div>
+
+                <div class="active-alerts-section">
+                    <h3>Active Alerts</h3>
+                    <div class="alerts-table-container">
+                        <table class="alerts-table">
+                            <thead>
+                                <tr>
+                                    <th>Stock/Keyword</th>
+                                    <th>Alert Type</th>
+                                    <th>Frequency</th>
+                                    <th>Created</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="alerts-tbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p class="footer-text">
+                <strong>Disclaimer:</strong> This application is for educational purposes only. 
+                Always conduct thorough research and consult with financial advisors before making investment decisions. 
+                Report suspected fraud to SEBI and local authorities.
+            </p>
+            <p class="footer-copyright">© 2025 Stock Fraud Detector. Data sourced from SEBI, regulatory bodies, and news agencies.</p>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
