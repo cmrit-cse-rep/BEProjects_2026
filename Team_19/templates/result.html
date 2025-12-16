@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Prediction Result</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        body {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            padding-top: 40px;
+            padding-bottom: 40px;
+        }
+        
+        .container {
+            max-width: 800px;
+        }
+        
+        .card {
+            border-radius: 20px;
+            border: none;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            background: white;
+        }
+        
+        .card-header {
+            background: linear-gradient(90deg, #8B4513 0%, #CD853F 100%);
+            color: white;
+            padding: 25px 30px;
+            border-bottom: none;
+            text-align: center;
+        }
+        
+        .card-body {
+            padding: 30px;
+        }
+        
+        h2 {
+            font-weight: 700;
+            margin: 0;
+            font-size: 2rem;
+        }
+        
+        .result-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: #28a745;
+        }
+        
+        .result-section {
+            margin-bottom: 25px;
+            padding: 20px;
+            border-radius: 15px;
+            background-color: #f8f9fa;
+        }
+        
+        .result-title {
+            color: #8B4513;
+            font-weight: 700;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+            border-bottom: 2px solid #e9d4c3;
+            padding-bottom: 8px;
+        }
+        
+        .info-item {
+            margin-bottom: 15px;
+            padding: 12px 15px;
+            background: white;
+            border-radius: 10px;
+            border-left: 4px solid #8B4513;
+        }
+        
+        .info-label {
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 5px;
+        }
+        
+        .info-value {
+            font-size: 1.1rem;
+            color: #212529;
+        }
+        
+        .disease-name {
+            color: #8B4513;
+            font-weight: 700;
+            font-size: 1.4rem;
+        }
+        
+        .confidence-value {
+            font-weight: 700;
+            color: #28a745;
+        }
+        
+        .steps-list {
+            counter-reset: step-counter;
+            padding-left: 0;
+        }
+        
+        .step-item {
+            background: white;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+            position: relative;
+            padding-left: 70px;
+            border-left: 4px solid #CD853F;
+        }
+        
+        .step-item:before {
+            counter-increment: step-counter;
+            content: counter(step-counter);
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: linear-gradient(90deg, #8B4513 0%, #CD853F 100%);
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(90deg, #8B4513 0%, #CD853F 100%);
+            border: none;
+            border-radius: 50px;
+            padding: 12px 40px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(139, 69, 19, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(139, 69, 19, 0.4);
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            border: none;
+            border-radius: 50px;
+            padding: 12px 40px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-secondary:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+        
+        .confidence-bar {
+            height: 12px;
+            background-color: #e9ecef;
+            border-radius: 6px;
+            margin-top: 8px;
+            overflow: hidden;
+        }
+        
+        .confidence-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #28a745 0%, #5cb85c 100%);
+            border-radius: 6px;
+            transition: width 0.5s ease;
+        }
+        
+        .severity-indicator {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+        
+        .severity-low {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .severity-medium {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        
+        .severity-high {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        @media (max-width: 576px) {
+            .card-body {
+                padding: 20px;
+            }
+            
+            h2 {
+                font-size: 1.7rem;
+            }
+            
+            .step-item {
+                padding-left: 60px;
+            }
+            
+            .step-item:before {
+                width: 32px;
+                height: 32px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container mt-4">
+    <div class="card shadow-lg">
+        
+        <!-- Card Header -->
+        <div class="card-header">
+            <div class="result-icon">
+                <i class="fas fa-diagnoses"></i>
+            </div>
+            <h2>Prediction Result</h2>
+            <p class="mb-0 mt-2">AI Analysis Complete</p>
+        </div>
+
+        <div class="card-body">
+            <!-- Prediction Results -->
+            <div class="result-section">
+                <h3 class="result-title"><i class="fas fa-clipboard-list me-2"></i>Analysis Summary</h3>
+                
+                <div class="info-item">
+                    <div class="info-label">Model Used</div>
+                    <div class="info-value">{{ model_name }}</div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-label">Detected Condition</div>
+                    <div class="disease-name">{{ predicted_class }}</div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-label">
+                        Confidence Level 
+                        <span class="confidence-value">{{ confidence }}%</span>
+                    </div>
+                    <div class="confidence-bar">
+                        <div class="confidence-fill" style="width: {{ confidence }}%"></div>
+                    </div>
+                </div>
+                
+                <!-- Optional Severity Indicator -->
+                <div class="info-item">
+                    <div class="info-label">Severity Assessment</div>
+                    <div class="info-value">
+                        Moderate
+                        <span class="severity-indicator severity-medium">Consult Doctor Recommended</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Suggested Steps -->
+            <div class="result-section">
+                <h3 class="result-title"><i class="fas fa-hand-holding-medical me-2"></i>Recommended Actions</h3>
+                
+                <ol class="steps-list">
+                    {% for step in steps %}
+                        <li class="step-item">{{ step }}</li>
+                    {% endfor %}
+                </ol>
+            </div>
+
+            <!-- Important Notice -->
+            <div class="alert alert-warning mt-4" role="alert" style="border-radius: 12px; border: none;">
+                <h5 class="alert-heading"><i class="fas fa-exclamation-triangle me-2"></i>Important Notice</h5>
+                <p class="mb-0">This AI analysis is for informational purposes only. Please consult a healthcare professional for accurate diagnosis and treatment recommendations.</p>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="text-center mt-4">
+                <a href="{{ url_for('predict') }}" class="btn btn-primary px-4 me-3">
+                    <i class="fas fa-redo me-2"></i>Analyze Another Image
+                </a>
+                <a href="{{ url_for('home') }}" class="btn btn-secondary px-4">
+                    <i class="fas fa-home me-2"></i>Back to Home
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

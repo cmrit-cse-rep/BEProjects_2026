@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monkeypox Detection</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        /* Custom styles for Monkeypox Detection */
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .navbar {
+            background: linear-gradient(90deg, #8B4513 0%, #CD853F 100%); /* Brown gradient */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            padding: 1rem 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-brand {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            letter-spacing: 1px;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+
+        .navbar-brand:hover {
+            color: #FFD700; /* Gold color on hover */
+            transform: scale(1.05);
+        }
+
+        .navbar-nav .nav-link {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #fff;
+            transition: color 0.3s ease, transform 0.3s ease;
+            padding: 0.8rem 1.2rem;
+        }
+
+        .navbar-nav .nav-link:hover {
+            color: #FFD700;
+            text-decoration: underline;
+            transform: translateY(-3px);
+        }
+
+        .navbar-nav .nav-link.active {
+            color: #FFD700;
+        }
+
+        .hero-section {
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), 
+                        url('https://images.unsplash.com/photo-1584036561566-baf8f5f1b144?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 120px 0;
+            text-align: center;
+            margin-top: 76px;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .btn-primary {
+            background-color: #8B4513;
+            border-color: #8B4513;
+            padding: 12px 30px;
+            font-size: 1.2rem;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #A0522D;
+            border-color: #A0522D;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .section-title {
+            color: #8B4513;
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            font-weight: 700;
+            text-align: center;
+            position: relative;
+        }
+
+        .section-title:after {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 4px;
+            background: #CD853F;
+            margin: 10px auto;
+        }
+
+        .feature-card {
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease-in-out;
+            margin-bottom: 30px;
+            border: none;
+            overflow: hidden;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .feature-card .card-body {
+            padding: 30px;
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            color: #8B4513;
+            margin-bottom: 20px;
+        }
+
+        .feature-card h3 {
+            color: #8B4513;
+            margin-bottom: 15px;
+        }
+
+        .symptom-item {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .symptom-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .symptom-item h4 {
+            color: #8B4513;
+            margin-bottom: 10px;
+        }
+
+        .prevention-item {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .prevention-icon {
+            font-size: 2.5rem;
+            color: #8B4513;
+            margin-bottom: 15px;
+        }
+
+        .info-section {
+            padding: 80px 0;
+        }
+
+        .info-section:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        .image-section {
+            max-width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .content-section {
+            font-size: 1.1rem;
+            color: #333;
+            text-align: justify;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .stats-container {
+            background: linear-gradient(135deg, #8B4513 0%, #CD853F 100%);
+            color: white;
+            padding: 60px 0;
+            border-radius: 15px;
+            margin: 40px 0;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            font-size: 1.2rem;
+        }
+
+        footer {
+            background-color: #343a40;
+            color: white;
+            padding: 40px 0;
+            margin-top: 60px;
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{{ url_for('home') }}">
+                <i class="fas fa-shield-virus me-2"></i>Monkeypox Detection
+            </a>
+        
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('predict') }}">Detection Tool</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('graphs') }}">Statistics</a>
+                    </li>
+                    {% if session.get('email') %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <h1 class="hero-title">Early Detection for Monkeypox</h1>
+            <p class="hero-subtitle">Our advanced AI-powered system helps identify potential monkeypox cases through symptom analysis and image recognition. Early detection saves lives.</p>
+            <a href="{{ url_for('predict') }}" class="btn btn-primary btn-lg">Start Detection</a>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="info-section">
+        <div class="container">
+            <h2 class="section-title">About Monkeypox</h2>
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <img src="{{ url_for('static', filename='index.jpg') }}" class="image-section">
+
+                </div>
+                <div class="col-md-6">
+                    <div class="content-section">
+                        <p>Monkeypox is a viral zoonotic disease with symptoms similar to smallpox, though clinically less severe. It's caused by the monkeypox virus and can spread from animals to humans as well as between people.</p>
+                        <p>Our detection system uses advanced machine learning algorithms to analyze symptoms and skin lesion images to identify potential monkeypox cases, helping with early diagnosis and treatment.</p>
+                        <p>Early detection is crucial for managing outbreaks and preventing further transmission of the virus.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Symptoms Section -->
+    <section class="info-section" style="background-color: #f8f9fa;">
+        <div class="container">
+            <h2 class="section-title">Common Symptoms</h2>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="symptom-item">
+                        <h4><i class="fas fa-temperature-high me-2"></i>Fever</h4>
+                        <p>One of the first symptoms, often accompanied by headache, muscle aches, and exhaustion.</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="symptom-item">
+                        <h4><i class="fas fa-head-side-virus me-2"></i>Headache</h4>
+                        <p>Severe headaches are common in the initial stage of infection.</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="symptom-item">
+                        <h4><i class="fas fa-swelling me-2"></i>Swollen Lymph Nodes</h4>
+                        <p>This symptom distinguishes monkeypox from other similar diseases like smallpox.</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="symptom-item">
+                        <h4><i class="fas fa-dot-circle me-2"></i>Skin Rash</h4>
+                        <p>Rash typically appears 1-3 days after fever, often beginning on the face then spreading.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="info-section">
+        <div class="container">
+            <h2 class="section-title">How Our Detection Works</h2>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="card-body text-center">
+                            <div class="feature-icon">
+                                <i class="fas fa-stethoscope"></i>
+                            </div>
+                            <h3>Symptom Analysis</h3>
+                            <p>Our system analyzes reported symptoms using advanced algorithms to identify potential monkeypox cases.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="card-body text-center">
+                            <div class="feature-icon">
+                                <i class="fas fa-camera"></i>
+                            </div>
+                            <h3>Image Recognition</h3>
+                            <p>Upload images of skin lesions for AI-powered analysis to detect characteristic monkeypox patterns.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="card-body text-center">
+                            <div class="feature-icon">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <h3>Risk Assessment</h3>
+                            <p>Get personalized risk assessments based on symptoms, exposure history, and demographic factors.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+   
+
+    <!-- Prevention Section -->
+    <section class="info-section" style="background-color: #f8f9fa;">
+        <div class="container">
+            <h2 class="section-title">Prevention Guidelines</h2>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="prevention-item">
+                        <div class="prevention-icon">
+                            <i class="fas fa-hands-wash"></i>
+                        </div>
+                        <h4>Hand Hygiene</h4>
+                        <p>Wash hands regularly with soap and water or use alcohol-based hand sanitizer.</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="prevention-item">
+                        <div class="prevention-icon">
+                            <i class="fas fa-people-arrows"></i>
+                        </div>
+                        <h4>Avoid Contact</h4>
+                        <p>Avoid close contact with people who have symptoms or confirmed monkeypox.</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="prevention-item">
+                        <div class="prevention-icon">
+                            <i class="fas fa-syringe"></i>
+                        </div>
+                        <h4>Vaccination</h4>
+                        <p>Consider vaccination if you're at high risk of exposure to monkeypox.</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="prevention-item">
+                        <div class="prevention-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h4>Protective Gear</h4>
+                        <p>Use appropriate personal protective equipment when caring for infected individuals.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+   
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+</body>
+</html>
