@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+  # 1. Database Service
+  db:
+    image: postgres:15-alpine
+    container_name: healthcare_db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=healthcare_lms
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - healthcare_net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # 2. Backend Service
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: healthcare_backend
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      # Database connection string (matches db service credentials)
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/healthcare_lms
+      # Since we use Nginx proxy, the frontend URL is effectively localhost:80
+      - FRONTEND_URL=http://localhost:3000
+      - MODEL_TYPE=mobilenetv2
+    volumes:
+      # Optional: Mount trained_models so you can update them without rebuilding
+      - ./backend/trained_models:/app/trained_models
+    networks:
+      - healthcare_net
+
+  # 3. Frontend Service
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: healthcare_frontend
+    ports:
+      - "3000:80" # Map host port 3000 to container port 80
+    depends_on:
+      - backend
+    networks:
+      - healthcare_net
+
+volumes:
+  postgres_data:
+
+networks:
+  healthcare_net:
+    driver: bridge
