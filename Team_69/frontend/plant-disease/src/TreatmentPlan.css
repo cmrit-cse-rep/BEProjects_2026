@@ -1,0 +1,585 @@
+/* ===== TreatmentPlan.css - Modern Medical-Style Treatment Component ===== */
+
+.treatment-plan-container {
+    background: linear-gradient(145deg, #ffffff 0%, #f8fafc 50%, #f1f5f9 100%);
+    border-radius: 24px;
+    padding: 28px;
+    margin: 24px 0;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08),
+        0 4px 16px rgba(0, 0, 0, 0.04);
+    animation: slideUp 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid rgba(226, 232, 240, 0.8);
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.treatment-header {
+    text-align: center;
+    margin-bottom: 28px;
+    padding-bottom: 24px;
+    border-bottom: 2px solid transparent;
+    background: linear-gradient(90deg, transparent, #22c55e, transparent) bottom no-repeat;
+    background-size: 60% 2px;
+}
+
+.treatment-title {
+    font-size: 24px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #1e293b, #334155);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 12px;
+    letter-spacing: -0.5px;
+}
+
+.severity-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 20px;
+    border-radius: 50px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.severity-badge.low {
+    background: linear-gradient(135deg, #dcfce7, #bbf7d0);
+    color: #166534;
+    box-shadow: 0 4px 16px rgba(34, 197, 94, 0.25);
+}
+
+.severity-badge.medium {
+    background: linear-gradient(135deg, #fef3c7, #fde68a);
+    color: #a16207;
+    box-shadow: 0 4px 16px rgba(245, 158, 11, 0.25);
+}
+
+.severity-badge.high {
+    background: linear-gradient(135deg, #fecaca, #fca5a5);
+    color: #b91c1c;
+    box-shadow: 0 4px 16px rgba(239, 68, 68, 0.25);
+}
+
+.severity-badge.very-high {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white;
+    animation: urgentPulse 2s infinite;
+    box-shadow: 0 4px 20px rgba(239, 68, 68, 0.4);
+}
+
+@keyframes urgentPulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+        box-shadow: 0 4px 20px rgba(239, 68, 68, 0.4);
+    }
+
+    50% {
+        transform: scale(1.02);
+        box-shadow: 0 6px 28px rgba(239, 68, 68, 0.5);
+    }
+}
+
+.treatment-description {
+    font-size: 15px;
+    color: #64748b;
+    line-height: 1.7;
+    margin-top: 16px;
+    padding: 16px 20px;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 12px;
+    border: 1px solid rgba(226, 232, 240, 0.6);
+}
+
+.symptoms-section {
+    margin: 20px 0;
+    padding: 20px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+    border: 1px solid rgba(226, 232, 240, 0.6);
+}
+
+.section-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.section-icon {
+    font-size: 22px;
+}
+
+.symptoms-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.symptoms-list li {
+    padding: 14px 16px;
+    margin: 8px 0;
+    background: linear-gradient(135deg, #fef2f2, #fff1f2);
+    border-left: 4px solid #ef4444;
+    border-radius: 10px;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #374151;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.symptoms-list li:hover {
+    background: linear-gradient(135deg, #fee2e2, #fecaca);
+    transform: translateX(6px);
+    box-shadow: 0 4px 16px rgba(239, 68, 68, 0.15);
+}
+
+.mongo-data-section {
+    margin: 20px 0;
+    padding: 20px;
+    background: linear-gradient(135deg, #fffbeb, #fef3c7);
+    border-radius: 16px;
+    border: 2px solid #f59e0b;
+    box-shadow: 0 8px 24px rgba(245, 158, 11, 0.15);
+    position: relative;
+    overflow: hidden;
+}
+
+.mongo-data-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #f59e0b, #eab308, #f59e0b);
+}
+
+.mongo-content {
+    margin-top: 16px;
+}
+
+.mongo-item {
+    margin: 12px 0;
+    padding: 14px 16px;
+    background: white;
+    border-radius: 12px;
+    border-left: 4px solid #f59e0b;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.mongo-item strong {
+    display: block;
+    font-size: 13px;
+    font-weight: 700;
+    color: #d97706;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.mongo-item p {
+    font-size: 14px;
+    line-height: 1.7;
+    color: #57534e;
+    margin: 0;
+}
+
+.treatment-tabs {
+    display: flex;
+    gap: 12px;
+    margin: 20px 0;
+    flex-wrap: wrap;
+}
+
+.tab-button {
+    flex: 1;
+    min-width: 180px;
+    padding: 16px 24px;
+    border: none;
+    border-radius: 14px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background: white;
+    color: #64748b;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    border: 2px solid transparent;
+    position: relative;
+    overflow: hidden;
+}
+
+.tab-button::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(16, 185, 129, 0.05));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.tab-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+.tab-button:hover::before {
+    opacity: 1;
+}
+
+.tab-button.active {
+    transform: translateY(-3px);
+    color: white;
+}
+
+.tab-button.active::before {
+    opacity: 0;
+}
+
+.tab-button.organic {
+    border-left: 4px solid #22c55e;
+}
+
+.tab-button.organic.active {
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    box-shadow: 0 8px 28px rgba(34, 197, 94, 0.35);
+}
+
+.tab-button.chemical {
+    border-left: 4px solid #3b82f6;
+}
+
+.tab-button.chemical.active {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    box-shadow: 0 8px 28px rgba(59, 130, 246, 0.35);
+}
+
+.treatment-content {
+    background: white;
+    padding: 24px;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+    margin-bottom: 20px;
+    border: 1px solid rgba(226, 232, 240, 0.6);
+}
+
+.treatment-steps {
+    margin: 20px 0;
+}
+
+.treatment-steps h4 {
+    font-size: 15px;
+    font-weight: 700;
+    color: #374151;
+    margin-bottom: 16px;
+}
+
+.steps-list {
+    list-style: none;
+    padding: 0;
+    counter-reset: step-counter;
+}
+
+.steps-list li {
+    padding: 14px 14px 14px 52px;
+    margin: 10px 0;
+    background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+    border-radius: 12px;
+    position: relative;
+    font-size: 14px;
+    line-height: 1.7;
+    color: #374151;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid rgba(226, 232, 240, 0.6);
+}
+
+.steps-list li:hover {
+    background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+    transform: translateX(6px);
+    box-shadow: 0 4px 16px rgba(34, 197, 94, 0.12);
+    border-color: rgba(34, 197, 94, 0.3);
+}
+
+.steps-list li::before {
+    counter-increment: step-counter;
+    content: counter(step-counter);
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    color: white;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 13px;
+    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+}
+
+.marketplace-section {
+    margin-top: 28px;
+}
+
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.product-card {
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 2px solid transparent;
+    position: relative;
+    overflow: hidden;
+}
+
+.product-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #22c55e, #10b981);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
+    border-color: #22c55e;
+}
+
+.product-card:hover::before {
+    transform: scaleX(1);
+}
+
+.product-name {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 10px;
+    line-height: 1.4;
+}
+
+.product-description {
+    font-size: 13px;
+    color: #64748b;
+    line-height: 1.6;
+    margin-bottom: 16px;
+}
+
+.product-price {
+    font-size: 20px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 16px;
+}
+
+.product-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: linear-gradient(135deg, #f97316, #ea580c);
+    color: white;
+    text-decoration: none;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 14px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 6px 20px rgba(249, 115, 22, 0.3);
+}
+
+.product-link:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 28px rgba(249, 115, 22, 0.4);
+}
+
+.product-link::before {
+    content: "🛒";
+    font-size: 16px;
+}
+
+.prevention-section {
+    background: linear-gradient(135deg, #eff6ff, #dbeafe);
+    padding: 24px;
+    border-radius: 16px;
+    margin-top: 20px;
+    border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+.prevention-list {
+    list-style: none;
+    padding: 0;
+    margin: 16px 0 0 0;
+}
+
+.prevention-list li {
+    padding: 14px 16px 14px 44px;
+    margin: 10px 0;
+    background: white;
+    border-radius: 12px;
+    position: relative;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #374151;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+    transition: all 0.3s ease;
+}
+
+.prevention-list li:hover {
+    transform: translateX(6px);
+    box-shadow: 0 4px 16px rgba(59, 130, 246, 0.12);
+}
+
+.prevention-list li::before {
+    content: "🛡️";
+    position: absolute;
+    left: 14px;
+    font-size: 18px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .treatment-plan-container {
+        padding: 20px;
+        border-radius: 20px;
+    }
+
+    .treatment-title {
+        font-size: 20px;
+    }
+
+    .treatment-tabs {
+        flex-direction: column;
+    }
+
+    .tab-button {
+        min-width: 100%;
+    }
+
+    .products-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .section-title {
+        font-size: 16px;
+    }
+
+    .symptoms-list li,
+    .steps-list li,
+    .prevention-list li {
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 480px) {
+    .treatment-plan-container {
+        padding: 16px;
+        margin: 16px 0;
+    }
+
+    .treatment-title {
+        font-size: 18px;
+    }
+
+    .severity-badge {
+        font-size: 10px;
+        padding: 6px 16px;
+    }
+
+    .treatment-description {
+        font-size: 13px;
+        padding: 12px;
+    }
+
+    .treatment-content {
+        padding: 16px;
+    }
+}
+
+.treatment-loading {
+    text-align: center;
+    padding: 48px 24px;
+    font-size: 16px;
+    color: #64748b;
+}
+
+.treatment-loading p {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+.treatment-loading p::before {
+    content: '';
+    width: 24px;
+    height: 24px;
+    border: 3px solid rgba(34, 197, 94, 0.2);
+    border-top-color: #22c55e;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.no-treatment {
+    text-align: center;
+    padding: 40px 24px;
+    background: linear-gradient(135deg, #fffbeb, #fef3c7);
+    border-radius: 16px;
+    border: 2px solid #f59e0b;
+    color: #92400e;
+}
+
+.no-treatment h3 {
+    font-size: 20px;
+    margin-bottom: 12px;
+    font-weight: 700;
+}
+
+.no-treatment p {
+    font-size: 14px;
+    margin: 6px 0;
+    color: #a16207;
+}

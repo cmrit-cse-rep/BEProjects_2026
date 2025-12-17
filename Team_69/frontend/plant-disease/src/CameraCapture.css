@@ -1,0 +1,317 @@
+/* ===== CameraCapture.css - Compact Modern Design ===== */
+
+.camera-capture-container {
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Mode Toggle - Compact pill style */
+.mode-toggle {
+    display: flex;
+    gap: 4px;
+    padding: 4px;
+    background: hsl(var(--muted));
+    border-radius: 12px;
+    margin-bottom: 16px;
+}
+
+.mode-button {
+    flex: 1;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 10px;
+    background: transparent;
+    color: hsl(var(--muted-foreground));
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.mode-button:hover {
+    color: hsl(var(--foreground));
+    background: hsl(var(--background) / 0.5);
+}
+
+.mode-button.active {
+    background: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+    box-shadow: 0 2px 8px hsl(var(--primary) / 0.3);
+}
+
+/* Upload Section - Compact */
+.upload-section {
+    width: 100%;
+}
+
+.upload-label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    padding: 32px 24px;
+    border: 2px dashed hsl(var(--border));
+    border-radius: 16px;
+    transition: all 0.2s ease;
+    background: hsl(var(--muted) / 0.3);
+    text-align: center;
+}
+
+.upload-label:hover {
+    border-color: hsl(var(--primary));
+    background: hsl(var(--primary) / 0.05);
+}
+
+.upload-label i {
+    font-size: 2.5rem;
+    color: hsl(var(--primary));
+}
+
+.upload-label span {
+    font-size: 15px;
+    font-weight: 600;
+    color: hsl(var(--primary));
+}
+
+.file-input {
+    display: none;
+}
+
+/* Hints - Compact inline style */
+.upload-hint,
+.camera-hint,
+.camera-info,
+.capture-success,
+.next-step-hint {
+    text-align: center;
+    font-size: 13px;
+    margin: 12px 0;
+    padding: 8px 16px;
+    border-radius: 8px;
+}
+
+.upload-hint {
+    color: hsl(var(--muted-foreground));
+    background: hsl(var(--muted) / 0.5);
+}
+
+.camera-hint {
+    color: hsl(210 100% 50%);
+    background: hsl(210 100% 50% / 0.1);
+    margin-bottom: 12px;
+}
+
+.capture-success {
+    color: hsl(var(--primary-foreground));
+    background: hsl(142 76% 36%);
+    font-weight: 600;
+}
+
+.next-step-hint {
+    color: hsl(var(--primary-foreground));
+    background: hsl(217 91% 60%);
+    margin-top: 12px;
+}
+
+.camera-info {
+    color: hsl(var(--muted-foreground));
+    background: hsl(var(--muted) / 0.5);
+    font-weight: 500;
+    margin-top: 8px;
+}
+
+/* Camera Section - Compact */
+.camera-section {
+    width: 100%;
+}
+
+.camera-preview-wrapper {
+    width: 100%;
+}
+
+.camera-error {
+    padding: 12px 16px;
+    background: hsl(0 84% 60% / 0.1);
+    border: 1px solid hsl(0 84% 60% / 0.3);
+    border-radius: 12px;
+    color: hsl(0 84% 60%);
+    text-align: center;
+    margin-bottom: 12px;
+    font-size: 13px;
+}
+
+.camera-error p {
+    margin: 0;
+}
+
+/* Camera Preview - Compact square aspect ratio */
+.camera-preview {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4/3;
+    border-radius: 16px;
+    overflow: hidden;
+    background: hsl(222 47% 11%);
+    box-shadow: 0 8px 24px hsl(var(--foreground) / 0.1);
+}
+
+.video-preview {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    border-radius: 16px;
+}
+
+/* Flip Camera Button - Smaller */
+.flip-camera-button {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 50%;
+    background: hsl(var(--background) / 0.2);
+    backdrop-filter: blur(10px);
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid hsl(var(--background) / 0.3);
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+
+.flip-camera-button:hover {
+    background: hsl(var(--background) / 0.3);
+    transform: rotate(180deg);
+}
+
+/* Capture Button - Compact */
+.capture-button {
+    position: absolute;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 12px 24px;
+    background: hsl(142 76% 36%);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 16px hsl(142 76% 36% / 0.4);
+    transition: all 0.2s ease;
+}
+
+.capture-button:hover {
+    transform: translateX(-50%) scale(1.05);
+}
+
+.capture-button:active {
+    transform: translateX(-50%) scale(0.98);
+}
+
+.capture-icon {
+    font-size: 18px;
+}
+
+/* Captured Preview - Compact */
+.captured-preview {
+    text-align: center;
+    width: 100%;
+}
+
+.captured-image {
+    width: 100%;
+    aspect-ratio: 4/3;
+    object-fit: cover;
+    border-radius: 16px;
+    margin-bottom: 16px;
+    box-shadow: 0 8px 24px hsl(var(--foreground) / 0.1);
+}
+
+.capture-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+}
+
+.retake-button,
+.use-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 50px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.retake-button {
+    background: hsl(25 95% 53%);
+    color: white;
+    box-shadow: 0 4px 12px hsl(25 95% 53% / 0.3);
+}
+
+.retake-button:hover {
+    transform: translateY(-2px);
+}
+
+.use-button {
+    background: hsl(142 76% 36%);
+    color: white;
+    box-shadow: 0 4px 12px hsl(142 76% 36% / 0.3);
+}
+
+.use-button:hover {
+    transform: translateY(-2px);
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    .mode-toggle {
+        gap: 2px;
+        padding: 3px;
+    }
+
+    .mode-button {
+        padding: 8px 12px;
+        font-size: 13px;
+    }
+
+    .upload-label {
+        padding: 24px 16px;
+    }
+
+    .upload-label i {
+        font-size: 2rem;
+    }
+
+    .capture-actions {
+        flex-direction: column;
+    }
+
+    .retake-button,
+    .use-button {
+        width: 100%;
+        justify-content: center;
+    }
+}

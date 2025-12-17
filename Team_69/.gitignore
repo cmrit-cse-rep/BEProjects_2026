@@ -1,0 +1,31 @@
+# Python virtual environments
+venv/
+env/
+.venv/
+*/venv/
+
+# Node modules
+node_modules/
+frontend/node_modules/
+server/node_modules/
+frontend/plant-disease/node_modules/
+
+# Deployment / build files
+deployment/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.log
+.DS_Store
+
+# Environment files (don't commit secrets)
+aibackend/.env
+*.env
+
+# Large files
+frontend/plant-disease/public/demo-video.mp4
+*.mp4
+*.mov
+*.avi
+

@@ -1,0 +1,432 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+/* Navbar container */
+.navbar {
+  width: 260px;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: linear-gradient(180deg, #0f172a 0%, #1e293b 50%, #134e4a 100%);
+  backdrop-filter: blur(20px);
+  border-right: 1px solid rgba(34, 197, 94, 0.2);
+  font-family: 'Inter', sans-serif;
+  z-index: 1000;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.navbar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 20% 50%, rgba(34, 197, 94, 0.1) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+/* Animated background */
+.navbar-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, 
+    rgba(34, 197, 94, 0.05) 0%, 
+    rgba(16, 185, 129, 0.05) 25%, 
+    rgba(59, 130, 246, 0.05) 50%, 
+    rgba(34, 197, 94, 0.05) 100%);
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.navbar-nav {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 4rem);
+}
+
+/* Logo Section */
+.logo-section {
+  padding: 2rem 1.5rem 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 1rem;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.logo-icon {
+  font-size: 2rem;
+  margin-right: 0.75rem;
+  filter: drop-shadow(0 0 10px rgba(34, 197, 94, 0.5));
+  animation: pulse 3s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+.logo-text {
+  font-size: 1.5rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #ffffff 0%, #22c55e 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: -0.5px;
+}
+
+.logo-subtitle {
+  font-size: 0.75rem;
+  color: rgba(34, 197, 94, 0.8);
+  font-weight: 500;
+  margin-left: 2.75rem;
+  opacity: 0.8;
+}
+
+/* Navigation Items */
+.nav-item {
+  margin: 0.25rem 0;
+  position: relative;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.95rem;
+  border-radius: 0 25px 25px 0;
+  margin-right: 1rem;
+  position: relative;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  background: transparent;
+  border: none;
+  width: calc(100% - 1rem);
+}
+
+.nav-link::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(16, 185, 129, 0.1) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  border-radius: 0 25px 25px 0;
+}
+
+.nav-link:hover::before,
+.nav-link.active::before {
+  opacity: 1;
+}
+
+.nav-icon {
+  font-size: 1.2rem;
+  margin-right: 1rem;
+  transition: transform 0.3s ease;
+  min-width: 20px;
+}
+
+.nav-text {
+  flex: 1;
+  transition: transform 0.3s ease;
+}
+
+.nav-indicator {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 0;
+  background: linear-gradient(180deg, #22c55e 0%, #10b981 100%);
+  border-radius: 0 4px 4px 0;
+  transition: height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nav-link:hover,
+.nav-link:focus {
+  color: #ffffff;
+  transform: translateX(8px);
+  box-shadow: 0 8px 25px rgba(34, 197, 94, 0.15);
+}
+
+.nav-link:hover .nav-icon,
+.nav-link.active .nav-icon {
+  transform: scale(1.2) rotate(5deg);
+}
+
+.nav-link:hover .nav-indicator,
+.nav-link.active .nav-indicator {
+  height: 70%;
+}
+
+.nav-link.active {
+  color: #22c55e;
+  background: rgba(34, 197, 94, 0.1);
+  border-left: 3px solid #22c55e;
+}
+
+/* Dropdown Styles */
+.dropdown {
+  position: relative;
+}
+
+.dropdown-toggle {
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  width: calc(100% - 1rem);
+  text-align: left;
+  justify-content: space-between;
+}
+
+.arrow {
+  font-size: 0.8rem;
+  color: rgba(34, 197, 94, 0.8);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  margin-left: auto;
+}
+
+.dropdown:hover .arrow,
+.dropdown:focus-within .arrow {
+  transform: rotate(180deg);
+  color: #22c55e;
+}
+
+.dropdown-menu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 0;
+  overflow: hidden;
+  background: rgba(15, 23, 42, 0.8);
+  backdrop-filter: blur(10px);
+  border-radius: 0 20px 20px 0;
+  margin-right: 1rem;
+  margin-top: 0.5rem;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  border-left: 2px solid rgba(34, 197, 94, 0.3);
+}
+
+.dropdown:hover .dropdown-menu,
+.dropdown:focus-within .dropdown-menu {
+  max-height: 300px;
+  padding: 0.5rem 0;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1.5rem 0.75rem 2rem;
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  border-radius: 0 15px 15px 0;
+  margin-right: 0.5rem;
+  position: relative;
+}
+
+.dropdown-icon {
+  font-size: 1rem;
+  margin-right: 0.75rem;
+  transition: transform 0.3s ease;
+}
+
+.dropdown-item:hover,
+.dropdown-item.active {
+  color: #22c55e;
+  background: rgba(34, 197, 94, 0.1);
+  transform: translateX(5px);
+}
+
+.dropdown-item:hover .dropdown-icon,
+.dropdown-item.active .dropdown-icon {
+  transform: scale(1.1);
+}
+
+/* Auth Section */
+.auth-section {
+  margin-top: auto;
+  margin-bottom: 2rem;
+  padding: 0 1rem;
+}
+
+.auth-wrapper {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(34, 197, 94, 0.2);
+  border-radius: 20px;
+  padding: 0.75rem;
+  transition: all 0.3s ease;
+}
+
+.auth-wrapper:hover {
+  background: rgba(34, 197, 94, 0.1);
+  border-color: rgba(34, 197, 94, 0.4);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(34, 197, 94, 0.15);
+}
+
+.auth-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  position: relative;
+}
+
+.auth-icon {
+  font-size: 1.2rem;
+  margin-right: 0.75rem;
+  filter: drop-shadow(0 0 8px rgba(34, 197, 94, 0.3));
+}
+
+/* Style the actual login/logout buttons */
+.auth-button button {
+  background: transparent !important;
+  border: none !important;
+  color: rgba(255, 255, 255, 0.9) !important;
+  font-weight: 600 !important;
+  font-size: 0.95rem !important;
+  padding: 0.5rem 1rem !important;
+  border-radius: 12px !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+  flex: 1;
+  text-align: center;
+}
+
+.auth-button button:hover {
+  background: rgba(34, 197, 94, 0.2) !important;
+  color: #22c55e !important;
+  transform: scale(1.02) !important;
+}
+
+.login-button {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(16, 185, 129, 0.1) 100%);
+  border-radius: 15px;
+}
+
+.logout-button {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(220, 38, 38, 0.1) 100%);
+  border-radius: 15px;
+}
+
+.logout-button .auth-icon {
+  filter: drop-shadow(0 0 8px rgba(239, 68, 68, 0.3));
+}
+
+.logout-button:hover {
+  background: rgba(239, 68, 68, 0.1) !important;
+  border-color: rgba(239, 68, 68, 0.3) !important;
+}
+
+.logout-button button:hover {
+  background: rgba(239, 68, 68, 0.2) !important;
+  color: #ef4444 !important;
+}
+
+/* Decorative Elements */
+.navbar-decorations {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.decoration-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(34, 197, 94, 0.5);
+  animation: decorationPulse 2s ease-in-out infinite;
+}
+
+.decoration-dot:nth-child(2) {
+  animation-delay: 0.5s;
+}
+
+.decoration-dot:nth-child(3) {
+  animation-delay: 1s;
+}
+
+@keyframes decorationPulse {
+  0%, 100% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+/* Hover Effects for Entire Navbar */
+.navbar:hover {
+  box-shadow: 5px 0 25px rgba(34, 197, 94, 0.1);
+}
+
+/* Smooth Scrolling */
+.navbar {
+  scroll-behavior: smooth;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 1024px) {
+  .navbar {
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+  }
+  
+  .navbar.mobile-open {
+    transform: translateX(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    width: 100%;
+    height: auto;
+    position: relative;
+    transform: none;
+  }
+  
+  .logo-section {
+    text-align: center;
+  }
+  
+  .auth-section {
+    position: relative;
+    bottom: auto;
+    margin-top: 1rem;
+  }
+}
