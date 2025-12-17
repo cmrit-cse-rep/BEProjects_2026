@@ -1,16 +1,17 @@
-**Project Title**
+# Heading 1 **Project Title**
 
 Anomaly Detection for Data Leakage Prevention
 
-**Team Number**
+## Heading 2 *Team Number** 
 
 Team_20
 
-**Branch**
+## Heading 2 **Branch**
 
 Computer Science and Engineering (CSE)
 
-**Overview**
+ 
+### Heading 3* **Overview**
 
 This project presents a machine learning–based intrusion detection system designed to identify both known and emerging cyber threats. Traditional signature-based methods often fail against behavioral attacks such as data leakage.
 
