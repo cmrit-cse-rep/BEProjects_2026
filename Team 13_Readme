@@ -1,0 +1,145 @@
+# Everwatch
+
+Everwatch is an Android-based emergency safety application designed as a final-year college project. It provides a fast, reliable, and automated SOS mechanism that can be triggered even when the phone is locked, ensuring timely assistance during critical situations.
+
+---
+
+## 📌 Project Overview
+
+Everwatch focuses on minimizing user interaction during emergencies by offering multiple SOS activation methods and automating all critical response actions. Once triggered, the app immediately contacts emergency contacts, shares real-time location, and records audio/video evidence.
+
+This project is developed as a **product-based Android application** and is **completed**.
+
+---
+
+## 🚨 Key Features
+
+- One-tap SOS activation from within the app  
+- **Lock-screen widget SOS button** (no unlock required)  
+- **Voice-triggered SOS using a predefined safeword** (works even when the phone is locked)  
+- Automated emergency calling  
+- SMS alerts with real-time GPS location and Google Maps link  
+- Automatic audio and video recording for evidence  
+- Foreground service to ensure uninterrupted execution  
+- Works in Silent and Do Not Disturb (DND) modes  
+- Supports full-screen emergency alerts  
+- Designed for low-latency response in critical scenarios  
+
+---
+
+## 🛠️ Tech Stack
+
+- **Programming Language:** Java  
+- **UI Design:** XML  
+- **IDE:** Android Studio  
+- **Build System:** Gradle  
+- **Platform:** Android  
+- **Minimum Android Version:** Android 8.0 (API 26)  
+- **Messaging & Alerts:** SMS Manager, Telephony APIs  
+- **Location Services:** GPS / Fused Location Provider  
+- **Media:** Camera & Microphone (MediaRecorder)  
+- **Push Notifications:** Firebase Cloud Messaging (FCM)
+
+---
+
+## 📱 System Requirements
+
+### Device Requirements
+- Android smartphone running **Android 8.0 or higher**
+- SIM card required (for calls and SMS)
+- GPS support
+- Camera and microphone
+- Internet connection (optional, not required for SOS)
+
+### Hardware Features Used (Optional)
+- Accelerometer  
+- GPS  
+- Camera  
+- Microphone  
+- Telephony  
+
+---
+
+## 🔐 Permissions Used
+
+Everwatch requires the following permissions for core functionality:
+
+- `ACCESS_FINE_LOCATION`
+- `ACCESS_COARSE_LOCATION`
+- `ACCESS_BACKGROUND_LOCATION`
+- `CALL_PHONE`
+- `SEND_SMS`
+- `READ_CONTACTS`
+- `CAMERA`
+- `RECORD_AUDIO`
+- `FOREGROUND_SERVICE`
+- `FOREGROUND_SERVICE_LOCATION`
+- `FOREGROUND_SERVICE_CAMERA`
+- `FOREGROUND_SERVICE_MICROPHONE`
+- `POST_NOTIFICATIONS` (Android 13+)
+- `ACCESS_NOTIFICATION_POLICY`
+- `USE_FULL_SCREEN_INTENT`
+- `INTERNET`
+- `VIBRATE`
+
+All permissions are requested at runtime where required.
+
+---
+
+## ▶️ How It Works
+
+1. SOS is triggered via:
+   - In-app SOS button  
+   - Lock-screen widget  
+   - Voice safeword  
+2. Trigger is validated to avoid accidental activation  
+3. Foreground emergency service starts  
+4. Emergency call is placed to the primary contact  
+5. SMS alerts with live GPS location are sent  
+6. Audio and video recording begins automatically  
+7. System continues monitoring until stopped  
+
+---
+
+## 🧪 Testing
+
+The application was tested under the following conditions:
+
+- Screen locked  
+- Silent mode  
+- Do Not Disturb (DND) mode  
+- Low battery  
+- Background execution  
+- Weak network connectivity  
+
+All critical modules functioned reliably across tested scenarios.
+
+---
+
+## ⚠️ Disclaimer
+
+This application is developed **as a final-year academic project**.  
+It is intended for **educational and demonstration purposes only** and should not be solely relied upon as a replacement for official emergency services.
+
+---
+
+## 👤 Author
+
+**Varad Rajeev**  
+Final-Year Engineering Project  
+
+---
+
+## 📄 Project Status
+
+- ✅ Completed  
+- 🎓 Final-year college project  
+- 🔒 Not actively maintained  
+
+---
+
+## 📜 License
+
+All rights reserved.  
+This project is not licensed for commercial redistribution.
+
