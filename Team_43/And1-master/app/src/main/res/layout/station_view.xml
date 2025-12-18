@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_marginBottom="5dp"
+    app:cardElevation="4dp"
+    app:cardCornerRadius="10dp"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <com.mikhaellopez.circularimageview.CircularImageView
+            android:id="@+id/station_image"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/smart_logo"/>
+    </LinearLayout>
+
+   <LinearLayout
+       android:layout_width="match_parent"
+
+       android:layout_height="match_parent"
+       android:orientation="vertical"
+       android:gravity="center">
+
+       <TextView
+           android:id="@+id/station_name"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:text="Station name"
+           android:layout_margin="5dp"
+           android:textSize="18sp"/>
+       <TextView
+           android:id="@+id/station_contact"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_margin="5dp"
+           android:text="Contact number"
+           android:textSize="15sp"/>
+       <TextView
+           android:id="@+id/station_dist"
+           android:layout_margin="5dp"
+           android:layout_gravity="bottom|end"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:text="10.3Km"
+           android:textSize="18sp"/>
+
+   </LinearLayout>
+
+</androidx.cardview.widget.CardView>

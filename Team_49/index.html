@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeficiScan AI - Health Analysis</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f0f4f9 0%, #f8fafc 100%);
+            min-height: 100vh;
+            padding: 15px;
+        }
+
+        .navbar {
+            background: white;
+            padding: 15px 0;
+            box-shadow: 0 2px 12px rgba(0, 102, 204, 0.08);
+            margin-bottom: 25px;
+            border-radius: 12px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-top: 3px solid #0066cc;
+        }
+
+        .navbar-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: 800;
+            color: #0066cc;
+            letter-spacing: -0.5px;
+        }
+
+        .tagline {
+            font-size: 11px;
+            color: #667788;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+        }
+
+        .header {
+            max-width: 1000px;
+            margin: 0 auto 30px;
+            text-align: center;
+            padding: 45px 25px;
+            background: linear-gradient(135deg, #0066cc 0%, #0052a3 100%);
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0, 102, 204, 0.15);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 300px;
+            height: 300px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 12px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .header p {
+            font-size: 14px;
+            line-height: 1.6;
+            opacity: 0.95;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: white;
+            border-radius: 14px;
+            padding: 28px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+            border: 1px solid rgba(0, 102, 204, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            box-shadow: 0 6px 20px rgba(0, 102, 204, 0.12);
+            border-color: rgba(0, 102, 204, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .card-title {
+            color: #0066cc;
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 18px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .upload-area {
+            border: 2.5px dashed #0066cc;
+            border-radius: 14px;
+            padding: 40px 25px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: linear-gradient(135deg, #f8fbff 0%, #eef6ff 100%);
+            position: relative;
+        }
+
+        .upload-area:hover {
+            border-color: #0052a3;
+            background: linear-gradient(135deg, #eef6ff 0%, #e0ecff 100%);
+            transform: scale(1.01);
+        }
+
+        .upload-area.dragover {
+            border-color: #0052a3;
+            background: linear-gradient(135deg, #e0ecff 0%, #d4e5ff 100%);
+            transform: scale(1.02);
+            box-shadow: 0 4px 16px rgba(0, 102, 204, 0.2);
+        }
+
+        .upload-area input[type="file"] {
+            display: none;
+        }
+
+        .upload-icon {
+            font-size: 42px;
+            margin-bottom: 12px;
+            display: inline-flex;
+            background: #0066cc;
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .upload-text {
+            color: #0066cc;
+            font-weight: 700;
+            margin-bottom: 5px;
+            font-size: 15px;
+        }
+
+        .upload-subtext {
+            color: #889999;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        #preview {
+            max-width: 280px;
+            max-height: 280px;
+            border-radius: 12px;
+            margin: 18px auto;
+            display: none;
+            box-shadow: 0 6px 16px rgba(0, 102, 204, 0.2);
+            border: 3px solid #0066cc;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 18px;
+        }
+
+        button {
+            flex: 1;
+            padding: 13px;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+        }
+
+        #predictBtn {
+            background: linear-gradient(135deg, #0066cc 0%, #0052a3 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(0, 102, 204, 0.3);
+        }
+
+        #predictBtn:hover:not(:disabled) {
+            background: linear-gradient(135deg, #0052a3 0%, #003d7a 100%);
+            box-shadow: 0 6px 20px rgba(0, 102, 204, 0.4);
+            transform: translateY(-2px);
+        }
+
+        #predictBtn:active:not(:disabled) {
+            transform: translateY(0);
+        }
+
+        #predictBtn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        #clearBtn {
+            background: #f0f5ff;
+            color: #0066cc;
+            border: 1.5px solid #0066cc;
+            font-weight: 700;
+        }
+
+        #clearBtn:hover {
+            background: #e0ecff;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .spinner {
+            border: 4px solid #f0f0f0;
+            border-top: 4px solid #0066cc;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 18px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            color: #0066cc;
+            font-weight: 700;
+            font-size: 14px;
+            letter-spacing: 0.3px;
+        }
+
+        .results-section {
+            display: none;
+        }
+
+        .results-section.show {
+            display: block;
+        }
+
+        .result-box {
+            background: linear-gradient(135deg, #f0f7ff 0%, #e8f2ff 100%);
+            border-left: 4px solid #0066cc;
+            padding: 24px;
+            border-radius: 12px;
+            margin-bottom: 18px;
+            border: 1px solid rgba(0, 102, 204, 0.15);
+        }
+
+        .result-label {
+            color: #0066cc;
+            font-size: 11px;
+            text-transform: uppercase;
+            font-weight: 800;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            opacity: 0.8;
+        }
+
+        .result-value {
+            color: #0052a3;
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .info-section {
+            background: white;
+            padding: 18px;
+            border-radius: 10px;
+            border: 1px solid rgba(0, 102, 204, 0.08);
+            margin-bottom: 15px;
+        }
+
+        .info-label {
+            color: #0066cc;
+            font-weight: 700;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .info-text {
+            color: #334455;
+            font-size: 13.5px;
+            line-height: 1.7;
+        }
+
+        .disclaimer-card {
+            background: linear-gradient(135deg, #fff9e6 0%, #fff5d9 100%);
+            border-left: 4px solid #ffc107;
+            padding: 18px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 193, 7, 0.15);
+        }
+
+        .disclaimer-title {
+            color: #ff9800;
+            font-size: 12px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .disclaimer-text {
+            color: #664d00;
+            font-size: 12.5px;
+            line-height: 1.6;
+        }
+
+        .error {
+            background: linear-gradient(135deg, #ffe6e6 0%, #ffd9d9 100%);
+            border-left: 4px solid #ff6b6b;
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 18px;
+            display: none;
+            color: #ff6b6b;
+            font-size: 13px;
+            border: 1px solid rgba(255, 107, 107, 0.15);
+        }
+
+        .error.show {
+            display: block;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 18px;
+            color: #889999;
+            font-size: 12px;
+            margin-top: 30px;
+            letter-spacing: 0.3px;
+        }
+
+        @media (max-width: 600px) {
+            .header {
+                padding: 30px 20px;
+            }
+
+            .header h1 {
+                font-size: 26px;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            #preview {
+                max-width: 230px;
+                max-height: 230px;
+            }
+
+            button {
+                padding: 12px;
+                font-size: 13px;
+            }
+
+            .result-value {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="navbar-content">
+            <div class="logo">🏥 DeficiScan AI</div>
+            <div class="tagline">Health Analysis Through Image Recognition</div>
+        </div>
+    </div>
+
+    <div class="header">
+        <div class="header-content">
+            <h1>DeficiScan AI</h1>
+            <p>Upload an image of your hair, skin, or nails to get AI-powered health insights</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Upload Section -->
+        <div class="card">
+            <div class="card-title">📸 Upload Image</div>
+
+            <div class="upload-area" id="uploadArea">
+                <input type="file" id="img" accept="image/*">
+                <div class="upload-icon">⬆️</div>
+                <div class="upload-text">Click or Drag Image</div>
+                <div class="upload-subtext">PNG, JPG up to 10MB</div>
+            </div>
+
+            <img id="preview" alt="Preview">
+
+            <div class="button-group">
+                <button id="predictBtn">🚀 Analyze</button>
+                <button id="clearBtn">↻ Clear</button>
+            </div>
+        </div>
+
+        <!-- Loading State -->
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <div class="loading-text">Analyzing Your Image...</div>
+        </div>
+
+        <!-- Error Message -->
+        <div class="error" id="error">
+            <div id="errorText"></div>
+        </div>
+
+        <!-- Results Section -->
+        <div class="results-section" id="resultsSection">
+            <!-- Result -->
+            <div class="card">
+                <div class="card-title">✅ Analysis Result</div>
+
+                <div class="result-box">
+                    <div class="result-label">📋 Detected Condition</div>
+                    <div class="result-value" id="result"></div>
+                </div>
+
+                <div class="info-section">
+                    <span class="info-label">❓ What is this?</span>
+                    <div class="info-text" id="infoText"></div>
+                </div>
+
+                <div class="info-section">
+                    <span class="info-label">⚠️ Deficiency</span>
+                    <div class="info-text" id="deficiencyText"></div>
+                </div>
+
+                <div class="info-section">
+                    <span class="info-label">🥗 Diet & Recommendations</span>
+                    <div class="info-text" id="dietText"></div>
+                </div>
+            </div>
+
+            <!-- Disclaimer -->
+            <div class="card">
+                <div class="disclaimer-card">
+                    <div class="disclaimer-title">⚠️ Medical Disclaimer</div>
+                    <div class="disclaimer-text">
+                        This tool provides AI-based analysis only and is not a substitute for professional medical advice. Please consult a qualified healthcare provider for proper diagnosis and treatment.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>© 2025 DeficiScan AI | College Project | Educational Purpose</p>
+    </div>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>

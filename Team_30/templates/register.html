@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+
+{% block title %}Register - NeuroPlay{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-lg">
+                <div class="card-body p-5">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-user-plus fa-3x text-primary mb-3"></i>
+                        <h2 class="card-title">Create Account</h2>
+                        <p class="text-muted">Join NeuroPlay for therapeutic gaming</p>
+                    </div>
+                    
+                    <form method="POST">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="name" class="form-label">
+                                        <i class="fas fa-user me-2"></i>Your Name
+                                    </label>
+                                    <input type="text" 
+                                           class="form-control" 
+                                           id="name" 
+                                           name="name" 
+                                           required 
+                                           placeholder="Parent/Guardian Name">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="email" class="form-label">
+                                        <i class="fas fa-envelope me-2"></i>Email Address
+                                    </label>
+                                    <input type="email" 
+                                           class="form-control" 
+                                           id="email" 
+                                           name="email" 
+                                           required 
+                                           placeholder="your.email@example.com">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="child_name" class="form-label">
+                                        <i class="fas fa-child me-2"></i>Child's Name
+                                    </label>
+                                    <input type="text" 
+                                           class="form-control" 
+                                           id="child_name" 
+                                           name="child_name" 
+                                           placeholder="Child's Name">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="child_age" class="form-label">
+                                        <i class="fas fa-birthday-cake me-2"></i>Child's Age
+                                    </label>
+                                    <select class="form-control" id="child_age" name="child_age">
+                                        <option value="">Select Age</option>
+                                        {% for age in range(2, 19) %}
+                                            <option value="{{ age }}">{{ age }} years old</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="password" class="form-label">
+                                <i class="fas fa-lock me-2"></i>Password
+                            </label>
+                            <input type="password" 
+                                   class="form-control" 
+                                   id="password" 
+                                   name="password" 
+                                   required 
+                                   placeholder="Create a secure password"
+                                   minlength="6">
+                            <small class="text-muted">Minimum 6 characters</small>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="user_type" class="form-label">
+                                <i class="fas fa-users me-2"></i>Account Type
+                            </label>
+                            <select class="form-control" id="user_type" name="user_type">
+                                <option value="parent">Parent/Guardian</option>
+                                <option value="therapist">Therapist/Professional</option>
+                                <option value="educator">Educator/Teacher</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="terms" required>
+                                <label class="form-check-label" for="terms">
+                                    I agree to the <a href="#" class="text-primary">Terms of Service</a> 
+                                    and <a href="#" class="text-primary">Privacy Policy</a>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-user-plus me-2"></i>Create Account
+                            </button>
+                        </div>
+                    </form>
+                    
+                    <div class="text-center mt-4">
+                        <p class="text-muted">Already have an account?</p>
+                        <a href="{{ url_for('login') }}" class="btn btn-outline-primary">
+                            <i class="fas fa-sign-in-alt me-2"></i>Sign In
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Information Cards -->
+            <div class="row mt-4">
+                <div class="col-md-4 text-center text-white mb-3">
+                    <i class="fas fa-shield-alt fa-2x mb-2"></i>
+                    <h6>Secure & Private</h6>
+                    <small>Your data is encrypted and HIPAA compliant</small>
+                </div>
+                <div class="col-md-4 text-center text-white mb-3">
+                    <i class="fas fa-graduation-cap fa-2x mb-2"></i>
+                    <h6>Evidence-Based</h6>
+                    <small>Games designed by therapy professionals</small>
+                </div>
+                <div class="col-md-4 text-center text-white mb-3">
+                    <i class="fas fa-heart fa-2x mb-2"></i>
+                    <h6>Autism-Friendly</h6>
+                    <small>Designed with sensory considerations</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,505 @@
+// NeuroPlay Main JavaScript File
+
+// Global NeuroPlay namespace
+const NeuroPlay = {
+    // Configuration
+    config: {
+        sessionTimeout: 1800000, // 30 minutes in milliseconds
+        maxIdleTime: 300000, // 5 minutes in milliseconds
+        autoSaveInterval: 30000, // 30 seconds in milliseconds
+    },
+    
+    // Game session data
+    session: {
+        startTime: null,
+        lastActivity: null,
+        gameData: {},
+        isActive: false
+    },
+    
+    // Initialize the application
+    init() {
+        this.setupEventListeners();
+        this.startSessionTracking();
+        this.initializeAccessibility();
+        this.setupProgressBars();
+        console.log('🎮 NeuroPlay initialized successfully');
+    },
+    
+    // Set up global event listeners
+    setupEventListeners() {
+        // Update last activity on user interactions
+        ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart', 'click'].forEach(event => {
+            document.addEventListener(event, () => {
+                this.session.lastActivity = Date.now();
+            }, true);
+        });
+        
+        // Handle page visibility changes
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                this.pauseSession();
+            } else {
+                this.resumeSession();
+            }
+        });
+        
+        // Handle game session messages from embedded games
+        window.addEventListener('message', (event) => {
+            this.handleGameMessage(event);
+        });
+        
+        // Form validation
+        document.querySelectorAll('form').forEach(form => {
+            form.addEventListener('submit', (e) => {
+                this.validateForm(e);
+            });
+        });
+    },
+    
+    // Start session tracking
+    startSessionTracking() {
+        this.session.startTime = Date.now();
+        this.session.lastActivity = Date.now();
+        this.session.isActive = true;
+        
+        // Check for inactivity every minute
+        setInterval(() => {
+            this.checkInactivity();
+        }, 60000);
+    },
+    
+    // Check for user inactivity
+    checkInactivity() {
+        const now = Date.now();
+        const idleTime = now - this.session.lastActivity;
+        
+        if (idleTime > this.config.maxIdleTime && this.session.isActive) {
+            this.showInactivityWarning();
+        }
+        
+        if (idleTime > this.config.sessionTimeout) {
+            this.handleSessionTimeout();
+        }
+    },
+    
+    // Show inactivity warning
+    showInactivityWarning() {
+        const warning = document.createElement('div');
+        warning.className = 'alert alert-warning position-fixed';
+        warning.style.cssText = `
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            min-width: 300px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            border-radius: 10px;
+        `;
+        warning.innerHTML = `
+            <div class="d-flex align-items-center">
+                <i class="fas fa-clock me-2"></i>
+                You've been inactive. Your session will expire soon.
+                <button class="btn btn-sm btn-primary ms-2" onclick="NeuroPlay.extendSession()">
+                    Stay Active
+                </button>
+            </div>
+        `;
+        
+        document.body.appendChild(warning);
+        
+        // Auto remove after 30 seconds
+        setTimeout(() => {
+            if (warning.parentNode) {
+                warning.parentNode.removeChild(warning);
+            }
+        }, 30000);
+    },
+    
+    // Extend user session
+    extendSession() {
+        this.session.lastActivity = Date.now();
+        document.querySelectorAll('.alert-warning').forEach(alert => {
+            alert.remove();
+        });
+        this.showNotification('Session extended successfully!', 'success');
+    },
+    
+    // Handle session timeout
+    handleSessionTimeout() {
+        this.session.isActive = false;
+        this.showNotification('Session expired due to inactivity. Please log in again.', 'warning');
+        
+        // Redirect to login after 5 seconds
+        setTimeout(() => {
+            window.location.href = '/login';
+        }, 5000);
+    },
+    
+    // Pause session (when page becomes hidden)
+    pauseSession() {
+        this.session.isActive = false;
+        console.log('Session paused');
+    },
+    
+    // Resume session (when page becomes visible)
+    resumeSession() {
+        this.session.isActive = true;
+        this.session.lastActivity = Date.now();
+        console.log('Session resumed');
+    },
+    
+    // Handle messages from embedded games
+    handleGameMessage(event) {
+        if (event.data && event.data.type === 'game_session_complete') {
+            this.recordGameSession(event.data.data);
+        }
+    },
+    
+    // Record game session data
+    recordGameSession(sessionData) {
+        // Add timestamp and session info
+        sessionData.recorded_at = new Date().toISOString();
+        sessionData.session_id = this.generateSessionId();
+        
+        // Send to Flask backend
+        fetch('/api/record_session', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: JSON.stringify(sessionData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                this.showNotification('🎮 Game session saved successfully!', 'success');
+                this.updateProgressIndicators();
+            } else {
+                this.showNotification('❌ Failed to save session: ' + (data.message || 'Unknown error'), 'danger');
+            }
+        })
+        .catch(error => {
+            console.error('Error recording session:', error);
+            this.showNotification('❌ Network error while saving session', 'danger');
+        });
+    },
+    
+    // Generate unique session ID
+    generateSessionId() {
+        return 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    },
+    
+    // Show notification to user
+    showNotification(message, type = 'info', duration = 5000) {
+        const notification = document.createElement('div');
+        notification.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+        notification.style.cssText = `
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            min-width: 320px;
+            max-width: 400px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            border-radius: 10px;
+            animation: slideInRight 0.3s ease-out;
+        `;
+        
+        const iconMap = {
+            'success': 'check-circle',
+            'danger': 'exclamation-triangle',
+            'warning': 'exclamation-circle',
+            'info': 'info-circle'
+        };
+        
+        notification.innerHTML = `
+            <div class="d-flex align-items-center">
+                <i class="fas fa-${iconMap[type] || 'info-circle'} me-2"></i>
+                <span class="flex-grow-1">${message}</span>
+                <button type="button" class="btn-close" onclick="this.parentElement.parentElement.remove()"></button>
+            </div>
+        `;
+        
+        document.body.appendChild(notification);
+        
+        // Auto remove after specified duration
+        if (duration > 0) {
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.style.animation = 'slideOutRight 0.3s ease-out forwards';
+                    setTimeout(() => {
+                        if (notification.parentNode) {
+                            notification.parentNode.removeChild(notification);
+                        }
+                    }, 300);
+                }
+            }, duration);
+        }
+    },
+    
+    // Initialize accessibility features
+    initializeAccessibility() {
+        // Add keyboard navigation for card elements
+        document.querySelectorAll('.game-card, .card').forEach(card => {
+            if (!card.hasAttribute('tabindex')) {
+                card.setAttribute('tabindex', '0');
+            }
+            
+            card.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    card.click();
+                }
+            });
+        });
+        
+        // Announce page changes to screen readers
+        this.announcePageChange();
+        
+        // Add focus indicators
+        this.setupFocusManagement();
+    },
+    
+    // Announce page changes for screen readers
+    announcePageChange() {
+        const pageTitle = document.title;
+        const announcement = document.createElement('div');
+        announcement.setAttribute('aria-live', 'polite');
+        announcement.setAttribute('aria-atomic', 'true');
+        announcement.className = 'sr-only';
+        announcement.textContent = `Page loaded: ${pageTitle}`;
+        
+        document.body.appendChild(announcement);
+        
+        // Remove announcement after screen reader has time to read it
+        setTimeout(() => {
+            if (announcement.parentNode) {
+                announcement.parentNode.removeChild(announcement);
+            }
+        }, 1000);
+    },
+    
+    // Setup focus management
+    setupFocusManagement() {
+        // Skip to main content link
+        if (!document.querySelector('.skip-to-main')) {
+            const skipLink = document.createElement('a');
+            skipLink.href = '#main-content';
+            skipLink.textContent = 'Skip to main content';
+            skipLink.className = 'skip-to-main sr-only';
+            skipLink.style.cssText = `
+                position: absolute;
+                top: -40px;
+                left: 6px;
+                background: #000;
+                color: #fff;
+                padding: 8px;
+                text-decoration: none;
+                border-radius: 4px;
+                z-index: 10000;
+            `;
+            
+            skipLink.addEventListener('focus', () => {
+                skipLink.style.top = '6px';
+                skipLink.classList.remove('sr-only');
+            });
+            
+            skipLink.addEventListener('blur', () => {
+                skipLink.style.top = '-40px';
+                skipLink.classList.add('sr-only');
+            });
+            
+            document.body.insertBefore(skipLink, document.body.firstChild);
+        }
+    },
+    
+    // Setup animated progress bars
+    setupProgressBars() {
+        const observeProgressBars = (entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const progressBar = entry.target;
+                    const width = progressBar.getAttribute('data-width') || progressBar.style.width;
+                    
+                    // Animate from 0 to target width
+                    progressBar.style.width = '0%';
+                    setTimeout(() => {
+                        progressBar.style.transition = 'width 1.5s ease-out';
+                        progressBar.style.width = width;
+                    }, 200);
+                    
+                    // Stop observing this element
+                    progressObserver.unobserve(progressBar);
+                }
+            });
+        };
+        
+        const progressObserver = new IntersectionObserver(observeProgressBars, {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        });
+        
+        document.querySelectorAll('.progress-bar').forEach(bar => {
+            // Store original width
+            if (bar.style.width) {
+                bar.setAttribute('data-width', bar.style.width);
+            }
+            progressObserver.observe(bar);
+        });
+    },
+    
+    // Update progress indicators after game session
+    updateProgressIndicators() {
+        // Refresh current page to show updated progress
+        // In a real application, you might want to update specific elements via AJAX
+        setTimeout(() => {
+            if (window.location.pathname.includes('dashboard') || 
+                window.location.pathname.includes('progress')) {
+                window.location.reload();
+            }
+        }, 2000);
+    },
+    
+    // Form validation
+    validateForm(event) {
+        const form = event.target;
+        let isValid = true;
+        
+        // Remove existing error messages
+        form.querySelectorAll('.error-message').forEach(error => {
+            error.remove();
+        });
+        
+        // Validate required fields
+        form.querySelectorAll('[required]').forEach(field => {
+            if (!field.value.trim()) {
+                isValid = false;
+                this.showFieldError(field, `${field.name || field.id} is required`);
+            }
+        });
+        
+        // Validate email fields
+        form.querySelectorAll('input[type="email"]').forEach(field => {
+            if (field.value && !this.isValidEmail(field.value)) {
+                isValid = false;
+                this.showFieldError(field, 'Please enter a valid email address');
+            }
+        });
+        
+        // Validate password fields
+        form.querySelectorAll('input[type="password"]').forEach(field => {
+            if (field.value && field.value.length < 6) {
+                isValid = false;
+                this.showFieldError(field, 'Password must be at least 6 characters long');
+            }
+        });
+        
+        if (!isValid) {
+            event.preventDefault();
+            this.showNotification('Please correct the errors in the form', 'danger');
+        }
+    },
+    
+    // Show field-specific error
+    showFieldError(field, message) {
+        const error = document.createElement('div');
+        error.className = 'error-message text-danger small mt-1';
+        error.textContent = message;
+        
+        field.classList.add('is-invalid');
+        field.parentNode.appendChild(error);
+        
+        // Remove error on input
+        field.addEventListener('input', () => {
+            field.classList.remove('is-invalid');
+            if (error.parentNode) {
+                error.parentNode.removeChild(error);
+            }
+        }, { once: true });
+    },
+    
+    // Email validation
+    isValidEmail(email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    },
+    
+    // Export game data
+    exportGameData(format = 'csv') {
+        this.showNotification('Preparing export...', 'info');
+        
+        fetch(`/api/export_data?format=${format}`, {
+            method: 'GET',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.blob();
+            }
+            throw new Error('Export failed');
+        })
+        .then(blob => {
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `neuroplay_export_${Date.now()}.${format}`;
+            a.click();
+            window.URL.revokeObjectURL(url);
+            
+            this.showNotification('✅ Export completed successfully!', 'success');
+        })
+        .catch(error => {
+            console.error('Export error:', error);
+            this.showNotification('❌ Export failed. Please try again.', 'danger');
+        });
+    }
+};
+
+// Animation keyframes for notifications
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes slideInRight {
+        from {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+    
+    @keyframes slideOutRight {
+        from {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        to {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+    }
+    
+    .skip-to-main:focus {
+        position: absolute !important;
+        top: 6px !important;
+        left: 6px;
+        background: #000 !important;
+        color: #fff !important;
+        padding: 8px;
+        text-decoration: none;
+        border-radius: 4px;
+        z-index: 10000;
+    }
+`;
+document.head.appendChild(style);
+
+// Initialize when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    NeuroPlay.init();
+});
+
+// Export for global use
+window.NeuroPlay = NeuroPlay;

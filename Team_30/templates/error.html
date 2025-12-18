@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error - NeuroPlay</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .error-container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .error-code {
+            font-size: 72px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #ff6b6b;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .error-title {
+            font-size: 24px;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .error-message {
+            font-size: 16px;
+            margin-bottom: 30px;
+            opacity: 0.9;
+            line-height: 1.5;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #51cf66, #40c057);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(64, 192, 87, 0.4);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(64, 192, 87, 0.6);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(45deg, #868e96, #6c757d);
+            box-shadow: 0 4px 15px rgba(108, 117, 125, 0.4);
+        }
+
+        .btn-secondary:hover {
+            box-shadow: 0 6px 20px rgba(108, 117, 125, 0.6);
+        }
+
+        .error-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        .suggestion-list {
+            text-align: left;
+            margin: 20px 0;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .suggestion-list ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .suggestion-list li {
+            margin: 8px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .suggestion-list li::before {
+            content: "💡";
+            position: absolute;
+            left: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <div class="error-icon">
+            {% if error_code == 404 %}
+                🔍
+            {% elif error_code == 500 %}
+                ⚙️
+            {% else %}
+                ❌
+            {% endif %}
+        </div>
+        
+        <div class="error-code">{{ error_code or 'Error' }}</div>
+        
+        <div class="error-title">
+            {% if error_code == 404 %}
+                Page Not Found
+            {% elif error_code == 500 %}
+                Server Error
+            {% else %}
+                Something Went Wrong
+            {% endif %}
+        </div>
+        
+        <div class="error-message">
+            {% if error_message %}
+                {{ error_message }}
+            {% elif error_code == 404 %}
+                The page you're looking for doesn't exist or has been moved.
+            {% elif error_code == 500 %}
+                We're experiencing technical difficulties. Please try again later.
+            {% else %}
+                An unexpected error occurred. Please try again.
+            {% endif %}
+        </div>
+
+        {% if error_code == 404 %}
+        <div class="suggestion-list">
+            <p><strong>Try these suggestions:</strong></p>
+            <ul>
+                <li>Check the URL for typos</li>
+                <li>Go back to the home page</li>
+                <li>Use the navigation menu</li>
+                <li>Contact support if the issue persists</li>
+            </ul>
+        </div>
+        {% endif %}
+
+        <div class="action-buttons">
+            <a href="{{ url_for('dashboard') if current_user and current_user.is_authenticated else url_for('index') }}" class="btn">
+                🏠 Go Home
+            </a>
+            <a href="javascript:history.back()" class="btn btn-secondary">
+                ← Go Back
+            </a>
+            {% if current_user and current_user.is_authenticated %}
+            <a href="{{ url_for('games') }}" class="btn btn-secondary">
+                🎮 Play Games
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

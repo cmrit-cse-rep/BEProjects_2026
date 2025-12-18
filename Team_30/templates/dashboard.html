@@ -1,0 +1,479 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - NeuroPlay{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Welcome Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0 bg-gradient-primary text-white" 
+                 style="background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));">
+                <div class="card-body py-4">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h1 class="card-title mb-2">
+                                Welcome back, {{ user.name }}! 👋
+                            </h1>
+                            <p class="card-text lead mb-0">
+                                {% if user.child_name %}
+                                    Track {{ user.child_name }}'s progress and continue the therapeutic gaming journey
+                                {% else %}
+                                    Track progress and continue your therapeutic gaming journey
+                                {% endif %}
+                            </p>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <div class="p-3">
+                                <i class="fas fa-chart-line fa-4x opacity-75"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Quick Stats -->
+    <div class="row mb-4">
+        <div class="col-md-3 col-sm-6 mb-3">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-gamepad fa-3x text-primary mb-3"></i>
+                    <h3 class="fw-bold">{{ recent_sessions|length }}</h3>
+                    <p class="text-muted mb-0">Recent Sessions</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6 mb-3">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-trophy fa-3x text-success mb-3"></i>
+                    <h3 class="fw-bold">
+                        {% if recent_sessions %}
+                            {{ recent_sessions|map(attribute='score')|max }}
+                        {% else %}
+                            0
+                        {% endif %}
+                    </h3>
+                    <p class="text-muted mb-0">Best Score</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6 mb-3">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-clock fa-3x text-info mb-3"></i>
+                    <h3 class="fw-bold">
+                        {% if recent_sessions %}
+                            {{ "%.0f"|format(recent_sessions|sum(attribute='session_duration')/60) }}m
+                        {% else %}
+                            0m
+                        {% endif %}
+                    </h3>
+                    <p class="text-muted mb-0">Total Play Time</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6 mb-3">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-brain fa-3x text-warning mb-3"></i>
+                    <h3 class="fw-bold">
+                        {% if progress %}
+                            {{ "%.0f"|format(progress.overall_development_score) }}%
+                        {% else %}
+                            --
+                        {% endif %}
+                    </h3>
+                    <p class="text-muted mb-0">Development Score</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <!-- Left Column -->
+        <div class="col-lg-8">
+            <!-- Quick Start Games -->
+            <div class="card mb-4">
+                <div class="card-header bg-transparent">
+                    <h5 class="mb-0">
+                        <i class="fas fa-play text-primary"></i> Quick Start Games
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="game-card card h-100" onclick="location.href='{{ url_for('play_game', game_name='follow_dot') }}'">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-draw-polygon fa-3x text-primary mb-3"></i>
+                                    <h6 class="card-title">Follow the Dot</h6>
+                                    <p class="card-text small text-muted">Hand-eye coordination and fine motor skills</p>
+                                    <div class="btn btn-primary btn-sm">
+                                        <i class="fas fa-video me-1"></i> Play with Webcam
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="game-card card h-100" onclick="location.href='{{ url_for('play_game', game_name='bubble_pop') }}'">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-circle fa-3x text-success mb-3"></i>
+                                    <h6 class="card-title">Bubble Pop</h6>
+                                    <p class="card-text small text-muted">Reaction time and bilateral coordination</p>
+                                    <div class="btn btn-success btn-sm">
+                                        <i class="fas fa-video me-1"></i> Play with Webcam
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center mt-3">
+                        <a href="{{ url_for('games') }}" class="btn btn-outline-primary">
+                            <i class="fas fa-gamepad me-2"></i>View All Games
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Recent Activity -->
+            <div class="card mb-4">
+                <div class="card-header bg-transparent">
+                    <h5 class="mb-0">
+                        <i class="fas fa-history text-primary"></i> Recent Activity
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if recent_sessions %}
+                        <div class="list-group list-group-flush">
+                            {% for session in recent_sessions %}
+                            <div class="list-group-item border-0 px-0">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div class="me-auto">
+                                        <div class="fw-semibold">
+                                            <i class="fas fa-{{ 'draw-polygon' if session.game_name == 'follow_dot' else 'circle' }} text-primary me-2"></i>
+                                            {{ session.game_name.replace('_', ' ').title() }}
+                                        </div>
+                                        <small class="text-muted">
+                                            {{ session.session_date.strftime('%B %d, %Y at %I:%M %p') }}
+                                        </small>
+                                    </div>
+                                    <div class="text-end">
+                                        <div class="badge bg-success">{{ session.score }} points</div>
+                                        <div class="small text-muted">Level {{ session.level_reached }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-gamepad fa-3x text-muted mb-3"></i>
+                            <p class="text-muted">No games played yet. Start your first session!</p>
+                            <a href="{{ url_for('games') }}" class="btn btn-primary">
+                                <i class="fas fa-play me-2"></i>Play First Game
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Right Column -->
+        <div class="col-lg-4">
+            <!-- Progress Overview -->
+            <div class="card mb-4">
+                <div class="card-header bg-transparent">
+                    <h5 class="mb-0">
+                        <i class="fas fa-chart-pie text-primary"></i> Progress Overview
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if progress %}
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <small class="fw-semibold">Motor Skills</small>
+                                <small class="text-muted">{{ "%.0f"|format(progress.motor_skills_score) }}%</small>
+                            </div>
+                            <div class="progress" style="height: 8px;">
+                                <div class="progress-bar bg-primary" style="width: {{ progress.motor_skills_score }}%"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <small class="fw-semibold">Cognitive Skills</small>
+                                <small class="text-muted">{{ "%.0f"|format(progress.cognitive_skills_score) }}%</small>
+                            </div>
+                            <div class="progress" style="height: 8px;">
+                                <div class="progress-bar bg-success" style="width: {{ progress.cognitive_skills_score }}%"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <small class="fw-semibold">Hand-Eye Coordination</small>
+                                <small class="text-muted">{{ "%.0f"|format(progress.hand_eye_coordination) }}%</small>
+                            </div>
+                            <div class="progress" style="height: 8px;">
+                                <div class="progress-bar bg-info" style="width: {{ progress.hand_eye_coordination }}%"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="text-center mt-3">
+                            <a href="{{ url_for('progress') }}" class="btn btn-outline-primary btn-sm">
+                                <i class="fas fa-chart-line me-1"></i>View Detailed Progress
+                            </a>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-3">
+                            <i class="fas fa-chart-bar fa-3x text-muted mb-3"></i>
+                            <p class="text-muted">No progress data yet.</p>
+                            <p class="small text-muted">Play games to start tracking progress!</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- AI Insights Preview -->
+            <div class="card mb-4">
+                <div class="card-header bg-transparent">
+                    <h5 class="mb-0">
+                        <i class="fas fa-lightbulb text-primary"></i> Latest AI Insight
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if insights %}
+                        <div class="alert alert-info border-0">
+                            <h6 class="alert-heading">
+                                <i class="fas fa-robot me-2"></i>Progress Trajectory
+                            </h6>
+                            <p class="mb-0">
+                                Current progress shows a <strong>{{ insights.progress_trajectory.title() }}</strong> trajectory.
+                                {% if insights.progress_trajectory == 'improving' %}
+                                    Keep up the great work!
+                                {% elif insights.progress_trajectory == 'stable' %}
+                                    Consistent progress is being made.
+                                {% else %}
+                                    Focus on regular practice sessions.
+                                {% endif %}
+                            </p>
+                        </div>
+                        <div class="text-center">
+                            <a href="{{ url_for('insights') }}" class="btn btn-outline-primary btn-sm">
+                                <i class="fas fa-brain me-1"></i>View All Insights
+                            </a>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-3">
+                            <i class="fas fa-robot fa-3x text-muted mb-3"></i>
+                            <p class="text-muted">AI insights will appear after playing games.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- NeuroPlay Assistant Chatbot -->
+            <div class="card mb-4">
+                <div class="card-header bg-transparent">
+                    <h5 class="mb-0">
+                        <i class="fas fa-comments text-primary"></i> NeuroPlay Assistant
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <p class="small text-muted mb-2">
+                        Ask gentle questions about game sessions and progress. 
+                        This assistant does not provide diagnoses or medical advice.
+                    </p>
+
+                    <div id="chat-window" style="
+                        max-height: 260px;
+                        overflow-y: auto;
+                        padding: 8px;
+                        border-radius: 10px;
+                        background: #f9fafb;
+                        margin-bottom: 8px;
+                    "></div>
+
+                    <div class="mb-2">
+                        <small class="text-muted d-block mb-1">Who is asking?</small>
+                        <div class="btn-group btn-group-sm w-100" role="group">
+                            <button type="button" class="btn btn-outline-primary active" id="audience-parent">
+                                Parent
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary" id="audience-therapist">
+                                Therapist
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-end gap-2">
+                        <textarea id="chat-input" rows="2" class="form-control" 
+                                  placeholder="Type your question here..."></textarea>
+                        <button id="chat-send-btn" class="btn btn-primary">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+
+                    <small class="text-muted d-block mt-2" style="font-size: 11px;">
+                        For information only – not a medical tool.
+                    </small>
+                </div>
+            </div>
+
+            
+            <!-- Quick Actions -->
+            <div class="card">
+                <div class="card-header bg-transparent">
+                    <h5 class="mb-0">
+                        <i class="fas fa-bolt text-primary"></i> Quick Actions
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a href="{{ url_for('games') }}" class="btn btn-primary">
+                            <i class="fas fa-gamepad me-2"></i>Play Games
+                        </a>
+                        <a href="{{ url_for('progress') }}" class="btn btn-outline-secondary">
+                            <i class="fas fa-chart-line me-2"></i>View Progress
+                        </a>
+                        <a href="{{ url_for('insights') }}" class="btn btn-outline-secondary">
+                            <i class="fas fa-lightbulb me-2"></i>AI Insights
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Add hover effects to game cards
+    const gameCards = document.querySelectorAll('.game-card');
+    gameCards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-5px)';
+            this.style.boxShadow = '0 8px 25px rgba(0,0,0,0.15)';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+            this.style.boxShadow = '';
+        });
+    });
+    
+    // Animate progress bars
+    const progressBars = document.querySelectorAll('.progress-bar');
+    progressBars.forEach(bar => {
+        const width = bar.style.width;
+        bar.style.width = '0%';
+        setTimeout(() => {
+            bar.style.transition = 'width 1s ease-in-out';
+            bar.style.width = width;
+        }, 500);
+    });
+});
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const chatWindow = document.getElementById("chat-window");
+    const chatInput = document.getElementById("chat-input");
+    const chatSendBtn = document.getElementById("chat-send-btn");
+    const btnParent = document.getElementById("audience-parent");
+    const btnTherapist = document.getElementById("audience-therapist");
+
+    let currentAudience = "parent";
+
+    function setAudience(aud) {
+        currentAudience = aud;
+        if (aud === "parent") {
+            btnParent.classList.add("btn-primary", "active");
+            btnParent.classList.remove("btn-outline-primary");
+            btnTherapist.classList.remove("btn-primary", "active");
+            btnTherapist.classList.add("btn-outline-secondary");
+        } else {
+            btnTherapist.classList.add("btn-primary", "active");
+            btnTherapist.classList.remove("btn-outline-secondary");
+            btnParent.classList.remove("btn-primary", "active");
+            btnParent.classList.add("btn-outline-primary");
+        }
+    }
+
+    btnParent.addEventListener("click", () => setAudience("parent"));
+    btnTherapist.addEventListener("click", () => setAudience("therapist"));
+
+    function addMessage(text, who) {
+        const wrapper = document.createElement("div");
+        wrapper.className = "mb-2 text-" + (who === "user" ? "end" : "start");
+
+        const bubble = document.createElement("div");
+        bubble.style.display = "inline-block";
+        bubble.style.padding = "6px 10px";
+        bubble.style.borderRadius = "12px";
+        bubble.style.maxWidth = "85%";
+        bubble.style.fontSize = "14px";
+        bubble.textContent = text;
+
+        if (who === "user") {
+            bubble.style.backgroundColor = "#dbeafe";
+            bubble.style.color = "#1e3a8a";
+            bubble.style.borderBottomRightRadius = "3px";
+        } else {
+            bubble.style.backgroundColor = "#e5e7eb";
+            bubble.style.color = "#111827";
+            bubble.style.borderBottomLeftRadius = "3px";
+        }
+
+        wrapper.appendChild(bubble);
+        chatWindow.appendChild(wrapper);
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+    }
+
+    async function sendMessage() {
+        const text = chatInput.value.trim();
+        if (!text) return;
+        addMessage(text, "user");
+        chatInput.value = "";
+        chatInput.disabled = true;
+        chatSendBtn.disabled = true;
+
+        try {
+            const res = await fetch("{{ url_for('chat') }}", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    message: text,
+                    audience: currentAudience,
+                }),
+            });
+            const data = await res.json();
+            if (data.reply) {
+                addMessage(data.reply, "bot");
+            } else if (data.error) {
+                addMessage("Sorry, I couldn't answer right now.", "bot");
+            }
+        } catch (err) {
+            console.error(err);
+            addMessage("Connection problem – please try again later.", "bot");
+        } finally {
+            chatInput.disabled = false;
+            chatSendBtn.disabled = false;
+            chatInput.focus();
+        }
+    }
+
+    chatSendBtn.addEventListener("click", sendMessage);
+    chatInput.addEventListener("keydown", function (e) {
+        if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            sendMessage();
+        }
+    });
+});
+</script>
+{% endblock %}

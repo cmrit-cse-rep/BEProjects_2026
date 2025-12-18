@@ -1,0 +1,505 @@
+{% extends "base.html" %}
+
+{% block title %}Progress - NeuroPlay{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Header Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0 bg-gradient-primary text-white" 
+                 style="background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));">
+                <div class="card-body py-4">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h1 class="card-title mb-2">
+                                <i class="fas fa-chart-line"></i> Progress Tracking
+                            </h1>
+                            <p class="card-text lead mb-0">
+                                {% if user.child_name %}
+                                    Monitor {{ user.child_name }}'s development and skill improvement over time
+                                {% else %}
+                                    Monitor your development and skill improvement over time
+                                {% endif %}
+                            </p>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <div class="p-3">
+                                <i class="fas fa-trophy fa-4x opacity-75"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Progress Summary Cards -->
+    <div class="row mb-4">
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-gamepad fa-3x text-primary mb-3"></i>
+                    <h3 class="fw-bold">{{ sessions|length }}</h3>
+                    <p class="text-muted mb-0">Total Sessions</p>
+                    <small class="text-success">
+                        {{ this_week_sessions|length if this_week_sessions else 0 }} this week
+                    </small>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-trophy fa-3x text-warning mb-3"></i>
+                    <h3 class="fw-bold">
+                        {% if sessions %}
+                            {{ sessions|map(attribute='score')|max }}
+                        {% else %}
+                            0
+                        {% endif %}
+                    </h3>
+                    <p class="text-muted mb-0">Best Score</p>
+                    <small class="text-info">
+                        Avg: {{ "%.0f"|format(sessions|sum(attribute='score')/sessions|length) if sessions else 0 }}
+                    </small>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-clock fa-3x text-success mb-3"></i>
+                    <h3 class="fw-bold">
+                        {% if sessions %}
+                            {{ "%.0f"|format(sessions|sum(attribute='session_duration')/60) }}m
+                        {% else %}
+                            0m
+                        {% endif %}
+                    </h3>
+                    <p class="text-muted mb-0">Total Play Time</p>
+                    <small class="text-primary">
+                        Avg: {{ "%.0f"|format((sessions|sum(attribute='session_duration')/sessions|length)/60) if sessions else 0 }}m per session
+                    </small>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-percentage fa-3x text-info mb-3"></i>
+                    <h3 class="fw-bold">
+                        {% if sessions %}
+                            {% set total_attempts = sessions|sum(attribute='total_attempts') %}
+                            {% if total_attempts > 0 %}
+                                {{ "%.0f"|format((sessions|sum(attribute='successful_attempts')/total_attempts)*100) }}%
+                            {% else %}
+                                0%
+                            {% endif %}
+                        {% else %}
+                            0%
+                        {% endif %}
+                    </h3>
+                    <p class="text-muted mb-0">Success Rate</p>
+                    <small class="text-success">Accuracy across all games</small>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <!-- Left Column - Charts and Analysis -->
+        <div class="col-lg-8">
+            <!-- Performance Over Time Chart -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-chart-line text-primary"></i> Performance Over Time
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if sessions %}
+                        <canvas id="performanceChart" height="300"></canvas>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="fas fa-chart-line fa-4x text-muted mb-3"></i>
+                            <p class="text-muted">No session data available yet.</p>
+                            <a href="{{ url_for('games') }}" class="btn btn-primary">
+                                <i class="fas fa-play me-2"></i>Start Playing Games
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Skill Development -->
+            {% if progress_data %}
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-brain text-primary"></i> Skill Development
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="skillsChart" height="250"></canvas>
+                </div>
+            </div>
+            {% endif %}
+            
+            <!-- Session History -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-history text-primary"></i> Recent Session History
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if sessions %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Game</th>
+                                        <th>Score</th>
+                                        <th>Level</th>
+                                        <th>Accuracy</th>
+                                        <th>Duration</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for session in sessions[-10:] %}
+                                    <tr>
+                                        <td>{{ session.session_date.strftime('%m/%d/%Y') if session.session_date else 'N/A' }}</td>
+                                        <td>
+                                            <i class="fas fa-{{ 'draw-polygon' if session.game_name == 'follow_dot' else 'circle' }} text-primary me-2"></i>
+                                            {{ session.game_name.replace('_', ' ').title() if session.game_name else 'Unknown' }}
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-success">{{ session.score|default(0) }}</span>
+                                        </td>
+                                        <td>{{ session.level_reached|default(1) }}</td>
+                                        <td>
+                                            {% if session.total_attempts and session.total_attempts > 0 %}
+                                                {{ "%.0f"|format((session.successful_attempts|default(0) / session.total_attempts) * 100) }}%
+                                            {% else %}
+                                                N/A
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ "%.1f"|format((session.session_duration|default(0)) / 60) }}m</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-gamepad fa-3x text-muted mb-3"></i>
+                            <p class="text-muted">No game sessions recorded yet.</p>
+                            <a href="{{ url_for('games') }}" class="btn btn-primary">
+                                <i class="fas fa-play me-2"></i>Play Your First Game
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Right Column - Progress Details -->
+        <div class="col-lg-4">
+            <!-- Current Progress -->
+            {% if progress_data %}
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-target text-primary"></i> Current Progress
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% set latest_progress = progress_data[0] %}
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <small class="fw-semibold">Motor Skills</small>
+                            <small class="text-muted">{{ "%.0f"|format(latest_progress.motor_skills_score|default(0)) }}%</small>
+                        </div>
+                        <div class="progress" style="height: 8px;">
+                            <div class="progress-bar bg-primary" style="width: {{ latest_progress.motor_skills_score|default(0) }}%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <small class="fw-semibold">Cognitive Skills</small>
+                            <small class="text-muted">{{ "%.0f"|format(latest_progress.cognitive_skills_score|default(0)) }}%</small>
+                        </div>
+                        <div class="progress" style="height: 8px;">
+                            <div class="progress-bar bg-success" style="width: {{ latest_progress.cognitive_skills_score|default(0) }}%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <small class="fw-semibold">Hand-Eye Coordination</small>
+                            <small class="text-muted">{{ "%.0f"|format(latest_progress.hand_eye_coordination|default(0)) }}%</small>
+                        </div>
+                        <div class="progress" style="height: 8px;">
+                            <div class="progress-bar bg-info" style="width: {{ latest_progress.hand_eye_coordination|default(0) }}%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <small class="fw-semibold">Attention Score</small>
+                            <small class="text-muted">{{ "%.0f"|format(latest_progress.attention_score|default(0)) }}%</small>
+                        </div>
+                        <div class="progress" style="height: 8px;">
+                            <div class="progress-bar bg-warning" style="width: {{ latest_progress.attention_score|default(0) }}%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center mt-3">
+                        <small class="text-muted">
+                            Last updated: {{ latest_progress.assessment_date.strftime('%B %d, %Y') if latest_progress.assessment_date else 'N/A' }}
+                        </small>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            
+            <!-- Game Statistics -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-gamepad text-primary"></i> Game Statistics
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if sessions %}
+                        <div class="row text-center">
+                            <div class="col-6 mb-3">
+                                <div class="border-end">
+                                    <h6 class="text-primary">Follow the Dot</h6>
+                                    <p class="mb-1 fw-bold">
+                                        {{ sessions|selectattr('game_name', 'equalto', 'follow_dot')|list|length }}
+                                    </p>
+                                    <small class="text-muted">Sessions</small>
+                                </div>
+                            </div>
+                            <div class="col-6 mb-3">
+                                <h6 class="text-success">Bubble Pop</h6>
+                                <p class="mb-1 fw-bold">
+                                    {{ sessions|selectattr('game_name', 'equalto', 'bubble_pop')|list|length }}
+                                </p>
+                                <small class="text-muted">Sessions</small>
+                            </div>
+                        </div>
+                        
+                        <hr>
+                        
+                        <div class="mb-2">
+                            <small class="text-muted">Most Played:</small>
+                            <br>
+                            {% set follow_count = sessions|selectattr('game_name', 'equalto', 'follow_dot')|list|length %}
+                            {% set bubble_count = sessions|selectattr('game_name', 'equalto', 'bubble_pop')|list|length %}
+                            <span class="badge bg-primary">
+                                {{ 'Follow the Dot' if follow_count >= bubble_count else 'Bubble Pop' }}
+                            </span>
+                        </div>
+                        
+                        <div class="mb-2">
+                            <small class="text-muted">Average Session:</small>
+                            <br>
+                            <span class="text-dark">{{ "%.1f"|format((sessions|sum(attribute='session_duration')/sessions|length)/60) }} minutes</span>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-3">
+                            <i class="fas fa-chart-bar fa-3x text-muted mb-3"></i>
+                            <p class="text-muted">Play games to see statistics!</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Quick Actions -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-bolt text-primary"></i> Quick Actions
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a href="{{ url_for('games') }}" class="btn btn-primary">
+                            <i class="fas fa-gamepad me-2"></i>Play Games
+                        </a>
+                        <a href="{{ url_for('insights') }}" class="btn btn-outline-secondary">
+                            <i class="fas fa-lightbulb me-2"></i>View AI Insights
+                        </a>
+                        <button class="btn btn-outline-info" onclick="exportProgress()">
+                            <i class="fas fa-download me-2"></i>Export Report
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    {% if sessions %}
+    // Performance Over Time Chart
+    const perfCtx = document.getElementById('performanceChart');
+    if (perfCtx) {
+        // Create arrays from session data safely
+        const sessionDates = [
+            {% for session in sessions %}
+                "{{ session.session_date.strftime('%Y-%m-%d') if session.session_date else '' }}"{{ ',' if not loop.last }}
+            {% endfor %}
+        ];
+        
+        const sessionScores = [
+            {% for session in sessions %}
+                {{ session.score|default(0) }}{{ ',' if not loop.last }}
+            {% endfor %}
+        ];
+        
+        const dates = sessionDates.map(date => {
+            if (!date) return 'N/A';
+            return new Date(date).toLocaleDateString();
+        });
+        
+        new Chart(perfCtx, {
+            type: 'line',
+            data: {
+                labels: dates,
+                datasets: [{
+                    label: 'Score',
+                    data: sessionScores,
+                    borderColor: 'rgb(102, 126, 234)',
+                    backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
+    {% endif %}
+    
+    {% if progress_data %}
+    // Skills Development Chart
+    const skillsCtx = document.getElementById('skillsChart');
+    if (skillsCtx) {
+        const latest = {
+            motor: {{ progress_data[0].motor_skills_score|default(0) }},
+            cognitive: {{ progress_data[0].cognitive_skills_score|default(0) }},
+            coordination: {{ progress_data[0].hand_eye_coordination|default(0) }},
+            attention: {{ progress_data[0].attention_score|default(0) }},
+            memory: {{ progress_data[0].memory_score|default(0) }}
+        };
+        
+        new Chart(skillsCtx, {
+            type: 'radar',
+            data: {
+                labels: ['Motor Skills', 'Cognitive Skills', 'Hand-Eye Coordination', 'Attention', 'Memory'],
+                datasets: [{
+                    label: 'Current Level',
+                    data: [
+                        latest.motor,
+                        latest.cognitive,
+                        latest.coordination,
+                        latest.attention,
+                        latest.memory
+                    ],
+                    borderColor: 'rgb(102, 126, 234)',
+                    backgroundColor: 'rgba(102, 126, 234, 0.2)',
+                    pointBackgroundColor: 'rgb(102, 126, 234)',
+                    pointRadius: 5
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    r: {
+                        beginAtZero: true,
+                        max: 100,
+                        ticks: {
+                            stepSize: 20
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+    }
+    {% endif %}
+    
+    // Animate progress bars
+    const progressBars = document.querySelectorAll('.progress-bar');
+    progressBars.forEach(bar => {
+        const width = bar.style.width;
+        bar.style.width = '0%';
+        setTimeout(() => {
+            bar.style.transition = 'width 1.5s ease-in-out';
+            bar.style.width = width;
+        }, 500);
+    });
+});
+
+function exportProgress() {
+    // Create CSV content safely
+    let csvContent = "Date,Game,Score,Level,Duration,Accuracy\n";
+    
+    {% if sessions %}
+    // Add session data
+    {% for session in sessions %}
+    csvContent += "{{ session.session_date.strftime('%Y-%m-%d') if session.session_date else 'N/A' }},";
+    csvContent += "{{ session.game_name|replace(',', ' ') if session.game_name else 'Unknown' }},";
+    csvContent += "{{ session.score|default(0) }},";
+    csvContent += "{{ session.level_reached|default(1) }},";
+    csvContent += "{{ session.session_duration|default(0) }},";
+    {% if session.total_attempts and session.total_attempts > 0 %}
+    csvContent += "{{ "%.1f"|format((session.successful_attempts|default(0) / session.total_attempts) * 100) }}";
+    {% else %}
+    csvContent += "0";
+    {% endif %}
+    csvContent += "\n";
+    {% endfor %}
+    {% endif %}
+    
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    if (link.download !== undefined) {
+        const url = URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', 'neuroplay_progress_' + new Date().toISOString().split('T')[0] + '.csv');
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+}
+</script>
+{% endblock %}

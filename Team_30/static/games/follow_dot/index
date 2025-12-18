@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Follow the Dot - Hand Tracking Game</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #gameContainer {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #canvas {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        #videoElement {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 200px;
+            height: 150px;
+            border-radius: 15px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            background: rgba(0, 0, 0, 0.5);
+            object-fit: cover;
+            z-index: 10;
+        }
+
+        #instructions {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 15px;
+            max-width: 300px;
+            z-index: 10;
+        }
+
+        #status {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            padding: 15px 25px;
+            border-radius: 25px;
+            font-size: 16px;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-icon {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #ff4444;
+            animation: pulse 2s infinite;
+        }
+
+        .status-icon.active {
+            background: #44ff44;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.7; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .dot {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 5;
+        }
+
+        .dot.current {
+            background: #ff6b6b;
+            box-shadow: 0 0 30px rgba(255, 107, 107, 0.8);
+            transform: scale(1.2);
+            animation: glow 1.5s infinite alternate;
+        }
+
+        .dot.completed {
+            background: #51cf66;
+            transform: scale(0.8);
+        }
+
+        .dot.upcoming {
+            background: rgba(255, 255, 255, 0.3);
+            border: 3px dashed rgba(255, 255, 255, 0.6);
+        }
+
+        @keyframes glow {
+            from { box-shadow: 0 0 20px rgba(255, 107, 107, 0.8); }
+            to { box-shadow: 0 0 40px rgba(255, 107, 107, 1), 0 0 60px rgba(255, 107, 107, 0.6); }
+        }
+
+        .path-line {
+            position: absolute;
+            height: 3px;
+            background: linear-gradient(90deg, #51cf66, rgba(81, 207, 102, 0.3));
+            border-radius: 2px;
+            transform-origin: left center;
+            z-index: 1;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .path-line.show {
+            opacity: 1;
+        }
+
+        #gameResults {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.9);
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            display: none;
+            z-index: 20;
+            max-width: 500px;
+        }
+
+        #gameResults h2 {
+            margin-bottom: 20px;
+            color: #51cf66;
+        }
+
+        .result-stat {
+            margin: 10px 0;
+            font-size: 18px;
+        }
+
+        .restart-btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: transform 0.2s ease;
+        }
+
+        .restart-btn:hover {
+            transform: scale(1.05);
+        }
+
+        #permissionPrompt {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.9);
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            z-index: 30;
+            max-width: 400px;
+        }
+
+        .camera-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .allow-btn {
+            background: #51cf66;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="gameContainer">
+        <canvas id="canvas" width="800" height="600"></canvas>
+        <video id="videoElement" playsinline muted></video>
+        
+        <div id="instructions">
+            <h3>🖐️ Follow the Dot</h3>
+            <p>Use your index finger to trace the pattern by following the numbered dots in sequence.</p>
+            <p><strong>Instructions:</strong></p>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li>Allow camera access</li>
+                <li>Point your index finger at dot #1</li>
+                <li>Follow the path to each numbered dot</li>
+                <li>Complete the pattern accurately</li>
+            </ul>
+        </div>
+
+        <div id="status">
+            <div class="status-icon" id="statusIcon"></div>
+            <span id="statusText">Initializing camera...</span>
+        </div>
+
+        <div id="gameResults">
+            <h2>🎉 Pattern Complete!</h2>
+            <div class="result-stat">Accuracy: <span id="accuracyScore">0%</span></div>
+            <div class="result-stat">Time: <span id="completionTime">0s</span></div>
+            <div class="result-stat">Smoothness: <span id="smoothnessScore">0%</span></div>
+            <button class="restart-btn" onclick="startNewGame()">Play Again</button>
+        </div>
+
+        <div id="permissionPrompt">
+            <div class="camera-icon">📷</div>
+            <h3>Camera Access Required</h3>
+            <p>This game uses your webcam to track hand movements. Please allow camera access to continue.</p>
+            <button class="allow-btn" onclick="requestCameraAccess()">Allow Camera Access</button>
+        </div>
+    </div>
+
+    <!-- MediaPipe Hands -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
+
+    <script>
+        // Game state
+        let gameState = {
+            isActive: false,
+            currentDot: 0,
+            startTime: null,
+            endTime: null,
+            handPositions: [],
+            dotPositions: [],
+            accuracy: 0,
+            smoothness: 0,
+            level: 1,
+            sessionData: {
+                gameType: 'follow_the_dot',
+                startTime: null,
+                endTime: null,
+                totalTime: 0,
+                accuracy: 0,
+                smoothness: 0,
+                level: 1,
+                score: 0,
+                handTrackingData: [],
+                completed: false
+            }
+        };
+
+        // MediaPipe setup
+        let hands, camera, videoElement, canvas, ctx;
+        let currentHandPosition = null;
+
+        // Dot pattern (you can customize this)
+        const dotPattern = [
+            { x: 200, y: 200, id: 1 },
+            { x: 600, y: 200, id: 2 },
+            { x: 600, y: 400, id: 3 },
+            { x: 200, y: 400, id: 4 },
+            { x: 400, y: 300, id: 5 }
+        ];
+
+        // Initialize the game
+        async function initGame() {
+            canvas = document.getElementById('canvas');
+            ctx = canvas.getContext('2d');
+            videoElement = document.getElementById('videoElement');
+
+            // Show permission prompt
+            document.getElementById('permissionPrompt').style.display = 'block';
+        }
+
+        async function requestCameraAccess() {
+            try {
+                // Hide permission prompt
+                document.getElementById('permissionPrompt').style.display = 'none';
+                updateStatus('Setting up camera...', false);
+
+                // Setup MediaPipe Hands
+                hands = new Hands({
+                    locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`
+                });
+
+                hands.setOptions({
+                    maxNumHands: 1,
+                    modelComplexity: 1,
+                    minDetectionConfidence: 0.7,
+                    minTrackingConfidence: 0.5
+                });
+
+                hands.onResults(onResults);
+
+                // Setup camera
+                camera = new Camera(videoElement, {
+                    onFrame: async () => {
+                        await hands.send({ image: videoElement });
+                    },
+                    width: 640,
+                    height: 480
+                });
+
+                await camera.start();
+                updateStatus('Camera ready! Point your finger at dot #1', true);
+                
+                // Start the game
+                startNewGame();
+
+            } catch (error) {
+                console.error('Camera access failed:', error);
+                updateStatus('Camera access failed. Please refresh and try again.', false);
+                document.getElementById('permissionPrompt').style.display = 'block';
+            }
+        }
+
+        function onResults(results) {
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw video background (flipped)
+            ctx.save();
+            ctx.scale(-1, 1);
+            ctx.translate(-canvas.width, 0);
+            ctx.drawImage(results.image, 0, 0, canvas.width, canvas.height);
+            ctx.restore();
+
+            // Process hand landmarks
+            if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
+                const landmarks = results.multiHandLandmarks[0];
+                
+                // Get index finger tip position (landmark 8)
+                const indexTip = landmarks[8];
+                currentHandPosition = {
+                    x: (1 - indexTip.x) * canvas.width, // Flip horizontally
+                    y: indexTip.y * canvas.height
+                };
+
+                // Draw hand landmarks
+                drawConnectors(ctx, landmarks, HAND_CONNECTIONS, { color: '#00FF00', lineWidth: 2 });
+                drawLandmarks(ctx, landmarks, { color: '#FF0000', lineWidth: 1, radius: 3 });
+
+                // Highlight index finger tip
+                ctx.beginPath();
+                ctx.arc(currentHandPosition.x, currentHandPosition.y, 15, 0, 2 * Math.PI);
+                ctx.fillStyle = 'rgba(255, 255, 0, 0.7)';
+                ctx.fill();
+                ctx.strokeStyle = '#FFD700';
+                ctx.lineWidth = 3;
+                ctx.stroke();
+
+                // Record hand position for analysis
+                if (gameState.isActive) {
+                    gameState.handPositions.push({
+                        timestamp: Date.now(),
+                        x: currentHandPosition.x,
+                        y: currentHandPosition.y
+                    });
+
+                    // Check if finger is near current dot
+                    checkDotProximity();
+                }
+            }
+
+            // Draw game elements
+            drawGameElements();
+        }
+
+        function drawGameElements() {
+            // Draw dots
+            dotPattern.forEach((dot, index) => {
+                const dotElement = document.createElement('div');
+                dotElement.className = 'dot';
+                dotElement.style.left = `${dot.x - 30}px`;
+                dotElement.style.top = `${dot.y - 30}px`;
+                dotElement.textContent = dot.id;
+
+                if (index < gameState.currentDot) {
+                    dotElement.classList.add('completed');
+                } else if (index === gameState.currentDot) {
+                    dotElement.classList.add('current');
+                } else {
+                    dotElement.classList.add('upcoming');
+                }
+
+                // Remove existing dot and add new one
+                const existingDot = document.getElementById(`dot-${dot.id}`);
+                if (existingDot) {
+                    existingDot.remove();
+                }
+                dotElement.id = `dot-${dot.id}`;
+                document.getElementById('gameContainer').appendChild(dotElement);
+            });
+
+            // Draw path lines for completed segments
+            for (let i = 0; i < gameState.currentDot; i++) {
+                const currentDot = dotPattern[i];
+                const nextDot = dotPattern[i + 1];
+                
+                if (nextDot) {
+                    drawPathLine(currentDot, nextDot, i);
+                }
+            }
+        }
+
+        function drawPathLine(fromDot, toDot, index) {
+            const lineElement = document.createElement('div');
+            lineElement.className = 'path-line show';
+            lineElement.id = `line-${index}`;
+
+            const deltaX = toDot.x - fromDot.x;
+            const deltaY = toDot.y - fromDot.y;
+            const length = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+            const angle = Math.atan2(deltaY, deltaX) * (180 / Math.PI);
+
+            lineElement.style.left = `${fromDot.x}px`;
+            lineElement.style.top = `${fromDot.y}px`;
+            lineElement.style.width = `${length}px`;
+            lineElement.style.transform = `rotate(${angle}deg)`;
+
+            // Remove existing line and add new one
+            const existingLine = document.getElementById(`line-${index}`);
+            if (existingLine) {
+                existingLine.remove();
+            }
+            document.getElementById('gameContainer').appendChild(lineElement);
+        }
+
+        function checkDotProximity() {
+            if (!currentHandPosition || gameState.currentDot >= dotPattern.length) return;
+
+            const targetDot = dotPattern[gameState.currentDot];
+            const distance = Math.sqrt(
+                Math.pow(currentHandPosition.x - targetDot.x, 2) + 
+                Math.pow(currentHandPosition.y - targetDot.y, 2)
+            );
+
+            // If finger is close enough to the dot (within 40 pixels)
+            if (distance < 40) {
+                gameState.currentDot++;
+                
+                if (gameState.currentDot >= dotPattern.length) {
+                    endGame();
+                } else {
+                    updateStatus(`Great! Now go to dot #${gameState.currentDot + 1}`, true);
+                }
+            }
+        }
+
+        function startNewGame() {
+            gameState = {
+                isActive: true,
+                currentDot: 0,
+                startTime: Date.now(),
+                endTime: null,
+                handPositions: [],
+                dotPositions: dotPattern.slice(),
+                accuracy: 0,
+                smoothness: 0,
+                level: 1,
+                sessionData: {
+                    gameType: 'follow_the_dot',
+                    startTime: Date.now(),
+                    endTime: null,
+                    totalTime: 0,
+                    accuracy: 0,
+                    smoothness: 0,
+                    level: 1,
+                    score: 0,
+                    handTrackingData: [],
+                    completed: false
+                }
+            };
+
+            // Clear previous game elements
+            document.querySelectorAll('.dot, .path-line').forEach(el => el.remove());
+            document.getElementById('gameResults').style.display = 'none';
+            
+            updateStatus('Point your finger at dot #1 to start!', true);
+        }
+
+        function endGame() {
+            gameState.isActive = false;
+            gameState.endTime = Date.now();
+            
+            // Calculate results
+            const totalTime = (gameState.endTime - gameState.startTime) / 1000;
+            const accuracy = calculateAccuracy();
+            const smoothness = calculateSmoothness();
+            
+            // Calculate score based on accuracy, smoothness, and time
+            const timeBonus = Math.max(0, (60 - totalTime) * 2); // Bonus for completing quickly
+            const score = Math.round((accuracy * 0.4) + (smoothness * 0.3) + (timeBonus * 0.3));
+
+            // Update session data with comprehensive results
+            gameState.sessionData = {
+                gameType: 'follow_the_dot',
+                game_name: 'Follow the Dot',
+                startTime: gameState.startTime,
+                endTime: gameState.endTime,
+                totalTime: totalTime,
+                accuracy: accuracy,
+                smoothness: smoothness,
+                level: gameState.level,
+                score: score,
+                successful_attempts: dotPattern.length, // All dots completed
+                total_attempts: dotPattern.length,
+                handTrackingData: gameState.handPositions,
+                completed: true
+            };
+
+            // Show results
+            document.getElementById('accuracyScore').textContent = `${accuracy}%`;
+            document.getElementById('completionTime').textContent = `${totalTime.toFixed(1)}s`;
+            document.getElementById('smoothnessScore').textContent = `${smoothness}%`;
+            document.getElementById('gameResults').style.display = 'block';
+
+            updateStatus('Pattern completed! Great job!', true);
+
+            // Send results to Flask backend
+            sendSessionData();
+        }
+
+        function sendSessionData() {
+            console.log('🎮 Sending session data:', gameState.sessionData);
+            
+            // Send to Flask API
+            fetch('/api/record_session', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: JSON.stringify(gameState.sessionData)
+            })
+            .then(response => response.json())
+            .then(result => {
+                console.log('✅ Session recorded:', result);
+                if (result.status === 'success') {
+                    console.log('🎯 Recorded data:', result.recorded_data);
+                }
+            })
+            .catch(error => {
+                console.error('❌ Error recording session:', error);
+            });
+        }
+
+        function calculateAccuracy() {
+            if (gameState.handPositions.length === 0) return 0;
+            
+            let totalDeviation = 0;
+            let measurements = 0;
+
+            // Calculate how closely the hand followed the ideal path
+            for (let i = 0; i < dotPattern.length - 1; i++) {
+                const startDot = dotPattern[i];
+                const endDot = dotPattern[i + 1];
+                
+                const relevantPositions = gameState.handPositions.filter(pos => {
+                    const startTime = gameState.startTime + (i * 2000); // Assume 2s per segment
+                    const endTime = gameState.startTime + ((i + 1) * 2000);
+                    return pos.timestamp >= startTime && pos.timestamp <= endTime;
+                });
+
+                relevantPositions.forEach(pos => {
+                    const distanceFromIdealPath = pointToLineDistance(pos, startDot, endDot);
+                    totalDeviation += distanceFromIdealPath;
+                    measurements++;
+                });
+            }
+
+            if (measurements === 0) return 85; // Default good accuracy if no measurements
+            
+            const averageDeviation = totalDeviation / measurements;
+            const maxAcceptableDeviation = 100; // pixels
+            const accuracy = Math.max(0, Math.min(100, 100 - (averageDeviation / maxAcceptableDeviation) * 100));
+            
+            return Math.round(accuracy);
+        }
+
+        function calculateSmoothness() {
+            if (gameState.handPositions.length < 3) return 75; // Default good smoothness
+
+            let totalJerk = 0;
+            
+            for (let i = 2; i < gameState.handPositions.length; i++) {
+                const p1 = gameState.handPositions[i - 2];
+                const p2 = gameState.handPositions[i - 1];
+                const p3 = gameState.handPositions[i];
+                
+                // Calculate acceleration change (jerk)
+                const dt1 = (p2.timestamp - p1.timestamp) / 1000;
+                const dt2 = (p3.timestamp - p2.timestamp) / 1000;
+                
+                if (dt1 > 0 && dt2 > 0) {
+                    const v1x = (p2.x - p1.x) / dt1;
+                    const v1y = (p2.y - p1.y) / dt1;
+                    const v2x = (p3.x - p2.x) / dt2;
+                    const v2y = (p3.y - p2.y) / dt2;
+                    
+                    const ax = (v2x - v1x) / dt2;
+                    const ay = (v2y - v1y) / dt2;
+                    
+                    totalJerk += Math.sqrt(ax * ax + ay * ay);
+                }
+            }
+
+            const averageJerk = totalJerk / (gameState.handPositions.length - 2);
+            const maxAcceptableJerk = 1000; // pixels/s²
+            const smoothness = Math.max(0, Math.min(100, 100 - (averageJerk / maxAcceptableJerk) * 100));
+            
+            return Math.round(smoothness);
+        }
+
+        function pointToLineDistance(point, lineStart, lineEnd) {
+            const A = point.x - lineStart.x;
+            const B = point.y - lineStart.y;
+            const C = lineEnd.x - lineStart.x;
+            const D = lineEnd.y - lineStart.y;
+
+            const dot = A * C + B * D;
+            const lenSq = C * C + D * D;
+            
+            if (lenSq === 0) return Math.sqrt(A * A + B * B);
+            
+            const param = dot / lenSq;
+            
+            let xx, yy;
+            if (param < 0) {
+                xx = lineStart.x;
+                yy = lineStart.y;
+            } else if (param > 1) {
+                xx = lineEnd.x;
+                yy = lineEnd.y;
+            } else {
+                xx = lineStart.x + param * C;
+                yy = lineStart.y + param * D;
+            }
+
+            const dx = point.x - xx;
+            const dy = point.y - yy;
+            return Math.sqrt(dx * dx + dy * dy);
+        }
+
+        function updateStatus(message, isActive) {
+            document.getElementById('statusText').textContent = message;
+            const statusIcon = document.getElementById('statusIcon');
+            
+            if (isActive) {
+                statusIcon.classList.add('active');
+            } else {
+                statusIcon.classList.remove('active');
+            }
+        }
+
+        // Drawing utilities for MediaPipe
+        function drawConnectors(ctx, landmarks, connections, options) {
+            ctx.save();
+            ctx.strokeStyle = options.color || '#00FF00';
+            ctx.lineWidth = options.lineWidth || 2;
+            ctx.scale(-1, 1);
+            ctx.translate(-canvas.width, 0);
+
+            for (const connection of connections) {
+                const from = landmarks[connection[0]];
+                const to = landmarks[connection[1]];
+                
+                ctx.beginPath();
+                ctx.moveTo(from.x * canvas.width, from.y * canvas.height);
+                ctx.lineTo(to.x * canvas.width, to.y * canvas.height);
+                ctx.stroke();
+            }
+            ctx.restore();
+        }
+
+        function drawLandmarks(ctx, landmarks, options) {
+            ctx.save();
+            ctx.fillStyle = options.color || '#FF0000';
+            ctx.scale(-1, 1);
+            ctx.translate(-canvas.width, 0);
+
+            for (const landmark of landmarks) {
+                ctx.beginPath();
+                ctx.arc(
+                    landmark.x * canvas.width,
+                    landmark.y * canvas.height,
+                    options.radius || 3,
+                    0,
+                    2 * Math.PI
+                );
+                ctx.fill();
+            }
+            ctx.restore();
+        }
+
+        // MediaPipe hand connections
+        const HAND_CONNECTIONS = [
+            [0, 1], [1, 2], [2, 3], [3, 4],
+            [0, 5], [5, 6], [6, 7], [7, 8],
+            [0, 9], [9, 10], [10, 11], [11, 12],
+            [0, 13], [13, 14], [14, 15], [15, 16],
+            [0, 17], [17, 18], [18, 19], [19, 20]
+        ];
+
+        // Initialize game when page loads
+        window.addEventListener('load', initGame);
+        
+        // Handle page visibility changes
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                gameState.isActive = false;
+            }
+        });
+    </script>
+</body>
+</html>
