@@ -1,0 +1,24 @@
+// 1. Plugin Management - Where to find Gradle plugins
+pluginManagement {
+    repositories {
+        google()              // Android Gradle Plugin
+        mavenCentral()        // Standard Java/Kotlin libs
+        gradlePluginPortal()  // Community Gradle plugins
+    }
+}
+
+// 2. Dependency Resolution - Where to find project dependencies
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()        // Firebase, Google Play Services, AndroidX
+        mavenCentral()  // Most Java/Android libraries
+        flatDir {
+            dirs 'libs'  // Local libraries in libs/ folder
+        }
+    }
+}
+
+// 3. Root Project Configuration
+rootProject.name = "Everwatch"
+include ':app'

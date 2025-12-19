@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!-- Microphone capsule/body -->
+    <path
+        android:fillColor="#70a36b"
+        android:pathData="M12,3c1.66,0 3,1.34 3,3v6c0,1.66 -1.34,3 -3,3s-3,-1.34 -3,-3V6c0,-1.66 1.34,-3 3,-3z"/>
+
+    <!-- Microphone support arc (semicircle hugging capsule) -->
+    <path
+        android:strokeColor="#70a36b"
+        android:strokeWidth="1.5"
+        android:fillColor="#00000000"
+        android:pathData="M7.5,12c0,2.49 2.01,4.5 4.5,4.5s4.5,-2.01 4.5,-4.5"/>
+
+    <!-- Vertical stand (thin line, longer) -->
+    <path
+        android:strokeColor="#70a36b"
+        android:strokeWidth="1.5"
+        android:fillColor="#00000000"
+        android:pathData="M12,16.5v4"/>
+
+    <!-- Horizontal base line (same thickness as vertical, attached to bottom of stand) -->
+    <path
+        android:strokeColor="#70a36b"
+        android:strokeWidth="1.5"
+        android:fillColor="#00000000"
+        android:pathData="M9,20.5h6"/>
+</vector>

@@ -1,5 +1,0 @@
-flask
-opencv-python
-insightface
-onnxruntime
-numpy

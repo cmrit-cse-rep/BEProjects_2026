@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="8dp"
+    app:cardBackgroundColor="@color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:padding="28dp">
+
+        <TextView
+            android:id="@+id/sosActivatedTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SOS Activated"
+            android:textColor="#d32f2f"
+            android:textSize="40sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="14dp" />
+
+        <TextView
+            android:id="@+id/timerText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="10"
+            android:textColor="#d32f2f"
+            android:textSize="50sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="14dp" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="18dp"
+            app:boxStrokeColor="#d32f2f"
+            app:boxBackgroundMode="outline"
+            app:boxCornerRadiusTopStart="8dp"
+            app:boxCornerRadiusTopEnd="8dp"
+            app:boxCornerRadiusBottomStart="8dp"
+            app:boxCornerRadiusBottomEnd="8dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/passwordEdit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Enter password to deactivate SOS"
+                android:inputType="textPassword"
+                android:background="#fff9e9"
+                android:textColor="#222"
+                android:textColorHint="#999"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/deactivateButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Deactivate SOS"
+            app:cornerRadius="12dp"
+            android:textStyle="bold"
+            android:textColor="?attr/colorOnPrimary"
+            android:backgroundTint="#70a36b"/>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
