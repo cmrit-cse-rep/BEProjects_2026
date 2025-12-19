@@ -1,0 +1,3014 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Construction Site Digital Twin</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #1a1a2e;
+            color: #fff;
+            overflow: hidden;
+        }
+        
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+        
+        .sidebar {
+            width: 350px;
+            background: rgba(16, 22, 58, 0.95);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            overflow-y: auto;
+            z-index: 1000;
+        }
+        
+        .main-view {
+            flex: 1;
+            position: relative;
+        }
+        
+        #canvas-container {
+            width: 100%;
+            height: 100vh;
+            position: relative;
+        }
+        
+        .header {
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .header h1 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .status-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        .controls {
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .control-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .control-group h3 {
+            color: #00d4ff;
+            margin-bottom: 0.8rem;
+            font-size: 1rem;
+        }
+        
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 0.3rem;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+        
+        .btn-primary { background: #00d4ff; color: #1a1a2e; }
+        .btn-success { background: #00ff88; color: #1a1a2e; }
+        .btn-danger { background: #ff4757; color: white; }
+        .btn-secondary { background: #3c4043; color: white; }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        
+        .info-panel {
+            padding: 1rem;
+        }
+        
+        .info-section {
+            margin-bottom: 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 1rem;
+        }
+        
+        .info-section h4 {
+            color: #00ff88;
+            margin-bottom: 0.8rem;
+            font-size: 0.9rem;
+        }
+        
+        .metric {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.3rem 0;
+            font-size: 0.85rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .metric:last-child {
+            border-bottom: none;
+        }
+        
+        .metric-value {
+            font-weight: bold;
+            color: #00d4ff;
+        }
+        
+        .equipment-list {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .equipment-item {
+            padding: 0.6rem;
+            margin: 0.3rem 0;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 6px;
+            border-left: 3px solid #00d4ff;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.85rem;
+        }
+        
+        .equipment-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateX(5px);
+        }
+        
+        .equipment-active { border-left-color: #00ff88; }
+        .equipment-alert { border-left-color: #ff4757; animation: pulse 2s infinite; }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        .view-controls {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+            background: rgba(16, 22, 58, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            padding: 1rem;
+        }
+        
+        .view-controls button {
+            display: block;
+            margin: 0.5rem 0;
+            width: 120px;
+        }
+        
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(26, 26, 46, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+        
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(0, 212, 255, 0.3);
+            border-top: 4px solid #00d4ff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .alert-overlay {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 71, 87, 0.95);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+            z-index: 200;
+            display: none;
+        }
+        
+        .tooltip {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            pointer-events: none;
+            z-index: 1000;
+            display: none;
+        }
+        
+        .legend {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(16, 22, 58, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 8px;
+            padding: 1rem;
+            z-index: 100;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin: 0.3rem 0;
+            font-size: 0.8rem;
+        }
+        
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+        }
+        
+        .stats-overlay {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(16, 22, 58, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 8px;
+            padding: 1rem;
+            z-index: 100;
+            min-width: 200px;
+        }
+        
+        .stats-overlay h3 {
+            color: #00d4ff;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+        
+        .property-group {
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .property-group:last-child {
+            border-bottom: none;
+        }
+        
+        .property-group h5 {
+            margin: 0 0 0.5rem 0;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+        
+        .property-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.2rem 0;
+            font-size: 0.85rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .property-item:last-child {
+            border-bottom: none;
+        }
+        
+        .property-item span:first-child {
+            color: #ccc;
+        }
+        
+        .property-value {
+            font-weight: bold;
+            color: #00d4ff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <div class="header">
+                <h1>🏗️ 3D Construction Twin</h1>
+                <div class="status-info">
+                    <span id="site-status">Loading...</span>
+                    <span id="fps-counter">FPS: --</span>
+                </div>
+            </div>
+            
+            <div class="controls">
+                <div class="control-group">
+                    <h3>🎮 Operations</h3>
+                    <button class="btn btn-success" onclick="startOperations()">▶️ Start</button>
+                    <button class="btn btn-danger" onclick="stopOperations()">⏸️ Stop</button>
+                </div>
+                
+                <div class="control-group">
+                    <h3>👁️ View Controls</h3>
+                    <button class="btn btn-primary" onclick="resetCamera()">🏠 Reset View</button>
+                    <button class="btn btn-primary" onclick="toggleWireframe()">📐 Wireframe</button>
+                    <button class="btn btn-primary" onclick="toggleGrid()">⚏ Grid</button>
+                    <button id="toggleCoordsBtn" class="btn btn-secondary" onclick="toggleCoordinateLabels()">📍 Show Coords</button>
+                </div>
+                
+                <div class="control-group">
+                    <h3>🚛 Routes</h3>
+                    <button class="btn btn-primary" onclick="toggleTruckRoutes()">🚛 Toggle Routes</button>
+                </div>
+            </div>
+            
+            <div class="info-panel">
+                <div class="info-section" id="selected-object-panel" style="display: none;">
+                    <h4 id="selected-object-title">📋 Selected Object</h4>
+                    <div id="selected-object-content">
+                        <!-- Selected object details will be populated by JavaScript -->
+                    </div>
+                    <button class="btn btn-secondary" id="clear-selection-btn" style="margin-top: 0.5rem;">Clear Selection</button>
+                </div>
+                
+                <div class="info-section">
+                    <h4>🏗️ Equipment Status</h4>
+                    <div id="equipment-list" class="equipment-list">
+                        <!-- Equipment items will be populated by JavaScript -->
+                    </div>
+                </div>
+                
+                <div class="info-section">
+                    <h4>🌡️ Environment</h4>
+                    <div id="environmental-info">
+                        <!-- Environmental data will be populated by JavaScript -->
+                    </div>
+                </div>
+                
+                <div class="info-section">
+                    <h4>📊 Site Statistics</h4>
+                    <div id="site-stats">
+                        <!-- Site statistics will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="main-view">
+            <div id="canvas-container">
+                <div id="loading-overlay" class="loading-overlay">
+                    <div>
+                        <div class="loading-spinner"></div>
+                        <p style="margin-top: 1rem; text-align: center;">Loading 3D Site...</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="view-controls">
+                <button class="btn btn-primary" onclick="focusOnEquipment()">🎯 Focus Equipment</button>
+                <button class="btn btn-primary" onclick="showOverview()">🗺️ Site Overview</button>
+                <button class="btn btn-primary" onclick="toggleFullscreen()">⛶ Fullscreen</button>
+            </div>
+            
+            <div class="alert-overlay" id="alert-overlay">
+                <strong>Safety Alert!</strong> <span id="alert-message"></span>
+            </div>
+            
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #00ff88;"></div>
+                    <span>Active Equipment</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #ff4757;"></div>
+                    <span>Equipment Alert</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #00d4ff;"></div>
+                    <span>Workers</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #ffa502;"></div>
+                    <span>Restricted Zone</span>
+                </div>
+            </div>
+            
+            <div class="stats-overlay">
+                <h3>📊 Live Stats</h3>
+                <div class="metric">
+                    <span>Active Equipment:</span>
+                    <span class="metric-value" id="active-equipment-count">0</span>
+                </div>
+                <div class="metric">
+                    <span>Workers on Site:</span>
+                    <span class="metric-value" id="worker-count">0</span>
+                </div>
+                <div class="metric">
+                    <span>Safety Alerts:</span>
+                    <span class="metric-value" id="alert-count">0</span>
+                </div>
+                <div class="metric">
+                    <span>Progress:</span>
+                    <span class="metric-value" id="progress-percentage">0%</span>
+                </div>
+            </div>
+            
+            <div class="tooltip" id="tooltip"></div>
+        </div>
+    </div>
+
+    <!-- Health polling: update site status based on /health endpoint -->
+    <script>
+        async function updateHealthStatus() {
+            try {
+                const res = await fetch('/health');
+                if (!res.ok) throw new Error('Health request failed');
+                const data = await res.json();
+                const el = document.getElementById('site-status');
+                if (!el) return;
+                const running = data.app_running;
+                const telemetry = data.telemetry_running;
+                el.textContent = running ? 'Running' : 'Stopped';
+                el.style.color = running ? '#00ff88' : '#ff4757';
+                // Add tooltip with telemetry info
+                el.title = `Telemetry: ${telemetry ? 'on' : 'off'} • Equipments: ${data.equipment_count} • Workers: ${data.worker_count}`;
+            } catch (err) {
+                const el = document.getElementById('site-status');
+                if (el) {
+                    el.textContent = 'Offline';
+                    el.style.color = '#ffa502';
+                    el.title = 'Health endpoint unreachable';
+                }
+                console.debug('Health poll error', err);
+            }
+        }
+
+        // Run once on load and then poll every 5 seconds
+        updateHealthStatus();
+        setInterval(updateHealthStatus, 5000);
+    </script>
+
+    <script>
+        // Global variables
+        let scene, camera, renderer, controls;
+        let equipmentMeshes = {};
+        let workerMeshes = {};
+        let safetyZones = {};
+        let truckRoutes = {}; // Store truck route visualizations
+        let showTruckRoutes = false; // Toggle for route visibility
+        let selectedObject = null; // Currently selected object
+        let selectionIndicator = null; // Visual selection indicator
+        let gridHelper, wireframeMode = false;
+        let dashboardData = {};
+        let animationId;
+        let clock = new THREE.Clock();
+        
+        // FPS tracking
+        let fps = 0;
+        let lastTime = performance.now();
+        let frameCount = 0;
+
+        // Initialize the 3D scene
+        function init3DScene() {
+            const container = document.getElementById('canvas-container');
+            
+            // Scene setup
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x0f1419);
+            scene.fog = new THREE.Fog(0x0f1419, 500, 2000);
+            
+            // Camera setup
+            camera = new THREE.PerspectiveCamera(
+                75,
+                container.clientWidth / container.clientHeight,
+                1,
+                2000
+            );
+            camera.position.set(200, 150, 200);
+            
+            // Renderer setup
+            renderer = new THREE.WebGLRenderer({ 
+                antialias: true,
+                powerPreference: "high-performance"
+            });
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            renderer.shadowMap.enabled = true;
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            renderer.physicallyCorrectLights = true;
+            renderer.toneMapping = THREE.ACESFilmicToneMapping;
+            renderer.toneMappingExposure = 1.0;
+            container.appendChild(renderer.domElement);
+            
+            // Controls
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+            controls.maxDistance = 1000;
+            controls.minDistance = 10;
+            controls.maxPolarAngle = Math.PI * 0.5;
+            
+            // Lighting setup
+            setupLighting();
+            
+            // Create construction site ground and environment
+            createConstructionSite();
+            
+            // Handle window resize
+            window.addEventListener('resize', onWindowResize);
+            
+            // Mouse interaction
+            setupMouseInteraction();
+            
+            // Hide loading overlay
+            document.getElementById('loading-overlay').style.display = 'none';
+            
+            console.log('3D Scene initialized successfully');
+        }
+        
+        function setupLighting() {
+            // Ambient light
+            const ambientLight = new THREE.AmbientLight(0x404040, 0.6);
+            scene.add(ambientLight);
+            
+            // Sun light
+            const sunLight = new THREE.DirectionalLight(0xffffff, 1.0);
+            sunLight.position.set(100, 200, 50);
+            sunLight.castShadow = true;
+            sunLight.shadow.mapSize.width = 2048;
+            sunLight.shadow.mapSize.height = 2048;
+            sunLight.shadow.camera.near = 1;
+            sunLight.shadow.camera.far = 500;
+            sunLight.shadow.camera.left = -200;
+            sunLight.shadow.camera.right = 200;
+            sunLight.shadow.camera.top = 200;
+            sunLight.shadow.camera.bottom = -200;
+            scene.add(sunLight);
+            
+            // Construction site lighting
+            const siteLight = new THREE.PointLight(0xffa500, 0.8, 300);
+            siteLight.position.set(150, 50, 100);
+            scene.add(siteLight);
+            
+            // Evening/night lighting effect
+            const moonLight = new THREE.DirectionalLight(0x9bb7ff, 0.3);
+            moonLight.position.set(-50, 100, -100);
+            scene.add(moonLight);
+            
+            // Weather and environmental effects
+            createWeatherEffects();
+        }
+        
+        function createWeatherEffects() {
+            // Dust particles
+            createDustEffect();
+            
+            // Sky with clouds
+            createSkyAndClouds();
+            
+            // Trees and vegetation around the site
+            createVegetation();
+            
+            // Atmospheric haze
+            scene.fog = new THREE.Fog(0x0f1419, 200, 1500);
+        }
+        
+        function createDustEffect() {
+            const dustGeometry = new THREE.BufferGeometry();
+            const dustCount = 1000;
+            const positions = new Float32Array(dustCount * 3);
+            
+            for (let i = 0; i < dustCount * 3; i += 3) {
+                positions[i] = (Math.random() - 0.5) * 400;      // x
+                positions[i + 1] = Math.random() * 100 + 5;      // y
+                positions[i + 2] = (Math.random() - 0.5) * 300;  // z
+            }
+            
+            dustGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            
+            const dustMaterial = new THREE.PointsMaterial({
+                color: 0x8B7355,
+                size: 2,
+                transparent: true,
+                opacity: 0.3
+            });
+            
+            const dustParticles = new THREE.Points(dustGeometry, dustMaterial);
+            scene.add(dustParticles);
+            
+            // Animate dust particles
+            function animateDust() {
+                const positions = dustParticles.geometry.attributes.position.array;
+                
+                for (let i = 0; i < dustCount * 3; i += 3) {
+                    positions[i] += Math.sin(performance.now() * 0.001 + i) * 0.1;
+                    positions[i + 2] += Math.cos(performance.now() * 0.0008 + i) * 0.1;
+                    
+                    // Reset particles that go too far
+                    if (positions[i] > 200) positions[i] = -200;
+                    if (positions[i] < -200) positions[i] = 200;
+                    if (positions[i + 2] > 150) positions[i + 2] = -150;
+                    if (positions[i + 2] < -150) positions[i + 2] = 150;
+                }
+                
+                dustParticles.geometry.attributes.position.needsUpdate = true;
+            }
+            
+            // Store animation function for later use
+            window.animateDust = animateDust;
+        }
+        
+        function createSkyAndClouds() {
+            // Sky dome
+            const skyGeometry = new THREE.SphereGeometry(1000, 32, 32);
+            const skyMaterial = new THREE.MeshBasicMaterial({
+                color: 0x87CEEB,
+                side: THREE.BackSide,
+                transparent: true,
+                opacity: 0.8
+            });
+            const sky = new THREE.Mesh(skyGeometry, skyMaterial);
+            scene.add(sky);
+            
+            // Clouds
+            const cloudGeometry = new THREE.SphereGeometry(20, 8, 8);
+            const cloudMaterial = new THREE.MeshLambertMaterial({
+                color: 0xffffff,
+                transparent: true,
+                opacity: 0.7
+            });
+            
+            const cloudPositions = [
+                [200, 150, -300], [-250, 180, -400], [300, 160, 200],
+                [-150, 140, 350], [100, 170, -200], [-300, 190, 100]
+            ];
+            
+            cloudPositions.forEach(pos => {
+                const cloud = new THREE.Mesh(cloudGeometry, cloudMaterial);
+                cloud.position.set(pos[0], pos[1], pos[2]);
+                cloud.scale.set(
+                    1 + Math.random() * 2,
+                    0.6 + Math.random() * 0.8,
+                    1 + Math.random() * 2
+                );
+                scene.add(cloud);
+            });
+        }
+        
+        function createVegetation() {
+            // Trees around the perimeter
+            const treePositions = [
+                [-250, 0, -150], [-280, 0, -100], [-270, 0, -50],
+                [250, 0, -120], [280, 0, -80], [270, 0, -40],
+                [-250, 0, 180], [-280, 0, 140], [250, 0, 160],
+                [280, 0, 120], [270, 0, 180], [-270, 0, 200]
+            ];
+            
+            treePositions.forEach(pos => {
+                createTree(pos[0], pos[1], pos[2]);
+            });
+            
+            // Grass patches
+            createGrassPatches();
+            
+            // Rocky outcrops
+            createRocks();
+        }
+        
+        function createTree(x, y, z) {
+            const treeGroup = new THREE.Group();
+            
+            // Tree trunk
+            const trunkGeometry = new THREE.CylinderGeometry(1, 2, 15);
+            const trunkMaterial = new THREE.MeshLambertMaterial({ color: 0x8B4513 });
+            const trunk = new THREE.Mesh(trunkGeometry, trunkMaterial);
+            trunk.position.set(0, 7.5, 0);
+            trunk.castShadow = true;
+            treeGroup.add(trunk);
+            
+            // Tree foliage
+            const foliageGeometry = new THREE.SphereGeometry(8, 8, 8);
+            const foliageMaterial = new THREE.MeshLambertMaterial({ color: 0x228B22 });
+            const foliage = new THREE.Mesh(foliageGeometry, foliageMaterial);
+            foliage.position.set(0, 18, 0);
+            foliage.scale.set(1.2, 1, 1.2);
+            foliage.receiveShadow = true;
+            treeGroup.add(foliage);
+            
+            // Additional foliage layers
+            const foliage2 = new THREE.Mesh(foliageGeometry, foliageMaterial);
+            foliage2.position.set(0, 22, 0);
+            foliage2.scale.set(0.8, 0.8, 0.8);
+            foliage2.receiveShadow = true;
+            treeGroup.add(foliage2);
+            
+            treeGroup.position.set(x, y, z);
+            scene.add(treeGroup);
+        }
+        
+        function createGrassPatches() {
+            const grassGeometry = new THREE.PlaneGeometry(20, 20);
+            const grassMaterial = new THREE.MeshLambertMaterial({
+                color: 0x7CFC00,
+                transparent: true,
+                opacity: 0.6
+            });
+            
+            const grassPositions = [
+                [-200, 0.1, -200], [-180, 0.1, -180], [200, 0.1, -190],
+                [180, 0.1, -170], [-190, 0.1, 190], [190, 0.1, 190],
+                [-170, 0.1, 170], [170, 0.1, 170]
+            ];
+            
+            grassPositions.forEach(pos => {
+                const grass = new THREE.Mesh(grassGeometry, grassMaterial);
+                grass.rotation.x = -Math.PI / 2;
+                grass.position.set(pos[0], pos[1], pos[2]);
+                grass.receiveShadow = true;
+                scene.add(grass);
+            });
+        }
+        
+        function createRocks() {
+            const rockPositions = [
+                [-230, 0, -80], [-260, 0, 60], [240, 0, -150],
+                [260, 0, 140], [-240, 0, 160], [220, 0, 180]
+            ];
+            
+            rockPositions.forEach(pos => {
+                const rockGeometry = new THREE.DodecahedronGeometry(
+                    3 + Math.random() * 4
+                );
+                const rockMaterial = new THREE.MeshLambertMaterial({ 
+                    color: 0x696969 
+                });
+                const rock = new THREE.Mesh(rockGeometry, rockMaterial);
+                rock.position.set(
+                    pos[0] + (Math.random() - 0.5) * 10,
+                    pos[1] + 2,
+                    pos[2] + (Math.random() - 0.5) * 10
+                );
+                rock.rotation.set(
+                    Math.random() * Math.PI,
+                    Math.random() * Math.PI,
+                    Math.random() * Math.PI
+                );
+                rock.castShadow = true;
+                rock.receiveShadow = true;
+                scene.add(rock);
+            });
+        }
+        
+        function createConstructionSite() {
+            // Ground plane
+            const groundGeometry = new THREE.PlaneGeometry(600, 400);
+            const groundTexture = createGroundTexture();
+            const groundMaterial = new THREE.MeshLambertMaterial({ 
+                map: groundTexture,
+                transparent: true
+            });
+            const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+            ground.rotation.x = -Math.PI / 2;
+            ground.receiveShadow = true;
+            scene.add(ground);
+            
+            // Construction boundary fence
+            createBoundaryFence();
+            
+            // Site roads
+            createSiteRoads();
+            
+            // Grid helper
+            gridHelper = new THREE.GridHelper(600, 30, 0x444444, 0x222222);
+            gridHelper.position.y = 0.5;
+            scene.add(gridHelper);
+
+            // Coordinate labels (initially hidden)
+            createCoordinateLabels();
+
+            // Buildings under construction
+            createBuildingStructures();
+        }
+        
+        function createGroundTexture() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 512;
+            canvas.height = 512;
+            const ctx = canvas.getContext('2d');
+            
+            // Base dirt color
+            ctx.fillStyle = '#8b6f47';
+            ctx.fillRect(0, 0, 512, 512);
+            
+            // Add some texture
+            for (let i = 0; i < 1000; i++) {
+                const x = Math.random() * 512;
+                const y = Math.random() * 512;
+                const size = Math.random() * 3 + 1;
+                ctx.fillStyle = `rgba(${139 + Math.random() * 20}, ${111 + Math.random() * 20}, ${71 + Math.random() * 20}, 0.3)`;
+                ctx.fillRect(x, y, size, size);
+            }
+            
+            const texture = new THREE.CanvasTexture(canvas);
+            texture.wrapS = THREE.RepeatWrapping;
+            texture.wrapT = THREE.RepeatWrapping;
+            texture.repeat.set(8, 8);
+            return texture;
+        }
+
+        // Coordinate labels group
+        let coordinateLabelsGroup = null;
+        let showCoordinates = false;
+
+        function createCoordinateLabels() {
+            coordinateLabelsGroup = new THREE.Group();
+            coordinateLabelsGroup.visible = false;
+
+            // Create sprite material for text labels
+            function createTextSprite(text, color = '#00ff00') {
+                const canvas = document.createElement('canvas');
+                canvas.width = 128;
+                canvas.height = 64;
+                const ctx = canvas.getContext('2d');
+                ctx.fillStyle = color;
+                ctx.font = 'bold 24px Arial';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(text, 64, 32);
+
+                const texture = new THREE.CanvasTexture(canvas);
+                const material = new THREE.SpriteMaterial({ map: texture });
+                const sprite = new THREE.Sprite(material);
+                sprite.scale.set(20, 10, 1);
+                return sprite;
+            }
+
+            // X-axis labels - Site X: 0-300, 3D X = siteX - 300
+            for (let siteX = 0; siteX <= 300; siteX += 50) {
+                const x3d = siteX - 300;
+                const label = createTextSprite(`${siteX}`, '#00ffff');
+                label.position.set(x3d, 5, -210);
+                coordinateLabelsGroup.add(label);
+            }
+
+            // Y-axis labels - Site Y: 0-200, 3D Z = siteY - 200
+            for (let siteY = 0; siteY <= 200; siteY += 50) {
+                const z3d = siteY - 200;
+                const label = createTextSprite(`${siteY}`, '#ffff00');
+                label.position.set(-310, 5, z3d);
+                coordinateLabelsGroup.add(label);
+            }
+
+            // Axis labels
+            const xAxisLabel = createTextSprite('X →', '#00ffff');
+            xAxisLabel.position.set(50, 8, -210);
+            coordinateLabelsGroup.add(xAxisLabel);
+
+            const yAxisLabel = createTextSprite('Y ↓', '#ffff00');
+            yAxisLabel.position.set(-310, 8, 50);
+            coordinateLabelsGroup.add(yAxisLabel);
+
+            // Origin marker (0,0)
+            const originLabel = createTextSprite('(0,0)', '#ff0000');
+            originLabel.position.set(-300, 10, -200);
+            coordinateLabelsGroup.add(originLabel);
+
+            // Add axis lines
+            const xAxisGeom = new THREE.BufferGeometry().setFromPoints([
+                new THREE.Vector3(-300, 2, -200),
+                new THREE.Vector3(300, 2, -200)
+            ]);
+            const yAxisGeom = new THREE.BufferGeometry().setFromPoints([
+                new THREE.Vector3(-300, 2, -200),
+                new THREE.Vector3(-300, 2, 200)
+            ]);
+            const xAxis = new THREE.Line(xAxisGeom, new THREE.LineBasicMaterial({ color: 0x00ffff, linewidth: 2 }));
+            const yAxis = new THREE.Line(yAxisGeom, new THREE.LineBasicMaterial({ color: 0xffff00, linewidth: 2 }));
+            coordinateLabelsGroup.add(xAxis);
+            coordinateLabelsGroup.add(yAxis);
+
+            scene.add(coordinateLabelsGroup);
+        }
+
+        function toggleCoordinateLabels() {
+            showCoordinates = !showCoordinates;
+            if (coordinateLabelsGroup) {
+                coordinateLabelsGroup.visible = showCoordinates;
+            }
+            const btn = document.getElementById('toggleCoordsBtn');
+            if (btn) {
+                btn.textContent = showCoordinates ? '📍 Hide Coords' : '📍 Show Coords';
+                btn.classList.toggle('btn-success', showCoordinates);
+                btn.classList.toggle('btn-secondary', !showCoordinates);
+            }
+        }
+
+        function createBoundaryFence() {
+            const fenceGeometry = new THREE.BoxGeometry(2, 20, 2);
+            const fenceMaterial = new THREE.MeshLambertMaterial({ color: 0x8B4513 });
+            
+            // Fence posts around perimeter
+            const positions = [
+                [-280, 0, -180], [280, 0, -180],  // Front
+                [-280, 0, 180], [280, 0, 180],   // Back
+                [-280, 0, 0], [280, 0, 0]        // Sides
+            ];
+            
+            positions.forEach(pos => {
+                const post = new THREE.Mesh(fenceGeometry, fenceMaterial);
+                post.position.set(pos[0], pos[1] + 10, pos[2]);
+                post.castShadow = true;
+                scene.add(post);
+            });
+        }
+        
+        function createSiteRoads() {
+            const roadGeometry = new THREE.PlaneGeometry(20, 400);
+            const roadMaterial = new THREE.MeshLambertMaterial({ 
+                color: 0x2c2c2c,
+                transparent: true,
+                opacity: 0.8
+            });
+            
+            const road1 = new THREE.Mesh(roadGeometry, roadMaterial);
+            road1.rotation.x = -Math.PI / 2;
+            road1.position.set(-100, 0.1, 0);
+            scene.add(road1);
+            
+            const road2 = new THREE.Mesh(roadGeometry, roadMaterial);
+            road2.rotation.x = -Math.PI / 2;
+            road2.rotation.z = Math.PI / 2;
+            road2.position.set(0, 0.1, 100);
+            scene.add(road2);
+        }
+        
+        function createBuildingStructures() {
+            // Main building foundation with reinforcement
+            const foundationGeometry = new THREE.BoxGeometry(100, 8, 80);
+            const foundationMaterial = new THREE.MeshLambertMaterial({ color: 0x555555 });
+            const foundation = new THREE.Mesh(foundationGeometry, foundationMaterial);
+            foundation.position.set(50, 4, 50);
+            foundation.castShadow = true;
+            foundation.receiveShadow = true;
+            scene.add(foundation);
+            
+            // Rebar texture for foundation
+            const rebarGeometry = new THREE.BoxGeometry(102, 1, 82);
+            const rebarMaterial = new THREE.MeshLambertMaterial({ color: 0x8B4513 });
+            const rebar = new THREE.Mesh(rebarGeometry, rebarMaterial);
+            rebar.position.set(50, 8.5, 50);
+            scene.add(rebar);
+            
+            // Building columns with more detail
+            const columnPositions = [
+                [20, 20], [50, 20], [80, 20],
+                [20, 50], [80, 50],
+                [20, 80], [50, 80], [80, 80]
+            ];
+            
+            columnPositions.forEach(pos => {
+                const columnGeometry = new THREE.BoxGeometry(4, 45, 4);
+                const columnMaterial = new THREE.MeshLambertMaterial({ color: 0x888888 });
+                const column = new THREE.Mesh(columnGeometry, columnMaterial);
+                column.position.set(pos[0], 22.5, pos[1]);
+                column.castShadow = true;
+                scene.add(column);
+                
+                // Column capitals
+                const capitalGeometry = new THREE.BoxGeometry(6, 3, 6);
+                const capitalMaterial = new THREE.MeshLambertMaterial({ color: 0x999999 });
+                const capital = new THREE.Mesh(capitalGeometry, capitalMaterial);
+                capital.position.set(pos[0], 46, pos[1]);
+                scene.add(capital);
+            });
+            
+            // Floor slabs (partially constructed)
+            const floorGeometry = new THREE.BoxGeometry(96, 2, 76);
+            const floorMaterial = new THREE.MeshLambertMaterial({ 
+                color: 0x777777,
+                transparent: true,
+                opacity: 0.8 
+            });
+            
+            // First floor
+            const floor1 = new THREE.Mesh(floorGeometry, floorMaterial);
+            floor1.position.set(50, 48, 50);
+            floor1.receiveShadow = true;
+            scene.add(floor1);
+            
+            // Partial second floor
+            const partialFloorGeometry = new THREE.BoxGeometry(48, 2, 76);
+            const floor2 = new THREE.Mesh(partialFloorGeometry, floorMaterial);
+            floor2.position.set(26, 63, 50);
+            floor2.receiveShadow = true;
+            scene.add(floor2);
+            
+            // Scaffolding
+            createScaffolding();
+            
+            // Construction materials storage
+            createMaterialStorage();
+            
+            // Construction site office trailers
+            createSiteOffices();
+            
+            // Additional construction elements
+            createConstructionElements();
+        }
+        
+        function createScaffolding() {
+            const scaffoldMaterial = new THREE.MeshLambertMaterial({ color: 0xFFD700 });
+            
+            // Vertical scaffolding poles
+            for (let x = 15; x <= 85; x += 15) {
+                for (let z = 15; z <= 85; z += 15) {
+                    if (x >= 20 && x <= 80 && z >= 20 && z <= 80) continue; // Skip building interior
+                    
+                    const poleGeometry = new THREE.CylinderGeometry(0.5, 0.5, 50);
+                    const pole = new THREE.Mesh(poleGeometry, scaffoldMaterial);
+                    pole.position.set(x, 25, z);
+                    pole.castShadow = true;
+                    scene.add(pole);
+                    
+                    // Horizontal connecting bars
+                    if (x < 85) {
+                        const barGeometry = new THREE.CylinderGeometry(0.3, 0.3, 15);
+                        const bar = new THREE.Mesh(barGeometry, scaffoldMaterial);
+                        bar.position.set(x + 7.5, 35, z);
+                        bar.rotation.z = Math.PI / 2;
+                        scene.add(bar);
+                    }
+                }
+            }
+            
+            // Scaffolding platforms
+            const platformGeometry = new THREE.BoxGeometry(12, 0.5, 4);
+            const platformMaterial = new THREE.MeshLambertMaterial({ color: 0x8B7D6B });
+            
+            for (let x = 15; x <= 75; x += 15) {
+                const platform = new THREE.Mesh(platformGeometry, platformMaterial);
+                platform.position.set(x + 6, 35, 15);
+                platform.receiveShadow = true;
+                scene.add(platform);
+            }
+        }
+        
+        function createMaterialStorage() {
+            // Steel beam storage
+            const beamMaterial = new THREE.MeshLambertMaterial({ color: 0x708090 });
+            for (let i = 0; i < 8; i++) {
+                const beamGeometry = new THREE.BoxGeometry(20, 1, 1);
+                const beam = new THREE.Mesh(beamGeometry, beamMaterial);
+                beam.position.set(-80, 2 + i * 1.2, -60);
+                beam.castShadow = true;
+                scene.add(beam);
+            }
+            
+            // Concrete blocks
+            const blockMaterial = new THREE.MeshLambertMaterial({ color: 0x696969 });
+            for (let x = 0; x < 4; x++) {
+                for (let z = 0; z < 3; z++) {
+                    for (let y = 0; y < 2; y++) {
+                        const blockGeometry = new THREE.BoxGeometry(4, 2, 2);
+                        const block = new THREE.Mesh(blockGeometry, blockMaterial);
+                        block.position.set(-90 + x * 5, 1 + y * 2.5, -40 + z * 3);
+                        block.castShadow = true;
+                        block.receiveShadow = true;
+                        scene.add(block);
+                    }
+                }
+            }
+            
+            // Lumber pile
+            const lumberMaterial = new THREE.MeshLambertMaterial({ color: 0xDEB887 });
+            for (let i = 0; i < 12; i++) {
+                const lumberGeometry = new THREE.BoxGeometry(16, 0.5, 0.8);
+                const lumber = new THREE.Mesh(lumberGeometry, lumberMaterial);
+                lumber.position.set(-120, 1 + i * 0.6, -80);
+                lumber.rotation.y = (i % 2) * 0.1;
+                lumber.castShadow = true;
+                scene.add(lumber);
+            }
+            
+            // Pipe storage
+            const pipeMaterial = new THREE.MeshLambertMaterial({ color: 0x2F4F4F });
+            for (let i = 0; i < 6; i++) {
+                const pipeGeometry = new THREE.CylinderGeometry(0.5, 0.5, 12);
+                const pipe = new THREE.Mesh(pipeGeometry, pipeMaterial);
+                pipe.position.set(-100, 1 + i * 1.1, -100);
+                pipe.rotation.z = Math.PI / 2;
+                pipe.castShadow = true;
+                scene.add(pipe);
+            }
+            
+            // Gravel pile
+            const gravelGeometry = new THREE.ConeGeometry(8, 6, 8);
+            const gravelMaterial = new THREE.MeshLambertMaterial({ color: 0x808080 });
+            const gravel = new THREE.Mesh(gravelGeometry, gravelMaterial);
+            gravel.position.set(-60, 3, -100);
+            gravel.receiveShadow = true;
+            scene.add(gravel);
+            
+            // Sand pile
+            const sandGeometry = new THREE.ConeGeometry(10, 5, 8);
+            const sandMaterial = new THREE.MeshLambertMaterial({ color: 0xF4A460 });
+            const sand = new THREE.Mesh(sandGeometry, sandMaterial);
+            sand.position.set(-30, 2.5, -110);
+            sand.receiveShadow = true;
+            scene.add(sand);
+        }
+        
+        function createSiteOffices() {
+            // Main site office trailer
+            const officeGeometry = new THREE.BoxGeometry(30, 8, 12);
+            const officeMaterial = new THREE.MeshLambertMaterial({ color: 0xF5F5DC });
+            const office = new THREE.Mesh(officeGeometry, officeMaterial);
+            office.position.set(-150, 4, 50);
+            office.castShadow = true;
+            office.receiveShadow = true;
+            scene.add(office);
+            
+            // Office roof
+            const roofGeometry = new THREE.BoxGeometry(32, 1, 14);
+            const roofMaterial = new THREE.MeshLambertMaterial({ color: 0x8B4513 });
+            const roof = new THREE.Mesh(roofGeometry, roofMaterial);
+            roof.position.set(-150, 9, 50);
+            roof.castShadow = true;
+            scene.add(roof);
+            
+            // Office windows
+            const windowGeometry = new THREE.BoxGeometry(4, 2, 0.2);
+            const windowMaterial = new THREE.MeshLambertMaterial({ 
+                color: 0x87CEEB,
+                transparent: true,
+                opacity: 0.7 
+            });
+            
+            for (let i = 0; i < 3; i++) {
+                const window = new THREE.Mesh(windowGeometry, windowMaterial);
+                window.position.set(-145 + i * 8, 6, 56.1);
+                scene.add(window);
+            }
+            
+            // Storage container
+            const containerGeometry = new THREE.BoxGeometry(20, 8, 8);
+            const containerMaterial = new THREE.MeshLambertMaterial({ color: 0xFF6347 });
+            const container = new THREE.Mesh(containerGeometry, containerMaterial);
+            container.position.set(-180, 4, 80);
+            container.castShadow = true;
+            container.receiveShadow = true;
+            scene.add(container);
+            
+            // Portable toilet
+            const toiletGeometry = new THREE.BoxGeometry(3, 7, 3);
+            const toiletMaterial = new THREE.MeshLambertMaterial({ color: 0x0000FF });
+            const toilet = new THREE.Mesh(toiletGeometry, toiletMaterial);
+            toilet.position.set(-200, 3.5, 30);
+            toilet.castShadow = true;
+            scene.add(toilet);
+        }
+        
+        function createConstructionElements() {
+            // Construction barriers
+            const barrierMaterial = new THREE.MeshLambertMaterial({ color: 0xFF4500 });
+            const barriers = [
+                [-200, 0, -50], [-180, 0, -50], [-160, 0, -50],
+                [150, 0, -50], [170, 0, -50], [190, 0, -50],
+                [-50, 0, 150], [-30, 0, 150], [-10, 0, 150]
+            ];
+            
+            barriers.forEach(pos => {
+                const barrierGeometry = new THREE.BoxGeometry(8, 3, 1);
+                const barrier = new THREE.Mesh(barrierGeometry, barrierMaterial);
+                barrier.position.set(pos[0], 1.5, pos[1]);
+                barrier.castShadow = true;
+                scene.add(barrier);
+            });
+            
+            // Traffic cones
+            const coneGeometry = new THREE.ConeGeometry(1.5, 4, 8);
+            const coneMaterial = new THREE.MeshLambertMaterial({ color: 0xFF6600 });
+            const conePositions = [
+                [-80, 0, -20], [-60, 0, -30], [120, 0, -40],
+                [140, 0, 120], [-40, 0, 130], [-20, 0, 140]
+            ];
+            
+            conePositions.forEach(pos => {
+                const cone = new THREE.Mesh(coneGeometry, coneMaterial);
+                cone.position.set(pos[0], 2, pos[1]);
+                cone.castShadow = true;
+                scene.add(cone);
+            });
+            
+            // Construction signs
+            const signGeometry = new THREE.BoxGeometry(6, 4, 0.2);
+            const signMaterial = new THREE.MeshLambertMaterial({ color: 0xFFFF00 });
+            const sign = new THREE.Mesh(signGeometry, signMaterial);
+            sign.position.set(-220, 4, 0);
+            sign.castShadow = true;
+            scene.add(sign);
+            
+            // Sign post
+            const postGeometry = new THREE.CylinderGeometry(0.3, 0.3, 8);
+            const postMaterial = new THREE.MeshLambertMaterial({ color: 0x654321 });
+            const post = new THREE.Mesh(postGeometry, postMaterial);
+            post.position.set(-220, 4, 0);
+            post.castShadow = true;
+            scene.add(post);
+            
+            // Concrete mixer truck parking area
+            const parkingGeometry = new THREE.BoxGeometry(25, 0.2, 12);
+            const parkingMaterial = new THREE.MeshLambertMaterial({ 
+                color: 0x2F2F2F,
+                transparent: true,
+                opacity: 0.8 
+            });
+            const parking = new THREE.Mesh(parkingGeometry, parkingMaterial);
+            parking.position.set(-50, 0.1, -150);
+            parking.receiveShadow = true;
+            scene.add(parking);
+            
+            // Lighting towers
+            createLightingTowers();
+            
+            // Power lines and utilities
+            createUtilities();
+        }
+        
+        function createLightingTowers() {
+            const towerPositions = [
+                [-100, 0, 100], [150, 0, 100], [-100, 0, -120], [200, 0, -100]
+            ];
+            
+            towerPositions.forEach(pos => {
+                // Tower mast
+                const mastGeometry = new THREE.CylinderGeometry(0.8, 1.2, 25);
+                const mastMaterial = new THREE.MeshLambertMaterial({ color: 0x708090 });
+                const mast = new THREE.Mesh(mastGeometry, mastMaterial);
+                mast.position.set(pos[0], 12.5, pos[1]);
+                mast.castShadow = true;
+                scene.add(mast);
+                
+                // Light fixture
+                const lightGeometry = new THREE.BoxGeometry(3, 1, 3);
+                const lightMaterial = new THREE.MeshLambertMaterial({ color: 0x444444 });
+                const light = new THREE.Mesh(lightGeometry, lightMaterial);
+                light.position.set(pos[0], 25.5, pos[1]);
+                scene.add(light);
+                
+                // Add actual light source
+                const spotLight = new THREE.SpotLight(0xFFFFAA, 0.5, 100, Math.PI / 6);
+                spotLight.position.set(pos[0], 25, pos[1]);
+                spotLight.target.position.set(pos[0], 0, pos[1] + 20);
+                spotLight.castShadow = true;
+                scene.add(spotLight);
+                scene.add(spotLight.target);
+            });
+        }
+        
+        function createUtilities() {
+            // Power lines
+            const cableGeometry = new THREE.CylinderGeometry(0.1, 0.1, 150);
+            const cableMaterial = new THREE.MeshLambertMaterial({ color: 0x000000 });
+            
+            const cable1 = new THREE.Mesh(cableGeometry, cableMaterial);
+            cable1.position.set(0, 15, 0);
+            cable1.rotation.z = Math.PI / 2;
+            scene.add(cable1);
+            
+            const cable2 = new THREE.Mesh(cableGeometry, cableMaterial);
+            cable2.position.set(0, 17, 0);
+            cable2.rotation.z = Math.PI / 2;
+            scene.add(cable2);
+            
+            // Electrical boxes
+            const boxGeometry = new THREE.BoxGeometry(2, 3, 1);
+            const boxMaterial = new THREE.MeshLambertMaterial({ color: 0x228B22 });
+            const electricalBoxes = [
+                [-180, 0, 20], [-160, 0, 60], [180, 0, -80]
+            ];
+            
+            electricalBoxes.forEach(pos => {
+                const box = new THREE.Mesh(boxGeometry, boxMaterial);
+                box.position.set(pos[0], 1.5, pos[1]);
+                box.castShadow = true;
+                scene.add(box);
+            });
+            
+            // Water tanks
+            const tankGeometry = new THREE.CylinderGeometry(6, 6, 8);
+            const tankMaterial = new THREE.MeshLambertMaterial({ color: 0x4169E1 });
+            const tank = new THREE.Mesh(tankGeometry, tankMaterial);
+            tank.position.set(-200, 4, -80);
+            tank.castShadow = true;
+            tank.receiveShadow = true;
+            scene.add(tank);
+            
+            // Dumpsters
+            const dumpsterGeometry = new THREE.BoxGeometry(6, 3, 4);
+            const dumpsterMaterial = new THREE.MeshLambertMaterial({ color: 0x8B4513 });
+            const dumpsterPositions = [
+                [-220, 0, -40], [-200, 0, 100], [200, 0, -120]
+            ];
+            
+            dumpsterPositions.forEach(pos => {
+                const dumpster = new THREE.Mesh(dumpsterGeometry, dumpsterMaterial);
+                dumpster.position.set(pos[0], 1.5, pos[1]);
+                dumpster.castShadow = true;
+                scene.add(dumpster);
+            });
+        }
+        
+        function createEquipmentMesh(equipment) {
+            let equipmentGroup = new THREE.Group();
+            let color = equipment.is_active ? 0x00ff88 : 0x666666;
+            if (equipment.alerts.length > 0) color = 0xff4757;
+            
+            switch (equipment.type) {
+                case 'excavator':
+                    equipmentGroup = createExcavatorMesh(color);
+                    break;
+                case 'crane':
+                    equipmentGroup = createCraneMesh(color);
+                    break;
+                case 'concrete_mixer':
+                    equipmentGroup = createConcreteMixerMesh(color);
+                    break;
+                case 'bulldozer':
+                    equipmentGroup = createBulldozerMesh(color);
+                    break;
+                default:
+                    const defaultGeometry = new THREE.BoxGeometry(10, 6, 15);
+                    const defaultMaterial = new THREE.MeshLambertMaterial({ color: 0x666666 });
+                    equipmentGroup.add(new THREE.Mesh(defaultGeometry, defaultMaterial));
+            }
+            
+            // Position the equipment
+            equipmentGroup.position.set(
+                equipment.location.x - 300,
+                0,
+                equipment.location.y - 200
+            );
+            
+            // Add equipment label
+            const labelGeometry = new THREE.PlaneGeometry(20, 8);
+            const canvas = document.createElement('canvas');
+            canvas.width = 256;
+            canvas.height = 64;
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
+            ctx.fillRect(0, 0, 256, 64);
+            ctx.fillStyle = 'white';
+            ctx.font = 'bold 24px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText(equipment.id, 128, 30);
+            ctx.font = '16px Arial';
+            ctx.fillText(equipment.type.replace('_', ' ').toUpperCase(), 128, 50);
+            
+            const labelTexture = new THREE.CanvasTexture(canvas);
+            const labelMaterial = new THREE.MeshBasicMaterial({ 
+                map: labelTexture,
+                transparent: true
+            });
+            const label = new THREE.Mesh(labelGeometry, labelMaterial);
+            label.position.set(0, 25, 0);
+            label.lookAt(camera.position);
+            equipmentGroup.add(label);
+            
+            equipmentGroup.castShadow = true;
+            equipmentGroup.receiveShadow = true;
+            equipmentGroup.userData = { equipment, type: 'equipment' };
+            
+            return equipmentGroup;
+        }
+        
+        function createExcavatorMesh(color) {
+            const excavatorGroup = new THREE.Group();
+            const material = new THREE.MeshLambertMaterial({ color });
+            
+            // Main body (cab)
+            const bodyGeometry = new THREE.BoxGeometry(6, 4, 8);
+            const body = new THREE.Mesh(bodyGeometry, material);
+            body.position.set(0, 6, -2);
+            body.castShadow = true;
+            excavatorGroup.add(body);
+            
+            // Tracks
+            const trackGeometry = new THREE.BoxGeometry(12, 2, 3);
+            const trackMaterial = new THREE.MeshLambertMaterial({ color: 0x333333 });
+            const leftTrack = new THREE.Mesh(trackGeometry, trackMaterial);
+            leftTrack.position.set(0, 1, -5);
+            leftTrack.castShadow = true;
+            excavatorGroup.add(leftTrack);
+            
+            const rightTrack = new THREE.Mesh(trackGeometry, trackMaterial);
+            rightTrack.position.set(0, 1, 1);
+            rightTrack.castShadow = true;
+            excavatorGroup.add(rightTrack);
+            
+            // Boom (main arm)
+            const boomGeometry = new THREE.BoxGeometry(1.5, 1.5, 8);
+            const boom = new THREE.Mesh(boomGeometry, material);
+            boom.position.set(4, 8, -2);
+            boom.rotation.z = -0.3;
+            boom.castShadow = true;
+            excavatorGroup.add(boom);
+            
+            // Arm
+            const armGeometry = new THREE.BoxGeometry(1, 1, 6);
+            const arm = new THREE.Mesh(armGeometry, material);
+            arm.position.set(8, 6, -2);
+            arm.rotation.z = 0.5;
+            arm.castShadow = true;
+            excavatorGroup.add(arm);
+            
+            // Bucket
+            const bucketGeometry = new THREE.BoxGeometry(2, 1.5, 3);
+            const bucket = new THREE.Mesh(bucketGeometry, material);
+            bucket.position.set(10, 3, -2);
+            bucket.castShadow = true;
+            excavatorGroup.add(bucket);
+            
+            // Counterweight
+            const counterweightGeometry = new THREE.BoxGeometry(4, 3, 6);
+            const counterweight = new THREE.Mesh(counterweightGeometry, material);
+            counterweight.position.set(-3, 5.5, -2);
+            counterweight.castShadow = true;
+            excavatorGroup.add(counterweight);
+            
+            return excavatorGroup;
+        }
+        
+        function createCraneMesh(color) {
+            const craneGroup = new THREE.Group();
+            const material = new THREE.MeshLambertMaterial({ color });
+            
+            // Base/counterweight
+            const baseGeometry = new THREE.BoxGeometry(8, 4, 8);
+            const base = new THREE.Mesh(baseGeometry, material);
+            base.position.set(0, 2, 0);
+            base.castShadow = true;
+            craneGroup.add(base);
+            
+            // Mast
+            const mastGeometry = new THREE.BoxGeometry(2, 35, 2);
+            const mast = new THREE.Mesh(mastGeometry, material);
+            mast.position.set(0, 19.5, 0);
+            mast.castShadow = true;
+            craneGroup.add(mast);
+            
+            // Jib (horizontal arm)
+            const jibGeometry = new THREE.BoxGeometry(25, 1.5, 1.5);
+            const jib = new THREE.Mesh(jibGeometry, material);
+            jib.position.set(12.5, 35, 0);
+            jib.castShadow = true;
+            craneGroup.add(jib);
+            
+            // Counter-jib
+            const counterJibGeometry = new THREE.BoxGeometry(10, 1, 1);
+            const counterJib = new THREE.Mesh(counterJibGeometry, material);
+            counterJib.position.set(-5, 35, 0);
+            counterJib.castShadow = true;
+            craneGroup.add(counterJib);
+            
+            // Hook
+            const hookGeometry = new THREE.BoxGeometry(0.5, 2, 0.5);
+            const hookMaterial = new THREE.MeshLambertMaterial({ color: 0x444444 });
+            const hook = new THREE.Mesh(hookGeometry, hookMaterial);
+            hook.position.set(20, 33, 0);
+            hook.castShadow = true;
+            craneGroup.add(hook);
+            
+            // Cable
+            const cableGeometry = new THREE.CylinderGeometry(0.1, 0.1, 2);
+            const cableMaterial = new THREE.MeshLambertMaterial({ color: 0x222222 });
+            const cable = new THREE.Mesh(cableGeometry, cableMaterial);
+            cable.position.set(20, 34, 0);
+            cable.castShadow = true;
+            craneGroup.add(cable);
+            
+            return craneGroup;
+        }
+        
+        function createConcreteMixerMesh(color) {
+            const mixerGroup = new THREE.Group();
+            const material = new THREE.MeshLambertMaterial({ color });
+            
+            // Truck chassis
+            const chassisGeometry = new THREE.BoxGeometry(12, 2, 4);
+            const chassis = new THREE.Mesh(chassisGeometry, material);
+            chassis.position.set(0, 2, 0);
+            chassis.castShadow = true;
+            mixerGroup.add(chassis);
+            
+            // Cab
+            const cabGeometry = new THREE.BoxGeometry(4, 4, 4);
+            const cab = new THREE.Mesh(cabGeometry, material);
+            cab.position.set(-6, 5, 0);
+            cab.castShadow = true;
+            mixerGroup.add(cab);
+            
+            // Mixing drum
+            const drumGeometry = new THREE.CylinderGeometry(3, 3, 8);
+            const drumMaterial = new THREE.MeshLambertMaterial({ color: 0x888888 });
+            const drum = new THREE.Mesh(drumGeometry, drumMaterial);
+            drum.position.set(2, 5, 0);
+            drum.rotation.z = Math.PI / 2;
+            drum.castShadow = true;
+            mixerGroup.add(drum);
+            
+            // Wheels
+            const wheelGeometry = new THREE.CylinderGeometry(1.5, 1.5, 0.5);
+            const wheelMaterial = new THREE.MeshLambertMaterial({ color: 0x222222 });
+            const wheelPositions = [
+                [-4, 1.5, -2.5], [-4, 1.5, 2.5],
+                [2, 1.5, -2.5], [2, 1.5, 2.5],
+                [6, 1.5, -2.5], [6, 1.5, 2.5]
+            ];
+            
+            wheelPositions.forEach(pos => {
+                const wheel = new THREE.Mesh(wheelGeometry, wheelMaterial);
+                wheel.position.set(pos[0], pos[1], pos[2]);
+                wheel.rotation.x = Math.PI / 2;
+                wheel.castShadow = true;
+                mixerGroup.add(wheel);
+            });
+            
+            // Chute
+            const chuteGeometry = new THREE.BoxGeometry(1, 1, 4);
+            const chute = new THREE.Mesh(chuteGeometry, drumMaterial);
+            chute.position.set(7, 4, 0);
+            chute.rotation.z = -0.3;
+            chute.castShadow = true;
+            mixerGroup.add(chute);
+            
+            return mixerGroup;
+        }
+        
+        function createBulldozerMesh(color) {
+            const bulldozerGroup = new THREE.Group();
+            const material = new THREE.MeshLambertMaterial({ color });
+            
+            // Main body
+            const bodyGeometry = new THREE.BoxGeometry(8, 3, 12);
+            const body = new THREE.Mesh(bodyGeometry, material);
+            body.position.set(0, 3.5, 0);
+            body.castShadow = true;
+            bulldozerGroup.add(body);
+            
+            // Tracks
+            const trackGeometry = new THREE.BoxGeometry(10, 2, 2);
+            const trackMaterial = new THREE.MeshLambertMaterial({ color: 0x333333 });
+            const leftTrack = new THREE.Mesh(trackGeometry, trackMaterial);
+            leftTrack.position.set(0, 1, -3);
+            leftTrack.castShadow = true;
+            bulldozerGroup.add(leftTrack);
+            
+            const rightTrack = new THREE.Mesh(trackGeometry, trackMaterial);
+            rightTrack.position.set(0, 1, 3);
+            rightTrack.castShadow = true;
+            bulldozerGroup.add(rightTrack);
+            
+            // Blade
+            const bladeGeometry = new THREE.BoxGeometry(12, 4, 1);
+            const bladeMaterial = new THREE.MeshLambertMaterial({ color: 0x666666 });
+            const blade = new THREE.Mesh(bladeGeometry, bladeMaterial);
+            blade.position.set(6, 3, 0);
+            blade.castShadow = true;
+            bulldozerGroup.add(blade);
+            
+            // Cab
+            const cabGeometry = new THREE.BoxGeometry(3, 3, 4);
+            const cab = new THREE.Mesh(cabGeometry, material);
+            cab.position.set(-1, 6.5, 0);
+            cab.castShadow = true;
+            bulldozerGroup.add(cab);
+            
+            // Ripper (rear attachment)
+            const ripperGeometry = new THREE.BoxGeometry(0.5, 3, 0.5);
+            const ripper = new THREE.Mesh(ripperGeometry, bladeMaterial);
+            ripper.position.set(-5, 2.5, 0);
+            ripper.castShadow = true;
+            bulldozerGroup.add(ripper);
+            
+            return bulldozerGroup;
+        }
+        
+        function createWorkerMesh(worker) {
+            const workerGroup = new THREE.Group();
+            let color = 0x00d4ff;
+            
+            // Color based on safety status
+            if (!worker.has_helmet || !worker.has_vest) {
+                color = 0xffa502; // Warning
+            }
+            if (worker.heart_rate > 120 || worker.body_temp > 38.5) {
+                color = 0xff4757; // Danger
+            }
+            
+            const material = new THREE.MeshLambertMaterial({ color });
+            
+            // Create worker body using basic geometries
+            // Body (cylinder for torso)
+            const bodyGeometry = new THREE.CylinderGeometry(1.2, 1.5, 4);
+            const body = new THREE.Mesh(bodyGeometry, material);
+            body.position.set(0, 3, 0);
+            body.castShadow = true;
+            workerGroup.add(body);
+            
+            // Head (sphere)
+            const headGeometry = new THREE.SphereGeometry(1, 8, 8);
+            const head = new THREE.Mesh(headGeometry, material);
+            head.position.set(0, 6, 0);
+            head.castShadow = true;
+            workerGroup.add(head);
+            
+            // Arms (cylinders)
+            const armGeometry = new THREE.CylinderGeometry(0.4, 0.4, 2.5);
+            const leftArm = new THREE.Mesh(armGeometry, material);
+            leftArm.position.set(-1.8, 3.5, 0);
+            leftArm.rotation.z = Math.PI / 6;
+            leftArm.castShadow = true;
+            workerGroup.add(leftArm);
+            
+            const rightArm = new THREE.Mesh(armGeometry, material);
+            rightArm.position.set(1.8, 3.5, 0);
+            rightArm.rotation.z = -Math.PI / 6;
+            rightArm.castShadow = true;
+            workerGroup.add(rightArm);
+            
+            // Legs (cylinders)
+            const legGeometry = new THREE.CylinderGeometry(0.5, 0.5, 2.5);
+            const leftLeg = new THREE.Mesh(legGeometry, material);
+            leftLeg.position.set(-0.6, 0.25, 0);
+            leftLeg.castShadow = true;
+            workerGroup.add(leftLeg);
+            
+            const rightLeg = new THREE.Mesh(legGeometry, material);
+            rightLeg.position.set(0.6, 0.25, 0);
+            rightLeg.castShadow = true;
+            workerGroup.add(rightLeg);
+            
+            // Safety helmet (if has helmet)
+            if (worker.has_helmet) {
+                const helmetGeometry = new THREE.SphereGeometry(1.2, 8, 8);
+                const helmetMaterial = new THREE.MeshLambertMaterial({ color: 0xFFD700 });
+                const helmet = new THREE.Mesh(helmetGeometry, helmetMaterial);
+                helmet.position.set(0, 6.5, 0);
+                helmet.scale.set(1, 0.7, 1);
+                helmet.castShadow = true;
+                workerGroup.add(helmet);
+            }
+            
+            // Safety vest (if has vest)
+            if (worker.has_vest) {
+                const vestGeometry = new THREE.CylinderGeometry(1.3, 1.6, 3);
+                const vestMaterial = new THREE.MeshLambertMaterial({ 
+                    color: 0xFF6600,
+                    transparent: true,
+                    opacity: 0.8
+                });
+                const vest = new THREE.Mesh(vestGeometry, vestMaterial);
+                vest.position.set(0, 3.2, 0);
+                workerGroup.add(vest);
+            }
+            
+            // Position the worker group
+            workerGroup.position.set(
+                worker.location.x - 300,
+                1.5,  // Adjust height for proper ground positioning
+                worker.location.y - 200
+            );
+            
+            // Add worker name label
+            const labelGeometry = new THREE.PlaneGeometry(15, 6);
+            const canvas = document.createElement('canvas');
+            canvas.width = 200;
+            canvas.height = 50;
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
+            ctx.fillRect(0, 0, 200, 50);
+            ctx.fillStyle = 'white';
+            ctx.font = '16px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText(worker.name, 100, 30);
+            
+            const labelTexture = new THREE.CanvasTexture(canvas);
+            const labelMaterial = new THREE.MeshBasicMaterial({ 
+                map: labelTexture,
+                transparent: true
+            });
+            const label = new THREE.Mesh(labelGeometry, labelMaterial);
+            label.position.set(0, 8, 0);
+            label.lookAt(camera.position);
+            workerGroup.add(label);
+            
+            workerGroup.castShadow = true;
+            workerGroup.userData = { worker, type: 'worker' };
+            
+            return workerGroup;
+        }
+        
+        function createSafetyZone(zone) {
+            const geometry = new THREE.CylinderGeometry(
+                zone.radius * 2, zone.radius * 2, 2, 32
+            );
+            const material = new THREE.MeshLambertMaterial({ 
+                color: 0xffa502,
+                transparent: true,
+                opacity: 0.3
+            });
+            const mesh = new THREE.Mesh(geometry, material);
+            
+            mesh.position.set(
+                zone.center.x - 300,
+                1,
+                zone.center.y - 200
+            );
+            
+            // Add warning stripes
+            const ringGeometry = new THREE.RingGeometry(
+                zone.radius * 2 - 2, zone.radius * 2, 32
+            );
+            const ringMaterial = new THREE.MeshBasicMaterial({
+                color: 0xff4757,
+                transparent: true,
+                opacity: 0.8
+            });
+            const ring = new THREE.Mesh(ringGeometry, ringMaterial);
+            ring.rotation.x = -Math.PI / 2;
+            ring.position.set(
+                zone.center.x - 300,
+                0.1,
+                zone.center.y - 200
+            );
+            scene.add(ring);
+            
+            mesh.userData = { zone, type: 'safety_zone' };
+            return mesh;
+        }
+        
+        function updateEquipmentColors(equipmentGroup, newColor) {
+            // Function to safely update equipment colors
+            if (!equipmentGroup) {
+                console.warn('No equipment group provided to updateEquipmentColors');
+                return;
+            }
+            
+            try {
+                equipmentGroup.traverse((child) => {
+                    try {
+                        if (child && child.isMesh && child.material) {
+                            // Check if material has color property
+                            if (child.material.color && typeof child.material.color.getHex === 'function') {
+                                const currentHex = child.material.color.getHex();
+                                
+                                // Only update main equipment body colors, skip:
+                                const skipColors = [
+                                    0x333333, 0x222222, 0x888888, 0x444444,  // Tracks and fixtures
+                                    0x000000,  // Cables
+                                    0x2F4F4F,  // Dark slate gray (pipes)
+                                    0x654321,  // Brown (posts)
+                                    0xFFD700,  // Gold (helmets)
+                                    0xFF6600,  // Orange (safety vests)
+                                ];
+                                
+                                // Check if this color should be updated
+                                const shouldUpdate = !skipColors.includes(currentHex) && 
+                                                   currentHex !== newColor;
+                                
+                                if (shouldUpdate && typeof child.material.color.setHex === 'function') {
+                                    child.material.color.setHex(newColor);
+                                }
+                            }
+                        }
+                    } catch (childError) {
+                        console.warn('Error updating child material:', childError);
+                    }
+                });
+            } catch (error) {
+                console.warn('Error updating equipment colors:', error);
+            }
+        }
+        
+        function updateWorkerColors(workerGroup, newColor) {
+            // Function to safely update worker body colors
+            if (!workerGroup) {
+                console.warn('No worker group provided to updateWorkerColors');
+                return;
+            }
+            
+            try {
+                workerGroup.traverse((child) => {
+                    try {
+                        if (child && child.isMesh && child.material) {
+                            // Check if material has color property
+                            if (child.material.color && typeof child.material.color.getHex === 'function') {
+                                const currentHex = child.material.color.getHex();
+                                
+                                // Only update worker body parts, skip helmet and vest colors
+                                const skipColors = [
+                                    0xFFD700,  // Gold helmets
+                                    0xFF6600,  // Orange safety vests
+                                ];
+                                
+                                if (!skipColors.includes(currentHex) && currentHex !== newColor) {
+                                    if (typeof child.material.color.setHex === 'function') {
+                                        child.material.color.setHex(newColor);
+                                    }
+                                }
+                            }
+                        }
+                    } catch (childError) {
+                        console.warn('Error updating worker child material:', childError);
+                    }
+                });
+            } catch (error) {
+                console.warn('Error updating worker colors:', error);
+            }
+        }
+        
+        function updateScene() {
+            if (!dashboardData.equipment) return;
+            
+            // Update equipment
+            Object.entries(dashboardData.equipment).forEach(([id, equipment]) => {
+                if (equipment.type === 'concrete_mixer') {
+                    console.log('Concrete mixer data:', equipment);
+                    
+                    // Add mock movement data since backend doesn't provide it
+                    if (!equipment.is_moving) {
+                        equipment.is_moving = true;
+                        equipment.movement_speed = 2.5; // m/s
+                        equipment.path_progress = "Route A → Site B";
+                        
+                        // Create a simple circular movement path
+                        if (!equipment.movement_path) {
+                            const centerX = 150;
+                            const centerY = 75;
+                            const radius = 30;
+                            equipment.movement_path = [];
+                            
+                            // Create 8 points in a circle
+                            for (let i = 0; i < 8; i++) {
+                                const angle = (i / 8) * Math.PI * 2;
+                                equipment.movement_path.push({
+                                    x: centerX + Math.cos(angle) * radius,
+                                    y: centerY + Math.sin(angle) * radius
+                                });
+                            }
+                        }
+                        
+                        // Animate position along the path
+                        const time = performance.now() * 0.0005; // Slow movement
+                        const pathIndex = Math.floor(time) % equipment.movement_path.length;
+                        const nextIndex = (pathIndex + 1) % equipment.movement_path.length;
+                        const t = time - Math.floor(time);
+                        
+                        // Interpolate between current and next path point
+                        const current = equipment.movement_path[pathIndex];
+                        const next = equipment.movement_path[nextIndex];
+                        
+                        equipment.location.x = current.x + (next.x - current.x) * t;
+                        equipment.location.y = current.y + (next.y - current.y) * t;
+                        
+                        // Calculate rotation angle based on movement direction
+                        const dx = next.x - current.x;
+                        const dy = next.y - current.y;
+                        equipment.rotation_angle = Math.atan2(dy, dx) * (180 / Math.PI);
+                        
+                        console.log('Mock movement applied - Position:', equipment.location, 'Moving:', equipment.is_moving);
+                    }
+                }
+                if (equipmentMeshes[id]) {
+                    // Update existing equipment
+                    const mesh = equipmentMeshes[id];
+                    let color = equipment.is_active ? 0x00ff88 : 0x666666;
+                    if (equipment.alerts.length > 0) color = 0xff4757;
+                    // Kill switch - frozen truck shows red/orange pulsing
+                    if (equipment.kill_switch) {
+                        color = Math.sin(Date.now() * 0.005) > 0 ? 0xff0000 : 0xff6600;
+                    }
+
+                    // Update color for all equipment parts
+                    try {
+                        updateEquipmentColors(mesh, color);
+                    } catch (colorError) {
+                        console.warn('Failed to update equipment colors for', id, colorError);
+                    }
+                    
+                    // Smooth position updates for moving equipment
+                    const targetX = equipment.location.x - 300;
+                    const targetZ = equipment.location.y - 200;
+                    
+                    if (equipment.is_moving && equipment.type === 'concrete_mixer') {
+                        console.log('Concrete mixer moving:', equipment.id, 'Speed:', equipment.movement_speed, 'Position:', equipment.location);
+                        // Smooth interpolation for truck movement
+                        const lerpFactor = 0.1; // Smoothing factor
+                        mesh.position.x = THREE.MathUtils.lerp(mesh.position.x, targetX, lerpFactor);
+                        mesh.position.z = THREE.MathUtils.lerp(mesh.position.z, targetZ, lerpFactor);
+                        
+                        // Update rotation based on movement direction
+                        if (equipment.rotation_angle !== undefined) {
+                            const targetRotation = (equipment.rotation_angle * Math.PI) / 180;
+                            mesh.rotation.y = THREE.MathUtils.lerp(mesh.rotation.y, targetRotation, lerpFactor);
+                        }
+                    } else {
+                        // Direct position update for non-moving or other equipment
+                        mesh.position.x = targetX;
+                        mesh.position.z = targetZ;
+                    }
+                    
+                    // Store activity state and movement data for animations
+                    mesh.userData.equipment = equipment;
+                } else {
+                    // Create new equipment
+                    const mesh = createEquipmentMesh(equipment);
+                    equipmentMeshes[id] = mesh;
+                    scene.add(mesh);
+                    
+                    // Create truck route visualization if needed
+                    if (equipment.type === 'concrete_mixer' && showTruckRoutes && !truckRoutes[id]) {
+                        createTruckRouteVisualization(equipment);
+                    }
+                }
+            });
+            
+            // Update workers
+            Object.entries(dashboardData.workers).forEach(([id, worker]) => {
+                if (workerMeshes[id]) {
+                    // Update existing worker
+                    const mesh = workerMeshes[id];
+                    mesh.position.x = worker.location.x - 300;
+                    mesh.position.z = worker.location.y - 200;
+                    
+                    // Update color based on safety
+                    let color = 0x00d4ff;
+                    if (!worker.has_helmet || !worker.has_vest) color = 0xffa502;
+                    if (worker.heart_rate > 120 || worker.body_temp > 38.5) color = 0xff4757;
+                    
+                    // Update worker body color (skip helmet and vest colors)
+                    try {
+                        updateWorkerColors(mesh, color);
+                    } catch (colorError) {
+                        console.warn('Failed to update worker colors for', id, colorError);
+                    }
+                } else {
+                    // Create new worker
+                    const mesh = createWorkerMesh(worker);
+                    workerMeshes[id] = mesh;
+                    scene.add(mesh);
+                }
+            });
+            
+            // Update safety zones
+            if (dashboardData.safety && dashboardData.safety.restricted_zones) {
+                dashboardData.safety.restricted_zones.forEach((zone, index) => {
+                    const id = `zone_${index}`;
+                    if (!safetyZones[id]) {
+                        const mesh = createSafetyZone(zone);
+                        safetyZones[id] = mesh;
+                        scene.add(mesh);
+                    }
+                });
+            }
+        }
+        
+        function setupMouseInteraction() {
+            const raycaster = new THREE.Raycaster();
+            const mouse = new THREE.Vector2();
+            const tooltip = document.getElementById('tooltip');
+            
+            renderer.domElement.addEventListener('mousemove', (event) => {
+                const rect = renderer.domElement.getBoundingClientRect();
+                mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+                mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+                
+                raycaster.setFromCamera(mouse, camera);
+                const intersects = raycaster.intersectObjects([
+                    ...Object.values(equipmentMeshes),
+                    ...Object.values(workerMeshes)
+                ], true); // Set recursive to true to check child objects
+                
+                if (intersects.length > 0) {
+                    const object = intersects[0].object;
+                    const userData = object.userData;
+                    
+                    let tooltipText = '';
+                    if (userData.type === 'equipment') {
+                        const eq = userData.equipment;
+                        tooltipText = `${eq.id} (${eq.type})\nTemp: ${eq.engine_temp}°C\nFuel: ${eq.fuel_level}%\nStatus: ${eq.is_active ? 'Active' : 'Stopped'}`;
+                        
+                        // Add movement information for trucks
+                        if (eq.type === 'concrete_mixer') {
+                            tooltipText += `\nMoving: ${eq.is_moving ? 'Yes' : 'No'}`;
+                            if (eq.is_moving) {
+                                tooltipText += `\nSpeed: ${eq.movement_speed.toFixed(1)} m/s`;
+                                tooltipText += `\nRoute: ${eq.path_progress}`;
+                            }
+                        }
+                        
+                        if (eq.alerts.length > 0) {
+                            tooltipText += `\nAlerts: ${eq.alerts.join(', ')}`;
+                        }
+                    } else if (userData.type === 'worker') {
+                        const worker = userData.worker;
+                        tooltipText = `${worker.name}\nHR: ${worker.heart_rate} bpm\nTemp: ${worker.body_temp}°C\nPPE: ${worker.has_helmet ? '🪖' : '❌'} ${worker.has_vest ? '🦺' : '❌'}`;
+                    }
+                    
+                    tooltip.innerHTML = tooltipText.replace(/\n/g, '<br>');
+                    tooltip.style.left = (event.clientX + 10) + 'px';
+                    tooltip.style.top = (event.clientY - 10) + 'px';
+                    tooltip.style.display = 'block';
+                    
+                    renderer.domElement.style.cursor = 'pointer';
+                } else {
+                    tooltip.style.display = 'none';
+                    renderer.domElement.style.cursor = 'default';
+                }
+            });
+            
+            renderer.domElement.addEventListener('click', (event) => {
+                // Calculate mouse coordinates for click event
+                const rect = renderer.domElement.getBoundingClientRect();
+                mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+                mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+                
+                raycaster.setFromCamera(mouse, camera);
+                const intersects = raycaster.intersectObjects([
+                    ...Object.values(equipmentMeshes),
+                    ...Object.values(workerMeshes)
+                ], true); // Set recursive to true to check child objects
+                
+                if (intersects.length > 0) {
+                    const object = intersects[0].object;
+                    console.log('Click detected on object:', object);
+                    
+                    // Find the parent object (equipment or worker group)
+                    let targetObject = object;
+                    while (targetObject.parent && !targetObject.userData.type) {
+                        targetObject = targetObject.parent;
+                    }
+                    console.log('Target object found:', targetObject, 'userData:', targetObject.userData);
+                    
+                    if (targetObject.userData.type) {
+                        console.log('Selecting object of type:', targetObject.userData.type);
+                        selectObject(targetObject);
+                        focusOnObject(targetObject);
+                    } else {
+                        console.log('No userData.type found on target object');
+                    }
+                } else {
+                    // Clicked on empty space, clear selection
+                    clearSelection();
+                }
+            });
+        }
+        
+        function focusOnObject(object) {
+            const targetPosition = object.position.clone();
+            targetPosition.y += 50;
+            
+            const startPosition = camera.position.clone();
+            const startTime = performance.now();
+            const duration = 2000; // 2 seconds
+            
+            function animateCamera() {
+                const elapsed = performance.now() - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const eased = 1 - Math.pow(1 - progress, 3); // Ease out cubic
+                
+                camera.position.lerpVectors(startPosition, targetPosition, eased);
+                controls.target.lerp(object.position, eased);
+                
+                if (progress < 1) {
+                    requestAnimationFrame(animateCamera);
+                }
+            }
+            
+            animateCamera();
+        }
+        
+        function animateTruckMovement(mesh, equipment, delta) {
+            // Add realistic truck movement effects
+            
+            // Rotate wheels based on movement speed
+            const wheelRotationSpeed = equipment.movement_speed * 2; // Adjust for realistic wheel rotation
+            mesh.traverse((child) => {
+                if (child.name === 'wheel' || (child.geometry && child.geometry.type === 'CylinderGeometry' && child.position.y < 3)) {
+                    child.rotation.x += wheelRotationSpeed * delta;
+                }
+            });
+            
+            // Add slight bouncing effect for truck movement
+            const baseY = 2; // Standard ground level for trucks
+            const bounceAmount = Math.sin(performance.now() * 0.01) * 0.2;
+            mesh.position.y = baseY + bounceAmount;
+            
+            // Rotate mixing drum for concrete mixer
+            mesh.traverse((child) => {
+                if (child.geometry && child.geometry.type === 'CylinderGeometry' && child.position.y > 4) {
+                    // This should be the mixing drum
+                    child.rotation.z += delta * 2; // Faster rotation for active mixing
+                }
+            });
+            
+            // Add dust particles behind moving trucks
+            if (Math.random() < 0.1) { // 10% chance each frame
+                createTruckDustEffect(mesh.position);
+            }
+        }
+        
+        function createTruckDustEffect(position) {
+            // Create small dust cloud behind truck
+            const dustGeometry = new THREE.SphereGeometry(0.5, 4, 4);
+            const dustMaterial = new THREE.MeshBasicMaterial({
+                color: 0x8B7355,
+                transparent: true,
+                opacity: 0.3
+            });
+            const dustParticle = new THREE.Mesh(dustGeometry, dustMaterial);
+            dustParticle.position.copy(position);
+            dustParticle.position.y = 1;
+            dustParticle.position.x -= 5; // Behind the truck
+            scene.add(dustParticle);
+            
+            // Animate and remove dust particle
+            let opacity = 0.3;
+            const animateDust = () => {
+                opacity -= 0.01;
+                dustParticle.material.opacity = opacity;
+                dustParticle.position.y += 0.1;
+                dustParticle.scale.multiplyScalar(1.02);
+                
+                if (opacity <= 0) {
+                    scene.remove(dustParticle);
+                    dustParticle.geometry.dispose();
+                    dustParticle.material.dispose();
+                } else {
+                    requestAnimationFrame(animateDust);
+                }
+            };
+            animateDust();
+        }
+        
+        function createTruckRouteVisualization(equipment) {
+            // Create visual path for truck routes
+            console.log('Creating route for equipment:', equipment.id, 'Type:', equipment.type, 'Has path:', !!equipment.movement_path);
+            if (equipment.type !== 'concrete_mixer' || !equipment.movement_path) {
+                console.log('Skipping route creation - not concrete mixer or no movement path');
+                return;
+            }
+            
+            // Convert path coordinates to 3D scene coordinates
+            const pathPoints = [];
+            equipment.movement_path.forEach(point => {
+                pathPoints.push(new THREE.Vector3(
+                    point.x - 300,  // Convert to scene coordinates
+                    0.5,             // Slightly above ground
+                    point.y - 200   // Convert to scene coordinates
+                ));
+            });
+            // Close the loop by adding first point at end
+            if (pathPoints.length > 0) {
+                pathPoints.push(pathPoints[0].clone());
+            }
+
+            // Create straight line path (matches actual truck movement)
+            const geometry = new THREE.BufferGeometry().setFromPoints(pathPoints);
+            
+            const material = new THREE.LineBasicMaterial({ 
+                color: 0x00d4ff,
+                transparent: true,
+                opacity: 0.6,
+                linewidth: 3
+            });
+            
+            const line = new THREE.Line(geometry, material);
+            truckRoutes[equipment.id] = line;
+            scene.add(line);
+            
+            // Add waypoint markers
+            equipment.movement_path.forEach((point, index) => {
+                const markerGeometry = new THREE.CylinderGeometry(1, 1, 0.5);
+                const markerMaterial = new THREE.MeshBasicMaterial({ 
+                    color: 0xffff00,
+                    transparent: true,
+                    opacity: 0.7
+                });
+                const marker = new THREE.Mesh(markerGeometry, markerMaterial);
+                marker.position.set(point.x - 300, 0.25, point.y - 200);
+                
+                // Add number label
+                const canvas = document.createElement('canvas');
+                canvas.width = 64;
+                canvas.height = 64;
+                const ctx = canvas.getContext('2d');
+                ctx.fillStyle = '#000000';
+                ctx.fillRect(0, 0, 64, 64);
+                ctx.fillStyle = '#ffffff';
+                ctx.font = '32px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText(index + 1, 32, 40);
+                
+                const texture = new THREE.CanvasTexture(canvas);
+                const labelGeometry = new THREE.PlaneGeometry(3, 3);
+                const labelMaterial = new THREE.MeshBasicMaterial({ map: texture, transparent: true });
+                const label = new THREE.Mesh(labelGeometry, labelMaterial);
+                label.position.set(point.x - 300, 2, point.y - 200);
+                label.lookAt(camera.position);
+                
+                marker.add(label);
+                scene.add(marker);
+                
+                if (!truckRoutes[equipment.id + '_markers']) {
+                    truckRoutes[equipment.id + '_markers'] = [];
+                }
+                truckRoutes[equipment.id + '_markers'].push(marker);
+            });
+        }
+        
+        function animate() {
+            animationId = requestAnimationFrame(animate);
+            
+            const delta = clock.getDelta();
+            
+            // Update controls
+            controls.update();
+            
+            // Calculate FPS
+            frameCount++;
+            const currentTime = performance.now();
+            if (currentTime >= lastTime + 1000) {
+                fps = Math.round((frameCount * 1000) / (currentTime - lastTime));
+                document.getElementById('fps-counter').textContent = `FPS: ${fps}`;
+                frameCount = 0;
+                lastTime = currentTime;
+            }
+            
+            // Animate objects
+            animateObjects(delta);
+            
+            // Render scene
+            renderer.render(scene, camera);
+        }
+        
+        function animateObjects(delta) {
+            // Enhanced equipment animations
+            Object.values(equipmentMeshes).forEach(mesh => {
+                const equipment = mesh.userData.equipment;
+                if (equipment && equipment.is_active) {
+                    // Different animations for different equipment types
+                    if (equipment.type === 'concrete_mixer' && equipment.is_moving) {
+                        // Truck-specific animations
+                        animateTruckMovement(mesh, equipment, delta);
+                    } else if (equipment.type !== 'concrete_mixer') {
+                        // Stationary equipment rotation
+                        mesh.rotation.y += delta * 0.1;
+                    }
+                }
+            });
+            
+            // Bob workers slightly
+            Object.values(workerMeshes).forEach((mesh, index) => {
+                const baseY = 1.5;  // Ground level for worker groups
+                mesh.position.y = baseY + Math.sin(performance.now() * 0.001 + index) * 0.3;
+            });
+            
+            // Pulse safety zones
+            Object.values(safetyZones).forEach(mesh => {
+                mesh.material.opacity = 0.2 + Math.sin(performance.now() * 0.003) * 0.1;
+            });
+            
+            // Animate dust particles
+            if (window.animateDust) {
+                window.animateDust();
+            }
+            
+            // Animate selection indicator if it exists
+            if (selectionIndicator) {
+                const pulse = Math.sin(performance.now() * 0.005) * 0.3 + 0.7;
+                selectionIndicator.material.opacity = pulse;
+                selectionIndicator.rotation.z += delta * 0.5; // Slow rotation
+            }
+        }
+        
+        function onWindowResize() {
+            const container = document.getElementById('canvas-container');
+            camera.aspect = container.clientWidth / container.clientHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(container.clientWidth, container.clientHeight);
+        }
+        
+        // Dashboard update functions
+        async function fetchDashboardData() {
+            try {
+                console.log('📊 Fetching dashboard data from /api/dashboard-data');
+                const response = await fetch('/api/dashboard-data');
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                dashboardData = await response.json();
+                console.log('✅ Dashboard data updated:', {
+                    isRunning: dashboardData.site_info?.is_running,
+                    equipmentCount: Object.keys(dashboardData.equipment || {}).length,
+                    activeEquipment: Object.values(dashboardData.equipment || {}).filter(eq => eq.is_active).length,
+                    timestamp: new Date().toLocaleTimeString()
+                });
+                updateScene();
+                updateSidebar();
+            } catch (error) {
+                console.error('❌ Error fetching dashboard data:', error);
+                
+                // Show connection error to user
+                document.getElementById('site-status').textContent = '🔴 Connection Error';
+            }
+        }
+        
+        // Test server connectivity
+        async function testServerConnection() {
+            console.log('🔍 Testing server connection...');
+            try {
+                const response = await fetch('/api/dashboard-data');
+                if (response.ok) {
+                    console.log('✅ Server connection successful');
+                    return true;
+                } else {
+                    console.error('❌ Server returned error:', response.status, response.statusText);
+                    return false;
+                }
+            } catch (error) {
+                console.error('❌ Server connection failed:', error);
+                alert('Cannot connect to server. Please ensure the Python server is running on port 8009.');
+                return false;
+            }
+        }
+        
+        function updateSidebar() {
+            // Update selected object properties if an object is selected
+            if (selectedObject && selectedObject.userData) {
+                if (selectedObject.userData.type === 'equipment') {
+                    const equipmentId = selectedObject.userData.equipment.id;
+                    if (dashboardData.equipment && dashboardData.equipment[equipmentId]) {
+                        // Update the equipment data and refresh the display
+                        selectedObject.userData.equipment = dashboardData.equipment[equipmentId];
+                        displayEquipmentProperties(dashboardData.equipment[equipmentId]);
+                    }
+                } else if (selectedObject.userData.type === 'worker') {
+                    const workerId = selectedObject.userData.worker.id;
+                    if (dashboardData.workers && dashboardData.workers[workerId]) {
+                        // Update the worker data and refresh the display
+                        selectedObject.userData.worker = dashboardData.workers[workerId];
+                        displayWorkerProperties(dashboardData.workers[workerId]);
+                    }
+                }
+            }
+            
+            // Update equipment list
+            const equipmentList = document.getElementById('equipment-list');
+            equipmentList.innerHTML = '';
+            
+            Object.entries(dashboardData.equipment || {}).forEach(([id, equipment]) => {
+                const div = document.createElement('div');
+                const statusClass = equipment.alerts.length > 0 ? 'equipment-alert' : 
+                                  equipment.is_active ? 'equipment-active' : '';
+                
+                div.className = `equipment-item ${statusClass}`;
+                let statusInfo = `Temp: ${equipment.engine_temp}°C | Fuel: ${equipment.fuel_level}% | ${equipment.is_active ? 'Active' : 'Stopped'}`;
+                
+                // Add movement status for trucks
+                if (equipment.type === 'concrete_mixer' && equipment.is_moving) {
+                    statusInfo += ` | 🚛 Moving (${equipment.movement_speed.toFixed(1)} m/s)`;
+                }
+                
+                div.innerHTML = `
+                    <strong>${equipment.id}</strong> (${equipment.type.replace('_', ' ')})<br>
+                    <small>${statusInfo}</small>
+                `;
+                div.onclick = () => {
+                    if (equipmentMeshes[id]) {
+                        focusOnObject(equipmentMeshes[id]);
+                    }
+                };
+                equipmentList.appendChild(div);
+            });
+            
+            // Update environmental info
+            const env = dashboardData.environment || {};
+            document.getElementById('environmental-info').innerHTML = `
+                <div class="metric">
+                    <span>Temperature:</span>
+                    <span class="metric-value">${env.temperature || 0}°C</span>
+                </div>
+                <div class="metric">
+                    <span>Humidity:</span>
+                    <span class="metric-value">${env.humidity || 0}%</span>
+                </div>
+                <div class="metric">
+                    <span>Wind Speed:</span>
+                    <span class="metric-value">${env.wind_speed || 0} km/h</span>
+                </div>
+                <div class="metric">
+                    <span>Air Quality:</span>
+                    <span class="metric-value">${env.air_quality || 0}%</span>
+                </div>
+            `;
+            
+            // Update site stats
+            const activeEquipment = Object.values(dashboardData.equipment || {}).filter(eq => eq.is_active).length;
+            const totalAlerts = Object.values(dashboardData.equipment || {}).reduce((sum, eq) => sum + eq.alerts.length, 0);
+            const workerCount = Object.keys(dashboardData.workers || {}).length;
+            const progress = dashboardData.progress ? dashboardData.progress.overall_progress : 0;
+            
+            document.getElementById('site-stats').innerHTML = `
+                <div class="metric">
+                    <span>Active Equipment:</span>
+                    <span class="metric-value">${activeEquipment}</span>
+                </div>
+                <div class="metric">
+                    <span>Total Alerts:</span>
+                    <span class="metric-value">${totalAlerts}</span>
+                </div>
+                <div class="metric">
+                    <span>Workers:</span>
+                    <span class="metric-value">${workerCount}</span>
+                </div>
+                <div class="metric">
+                    <span>Progress:</span>
+                    <span class="metric-value">${progress}%</span>
+                </div>
+            `;
+            
+            // Update live stats overlay
+            document.getElementById('active-equipment-count').textContent = activeEquipment;
+            document.getElementById('worker-count').textContent = workerCount;
+            document.getElementById('alert-count').textContent = totalAlerts;
+            document.getElementById('progress-percentage').textContent = progress + '%';
+            
+            // Update site status
+            const siteInfo = dashboardData.site_info || {};
+            document.getElementById('site-status').textContent = 
+                siteInfo.is_running ? '🟢 Running' : '🔴 Stopped';
+        }
+        
+        // Control functions
+        async function startOperations() {
+            console.log('🚀 Start button clicked - Starting operations...');
+            
+            // Show user feedback
+            const startBtn = event.target;
+            const originalText = startBtn.innerHTML;
+            startBtn.innerHTML = '⏳ Starting...';
+            startBtn.disabled = true;
+            
+            try {
+                console.log('📡 Sending POST request to /api/start-operations');
+                const response = await fetch('/api/start-operations', { 
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+                
+                console.log('📡 Response status:', response.status, response.statusText);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const result = await response.json();
+                console.log('✅ Start operations result:', result);
+                
+                // Force immediate data refresh
+                console.log('🔄 Fetching fresh dashboard data...');
+                await fetchDashboardData();
+                console.log('✅ Dashboard data refreshed after start');
+                
+                // Update UI to show success
+                startBtn.innerHTML = '✅ Started!';
+                setTimeout(() => {
+                    startBtn.innerHTML = originalText;
+                    startBtn.disabled = false;
+                }, 2000);
+                
+            } catch (error) {
+                console.error('❌ Error starting operations:', error);
+                
+                // Show error to user
+                startBtn.innerHTML = '❌ Error';
+                setTimeout(() => {
+                    startBtn.innerHTML = originalText;
+                    startBtn.disabled = false;
+                }, 2000);
+                
+                // Show alert to user
+                alert(`Failed to start operations: ${error.message}`);
+            }
+        }
+        
+        async function stopOperations() {
+            console.log('🛑 Stop button clicked - Stopping operations...');
+            
+            // Show user feedback
+            const stopBtn = event.target;
+            const originalText = stopBtn.innerHTML;
+            stopBtn.innerHTML = '⏳ Stopping...';
+            stopBtn.disabled = true;
+            
+            try {
+                console.log('📡 Sending POST request to /api/stop-operations');
+                const response = await fetch('/api/stop-operations', { 
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+                
+                console.log('📡 Response status:', response.status, response.statusText);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const result = await response.json();
+                console.log('✅ Stop operations result:', result);
+                
+                // Force immediate data refresh
+                console.log('🔄 Fetching fresh dashboard data...');
+                await fetchDashboardData();
+                console.log('✅ Dashboard data refreshed after stop');
+                
+                // Update UI to show success
+                stopBtn.innerHTML = '✅ Stopped!';
+                setTimeout(() => {
+                    stopBtn.innerHTML = originalText;
+                    stopBtn.disabled = false;
+                }, 2000);
+                
+            } catch (error) {
+                console.error('❌ Error stopping operations:', error);
+                
+                // Show error to user
+                stopBtn.innerHTML = '❌ Error';
+                setTimeout(() => {
+                    stopBtn.innerHTML = originalText;
+                    stopBtn.disabled = false;
+                }, 2000);
+                
+                // Show alert to user
+                alert(`Failed to stop operations: ${error.message}`);
+            }
+        }
+        
+        function resetCamera() {
+            camera.position.set(200, 150, 200);
+            controls.target.set(0, 0, 0);
+            controls.update();
+        }
+        
+        function toggleWireframe() {
+            wireframeMode = !wireframeMode;
+            Object.values(equipmentMeshes).forEach(mesh => {
+                mesh.material.wireframe = wireframeMode;
+            });
+        }
+        
+        function toggleGrid() {
+            gridHelper.visible = !gridHelper.visible;
+        }
+        
+        function setupEventListeners() {
+            console.log('Setting up event listeners...');
+            
+            // Set up clear selection button
+            const clearBtn = document.getElementById('clear-selection-btn');
+            if (clearBtn) {
+                clearBtn.addEventListener('click', () => {
+                    console.log('Clear selection button clicked');
+                    clearSelection();
+                });
+            }
+        }
+        
+        function updateWorkerColors(workerGroup, newColor) {
+            // Function to safely update worker colors
+            if (!workerGroup) {
+                console.warn('No worker group provided to updateWorkerColors');
+                return;
+            }
+            
+            workerGroup.traverse((child) => {
+                if (child.isMesh && child.material && child.userData.colorable !== false) {
+                    try {
+                        if (child.material.color) {
+                            child.material.color.setHex(newColor);
+                        }
+                    } catch (colorError) {
+                        console.warn('Failed to update worker color:', colorError);
+                    }
+                }
+            });
+        }
+        
+        
+        function focusOnEquipment() {
+            const activeEquipment = Object.values(equipmentMeshes).find(mesh => 
+                mesh.userData.equipment && mesh.userData.equipment.is_active
+            );
+            if (activeEquipment) {
+                focusOnObject(activeEquipment);
+            }
+        }
+        
+        function showOverview() {
+            resetCamera();
+        }
+        
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                document.exitFullscreen();
+            }
+        }
+        
+        function toggleTruckRoutes() {
+            showTruckRoutes = !showTruckRoutes;
+            console.log('Toggle truck routes called, showTruckRoutes:', showTruckRoutes);
+            console.log('Available equipment:', Object.keys(dashboardData.equipment || {}));
+            
+            if (showTruckRoutes) {
+                // Show truck routes for all concrete mixers
+                Object.entries(dashboardData.equipment || {}).forEach(([id, equipment]) => {
+                    if (equipment.type === 'concrete_mixer' && !truckRoutes[id]) {
+                        createTruckRouteVisualization(equipment);
+                    }
+                });
+            } else {
+                // Hide all truck routes
+                Object.values(truckRoutes).forEach(routeObj => {
+                    if (Array.isArray(routeObj)) {
+                        // Array of markers
+                        routeObj.forEach(marker => {
+                            scene.remove(marker);
+                            if (marker.geometry) marker.geometry.dispose();
+                            if (marker.material) marker.material.dispose();
+                        });
+                    } else if (routeObj.isLine) {
+                        // Route line
+                        scene.remove(routeObj);
+                        routeObj.geometry.dispose();
+                        routeObj.material.dispose();
+                    }
+                });
+                truckRoutes = {}; // Clear the routes object
+            }
+            
+            console.log(`Truck routes ${showTruckRoutes ? 'enabled' : 'disabled'}`);
+        }
+        
+        function selectObject(object) {
+            console.log('selectObject called with:', object, 'userData:', object.userData);
+            // Clear previous selection
+            clearSelection();
+            
+            selectedObject = object;
+            const userData = object.userData;
+            
+            console.log('About to create selection indicator...');
+            // Create visual selection indicator
+            createSelectionIndicator(object);
+            
+            console.log('About to show properties panel...');
+            // Show properties panel
+            const panel = document.getElementById('selected-object-panel');
+            console.log('Properties panel element:', panel);
+            if (panel) {
+                panel.style.display = 'block';
+                console.log('Panel display set to block');
+            } else {
+                console.error('Properties panel element not found!');
+            }
+            
+            if (userData.type === 'worker') {
+                console.log('Displaying worker properties for:', userData.worker);
+                displayWorkerProperties(userData.worker);
+            } else if (userData.type === 'equipment') {
+                console.log('Displaying equipment properties for:', userData.equipment);
+                displayEquipmentProperties(userData.equipment);
+            } else {
+                console.log('Unknown userData type:', userData.type);
+            }
+        }
+        
+        function displayWorkerProperties(worker) {
+            console.log('displayWorkerProperties called with worker:', worker);
+            const title = document.getElementById('selected-object-title');
+            const content = document.getElementById('selected-object-content');
+            
+            console.log('Title element:', title, 'Content element:', content);
+            
+            if (!title || !content) {
+                console.error('Properties panel elements not found!');
+                return;
+            }
+            
+            title.innerHTML = `👷 Worker: ${worker.name}`;
+            
+            // Calculate safety status
+            let safetyStatus = 'Safe';
+            let safetyColor = '#00ff88';
+            let safetyIcon = '✅';
+            
+            if (!worker.has_helmet || !worker.has_vest) {
+                safetyStatus = 'PPE Missing';
+                safetyColor = '#ffa502';
+                safetyIcon = '⚠️';
+            }
+            
+            if (worker.heart_rate > 120 || worker.body_temp > 38.5) {
+                safetyStatus = 'Health Alert';
+                safetyColor = '#ff4757';
+                safetyIcon = '🚨';
+            }
+            
+            const lastSeenTime = new Date(worker.last_seen);
+            const timeDiff = Math.floor((new Date() - lastSeenTime) / 1000);
+            
+            content.innerHTML = `
+                <div class="property-group">
+                    <h5 style="color: #00d4ff; margin-bottom: 0.5rem;">📍 Location & Status</h5>
+                    <div class="property-item">
+                        <span>Position:</span>
+                        <span class="property-value">X: ${worker.location.x.toFixed(1)}, Y: ${worker.location.y.toFixed(1)}</span>
+                    </div>
+                    <div class="property-item">
+                        <span>Last Seen:</span>
+                        <span class="property-value">${timeDiff < 60 ? timeDiff + 's ago' : Math.floor(timeDiff/60) + 'm ago'}</span>
+                    </div>
+                </div>
+                
+                <div class="property-group">
+                    <h5 style="color: #00ff88; margin-bottom: 0.5rem;">🩺 Health Metrics</h5>
+                    <div class="property-item">
+                        <span>Heart Rate:</span>
+                        <span class="property-value" style="color: ${worker.heart_rate > 120 ? '#ff4757' : '#00ff88'}">${worker.heart_rate} BPM</span>
+                    </div>
+                    <div class="property-item">
+                        <span>Body Temperature:</span>
+                        <span class="property-value" style="color: ${worker.body_temp > 38.5 ? '#ff4757' : '#00ff88'}">${worker.body_temp.toFixed(1)}°C</span>
+                    </div>
+                </div>
+                
+                <div class="property-group">
+                    <h5 style="color: #ffa502; margin-bottom: 0.5rem;">🦺 PPE Compliance</h5>
+                    <div class="property-item">
+                        <span>Safety Helmet:</span>
+                        <span class="property-value">${worker.has_helmet ? '✅ Present' : '❌ Missing'}</span>
+                    </div>
+                    <div class="property-item">
+                        <span>Safety Vest:</span>
+                        <span class="property-value">${worker.has_vest ? '✅ Present' : '❌ Missing'}</span>
+                    </div>
+                </div>
+                
+                <div class="property-group">
+                    <h5 style="color: ${safetyColor}; margin-bottom: 0.5rem;">${safetyIcon} Overall Safety</h5>
+                    <div class="property-item">
+                        <span>Status:</span>
+                        <span class="property-value" style="color: ${safetyColor}">${safetyStatus}</span>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function displayEquipmentProperties(equipment) {
+            console.log('displayEquipmentProperties called with equipment:', equipment);
+            const title = document.getElementById('selected-object-title');
+            const content = document.getElementById('selected-object-content');
+            
+            console.log('Title element:', title, 'Content element:', content);
+            
+            if (!title || !content) {
+                console.error('Properties panel elements not found!');
+                return;
+            }
+            
+            title.innerHTML = `🏗️ ${equipment.type.replace('_', ' ').toUpperCase()}: ${equipment.id}`;
+            
+            // Calculate equipment status
+            let statusColor = equipment.is_active ? '#00ff88' : '#666666';
+            let statusText = equipment.is_active ? 'Active' : 'Stopped';
+            let statusIcon = equipment.is_active ? '🟢' : '🔴';
+            
+            if (equipment.alerts.length > 0) {
+                statusColor = '#ff4757';
+                statusText = 'Alert';
+                statusIcon = '🚨';
+            }
+            
+            // Format operating hours
+            const hours = Math.floor(equipment.operating_hours);
+            const minutes = Math.floor((equipment.operating_hours % 1) * 60);
+            
+            let movementSection = '';
+            if (equipment.type === 'concrete_mixer') {
+                movementSection = `
+                    <div class="property-group">
+                        <h5 style="color: #00d4ff; margin-bottom: 0.5rem;">🚛 Movement Status</h5>
+                        <div class="property-item">
+                            <span>Moving:</span>
+                            <span class="property-value">${equipment.is_moving ? '✅ Yes' : '❌ No'}</span>
+                        </div>
+                        ${equipment.is_moving ? `
+                        <div class="property-item">
+                            <span>Speed:</span>
+                            <span class="property-value">${equipment.movement_speed.toFixed(1)} m/s</span>
+                        </div>
+                        <div class="property-item">
+                            <span>Route Progress:</span>
+                            <span class="property-value">${equipment.path_progress}</span>
+                        </div>
+                        <div class="property-item">
+                            <span>Direction:</span>
+                            <span class="property-value">${equipment.rotation_angle.toFixed(1)}°</span>
+                        </div>
+                        ` : ''}
+                    </div>
+                `;
+            }
+            
+            console.log('Setting equipment properties content...');
+            content.innerHTML = `
+                <div class="property-group">
+                    <h5 style="color: ${statusColor}; margin-bottom: 0.5rem;">${statusIcon} Status</h5>
+                    <div class="property-item">
+                        <span>State:</span>
+                        <span class="property-value" style="color: ${statusColor}">${statusText}</span>
+                    </div>
+                    <div class="property-item">
+                        <span>Location:</span>
+                        <span class="property-value">X: ${equipment.location.x.toFixed(1)}, Y: ${equipment.location.y.toFixed(1)}</span>
+                    </div>
+                </div>
+                
+                <div class="property-group">
+                    <h5 style="color: #ffa502; margin-bottom: 0.5rem;">🔧 Telemetry</h5>
+                    <div class="property-item">
+                        <span>Engine Temp:</span>
+                        <span class="property-value" style="color: ${equipment.engine_temp > 90 ? '#ff4757' : '#00ff88'}">${equipment.engine_temp.toFixed(1)}°C</span>
+                    </div>
+                    <div class="property-item">
+                        <span>Fuel Level:</span>
+                        <span class="property-value" style="color: ${equipment.fuel_level < 10 ? '#ff4757' : equipment.fuel_level < 25 ? '#ffa502' : '#00ff88'}">${equipment.fuel_level.toFixed(1)}%</span>
+                    </div>
+                    <div class="property-item">
+                        <span>Vibration:</span>
+                        <span class="property-value" style="color: ${equipment.vibration_level > 70 ? '#ff4757' : '#00ff88'}">${equipment.vibration_level.toFixed(1)}</span>
+                    </div>
+                    <div class="property-item">
+                        <span>Load Weight:</span>
+                        <span class="property-value">${equipment.load_weight.toFixed(0)} kg</span>
+                    </div>
+                </div>
+                
+                <div class="property-group">
+                    <h5 style="color: #00d4ff; margin-bottom: 0.5rem;">⏱️ Operations</h5>
+                    <div class="property-item">
+                        <span>Runtime:</span>
+                        <span class="property-value">${hours}h ${minutes}m</span>
+                    </div>
+                    <div class="property-item">
+                        <span>Last Update:</span>
+                        <span class="property-value">Just now</span>
+                    </div>
+                </div>
+                
+                ${movementSection}
+                
+                ${equipment.alerts.length > 0 ? `
+                <div class="property-group">
+                    <h5 style="color: #ff4757; margin-bottom: 0.5rem;">🚨 Active Alerts</h5>
+                    ${equipment.alerts.map(alert => `
+                        <div class="property-item">
+                            <span style="color: #ff4757;">⚠️ ${alert.replace('_', ' ')}</span>
+                        </div>
+                    `).join('')}
+                </div>
+                ` : ''}
+            `;
+            console.log('Equipment properties content set. Content length:', content.innerHTML.length);
+            console.log('Panel display style after content set:', document.getElementById('selected-object-panel').style.display);
+        }
+        
+        function clearSelection() {
+            selectedObject = null;
+            
+            // Hide properties panel
+            document.getElementById('selected-object-panel').style.display = 'none';
+            
+            // Remove visual selection indicator
+            if (selectionIndicator) {
+                scene.remove(selectionIndicator);
+                if (selectionIndicator.geometry) selectionIndicator.geometry.dispose();
+                if (selectionIndicator.material) selectionIndicator.material.dispose();
+                selectionIndicator = null;
+            }
+        }
+        
+        function createSelectionIndicator(object) {
+            // Remove existing indicator
+            if (selectionIndicator) {
+                scene.remove(selectionIndicator);
+                if (selectionIndicator.geometry) selectionIndicator.geometry.dispose();
+                if (selectionIndicator.material) selectionIndicator.material.dispose();
+            }
+            
+            // Create a pulsing ring around the selected object
+            const geometry = new THREE.RingGeometry(8, 12, 16);
+            const material = new THREE.MeshBasicMaterial({
+                color: 0x00d4ff,
+                transparent: true,
+                opacity: 0.6,
+                side: THREE.DoubleSide
+            });
+            
+            selectionIndicator = new THREE.Mesh(geometry, material);
+            selectionIndicator.position.copy(object.position);
+            selectionIndicator.position.y = 0.1; // Slightly above ground
+            selectionIndicator.rotation.x = -Math.PI / 2; // Lay flat on ground
+            
+            scene.add(selectionIndicator);
+        }
+        
+        // Initialize everything
+        document.addEventListener('DOMContentLoaded', async function() {
+            console.log('🚀 Initializing 3D Construction Digital Twin...');
+            
+            // Test server connection first
+            const serverConnected = await testServerConnection();
+            if (!serverConnected) {
+                console.warn('⚠️ Server connection issues detected');
+            }
+            
+            // Initialize 3D scene
+            console.log('🎨 Initializing 3D scene...');
+            init3DScene();
+            
+            // Fetch initial data
+            console.log('📊 Fetching initial dashboard data...');
+            await fetchDashboardData();
+            
+            // Set up event listeners
+            setupEventListeners();
+            
+            // Test properties panel visibility
+            console.log('Testing properties panel availability...');
+            const testPanel = document.getElementById('selected-object-panel');
+            console.log('Properties panel found:', testPanel);
+            if (testPanel) {
+                console.log('Panel current display style:', testPanel.style.display);
+                console.log('Panel computed style:', window.getComputedStyle(testPanel).display);
+            }
+            
+            // Start animation loop
+            console.log('🎬 Starting animation loop...');
+            animate();
+            
+            // Update every 3 seconds
+            console.log('⏰ Setting up periodic updates (every 3 seconds)...');
+            setInterval(fetchDashboardData, 3000);
+            
+            console.log('✅ 3D Construction Digital Twin initialized successfully!');
+        });
+    </script>
+</body>
+</html>

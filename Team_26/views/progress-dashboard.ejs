@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learning Progress Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+    :root {
+        --primary-color: #0ff; /* Neon cyan */
+        --secondary-color: #ff00ff; /* Neon magenta */
+        --success-color: #00ff88;
+        --info-color: #00e5ff;
+        --warning-color: #ffcc00;
+        --danger-color: #ff3b3b;
+        --light-color: #1a1a1a; /* Dark background */
+        --dark-color: #f0f0f0; /* Light text */
+    }
+
+    body {
+        background-color: var(--light-color);
+        font-family: 'Nunito', sans-serif;
+        min-height: 100vh;
+        color: var(--dark-color);
+    }
+
+    .container, .quiz-container {
+        max-width: 900px;
+        margin: 2rem auto;
+        padding: 2rem 1rem;
+    }
+
+    .card {
+        background-color: #111;
+        border: 1px solid var(--primary-color);
+        border-radius: 15px;
+        box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        margin-bottom: 1.5rem;
+    }
+
+    .card:hover {
+        transform: scale(1.02);
+        box-shadow: 0 0 25px rgba(0, 255, 255, 0.4);
+    }
+
+    .card-header {
+        background-color: transparent;
+        padding: 1.5rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .card-header h5 {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #0ff;
+        font-weight: 700;
+        text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+    }
+
+    .card-header h5 i {
+        font-size: 1.2em;
+        color: #0ff;
+        text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+    }
+
+    .card-body {
+        padding: 1.5rem;
+    }
+
+    .quiz-header h1,
+    .dashboard-header h1 {
+        font-size: 2.5rem;
+        color: var(--primary-color);
+        text-shadow: 0 0 8px var(--primary-color);
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .question-card {
+        background: #111;
+        padding: 2rem;
+        margin-bottom: 1.5rem;
+        border: 1px solid #00e5ff;
+        box-shadow: 0 0 10px rgba(0, 229, 255, 0.3);
+    }
+
+    .option-btn {
+        display: block;
+        width: 100%;
+        padding: 1rem;
+        margin: 0.75rem 0;
+        text-align: left;
+        border: 2px solid #333;
+        border-radius: 10px;
+        background: #222;
+        color: var(--dark-color);
+        font-size: 1rem;
+        transition: all 0.3s;
+    }
+
+    .option-btn:hover {
+        background: #111;
+        border-color: var(--primary-color);
+        color: var(--primary-color);
+        box-shadow: 0 0 10px var(--primary-color);
+        transform: translateX(5px);
+    }
+
+    .option-btn.selected {
+        background: var(--primary-color);
+        color: #000;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 10px var(--primary-color);
+    }
+
+    .timer {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: var(--warning-color);
+        text-align: center;
+        padding: 1rem;
+        background: #222;
+        border-radius: 10px;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 0 10px var(--warning-color);
+    }
+
+    .navigation-buttons {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 2rem;
+    }
+
+    .feedback {
+        margin: 1rem 0;
+        padding: 1rem;
+        border-radius: 10px;
+        border-left: 5px solid;
+        color: #fff;
+    }
+
+    .feedback.correct {
+        background-color: rgba(0, 255, 136, 0.1);
+        border-left-color: var(--success-color);
+        box-shadow: 0 0 8px var(--success-color);
+    }
+
+    .feedback.incorrect {
+        background-color: rgba(255, 59, 59, 0.1);
+        border-left-color: var(--danger-color);
+        box-shadow: 0 0 8px var(--danger-color);
+    }
+
+    .form-select {
+        padding: 0.75rem;
+        border-radius: 10px;
+        border: 2px solid #555;
+        font-size: 1rem;
+        background-color: #222;
+        color: var(--primary-color);
+    }
+
+    .topic-progress,
+    .study-plan-item {
+        background-color: #111;
+        padding: 1rem;
+        border-radius: 10px;
+        margin: 0.5rem 0;
+        border-left: 4px solid var(--info-color);
+    }
+
+    .topic-title {
+        font-weight: 600;
+        color: var(--primary-color);
+    }
+
+    .topic-percentage {
+        font-weight: 600;
+        color: var(--secondary-color);
+    }
+
+    .study-plan-item.priority-high { border-color: var(--danger-color); }
+    .study-plan-item.priority-medium { border-color: var(--warning-color); }
+    .study-plan-item.priority-low { border-color: var(--success-color); }
+
+    .resource-item {
+        background-color: #222;
+        padding: 0.75rem;
+        border-radius: 8px;
+        margin: 0.5rem 0;
+        color: var(--primary-color);
+    }
+
+    .resource-link {
+        color: var(--primary-color);
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+
+    .resource-link:hover {
+        color: var(--secondary-color);
+        text-decoration: none;
+        text-shadow: 0 0 10px var(--secondary-color);
+    }
+
+    .resource-icon {
+        color: var(--primary-color);
+        margin-right: 0.5rem;
+    }
+
+    .error-message {
+        background-color: rgba(255, 59, 59, 0.2);
+        color: var(--danger-color);
+        padding: 1rem;
+        border-radius: 10px;
+        margin: 1rem 0;
+        text-align: center;
+        box-shadow: 0 0 10px var(--danger-color);
+    }
+
+    .progress {
+        background-color: rgba(255, 255, 255, 0.1);
+        height: 0.75rem;
+        margin: 0.5rem 0;
+        border-radius: 1rem;
+        overflow: hidden;
+    }
+
+    .progress-bar {
+        background-color: #0ff;
+        box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+        transition: width 0.6s ease;
+    }
+
+    .btn {
+        padding: 0.75rem 1.5rem;
+        border-radius: 10px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .btn-primary {
+        background-color: var(--primary-color);
+        border: none;
+        color: #000;
+        box-shadow: 0 0 10px var(--primary-color);
+    }
+
+    .btn-primary:hover {
+        background-color: #00e5ff;
+        transform: scale(1.05);
+    }
+
+    .btn-secondary {
+        background-color: var(--secondary-color);
+        color: white;
+        border: none;
+        box-shadow: 0 0 10px var(--secondary-color);
+    }
+
+    .chart-container {
+        position: relative;
+        height: 300px;
+        margin: 1rem 0;
+        padding: 1rem;
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 10px;
+        border: 1px solid rgba(0, 255, 255, 0.1);
+    }
+
+    .chart-container canvas {
+        filter: drop-shadow(0 0 10px rgba(0, 255, 255, 0.2));
+    }
+
+    .dashboard-header h1 {
+        color: #0ff;
+        text-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+
+    .dashboard-header .lead {
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 1.2rem;
+        margin-bottom: 2rem;
+    }
+
+    @media (max-width: 768px) {
+        .container, .quiz-container {
+            padding: 1rem;
+            margin: 1rem auto;
+        }
+
+        .card-body,
+        .question-card {
+            padding: 1rem;
+        }
+
+        .option-btn {
+            padding: 0.75rem;
+        }
+
+        .quiz-header h1,
+        .dashboard-header h1 {
+            font-size: 2rem;
+        }
+
+        .chart-container {
+            height: 250px;
+            padding: 0.5rem;
+        }
+        
+        .card-header h5 {
+            font-size: 1rem;
+        }
+    }
+</style>
+
+
+</head>
+<body>
+    <div class="container">
+        <div class="dashboard-header">
+            <h1>Attempted Subjects</h1>
+            <p class="lead">Graph of subjects you've attempted via quizzes (average score)</p>
+        </div>
+
+        <!-- Charts: only attempted subjects -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5><i class="fas fa-chart-line me-2"></i>Average Score by Attempted Subject</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="overallProgressChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5><i class="fas fa-chart-pie me-2"></i>Attempt Distribution</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="subjectDistributionChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Generate random colors for charts
+        function generateColors(count) {
+            const colors = [];
+            for (let i = 0; i < count; i++) {
+                const hue = (i * 137.508) % 360; // Use golden angle approximation
+                colors.push(`hsl(${hue}, 70%, 60%)`);
+            }
+            return colors;
+        }
+
+        // Fetch dashboard data (include credentials so session cookie is sent)
+        async function fetchDashboardData() {
+            try {
+                const response = await fetch('/api/quiz/progress', { credentials: 'same-origin' });
+                // If user is not authenticated, the protected API will return 401/redirect — handle that gracefully
+                if (response.status === 401 || response.status === 403) {
+                    document.querySelector('.container').insertAdjacentHTML('afterbegin', `
+                        <div class="error-message">
+                            You need to be logged in to view your progress. <a href="/login" style="color:var(--primary-color); text-decoration:underline;">Sign in</a>
+                        </div>
+                    `);
+                    return null;
+                }
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch dashboard data');
+                }
+
+                const contentType = response.headers.get('content-type') || '';
+                // If server redirected to HTML login page or returned HTML, treat as not authenticated
+                if (!contentType.includes('application/json')) {
+                    document.querySelector('.container').insertAdjacentHTML('afterbegin', `
+                        <div class="error-message">
+                            You need to be logged in to view your progress. <a href="/login" style="color:var(--primary-color); text-decoration:underline;">Sign in</a>
+                        </div>
+                    `);
+                    return null;
+                }
+
+                const data = await response.json();
+                return data.dashboard;
+            } catch (error) {
+                console.error('Error fetching dashboard data:', error);
+                document.querySelector('.container').insertAdjacentHTML('afterbegin', `
+                    <div class="error-message">
+                        Failed to load dashboard data. Please try refreshing the page.
+                    </div>
+                `);
+                return null;
+            }
+        }
+
+        // Initialize charts and dashboard
+        async function initializeDashboard() {
+            const dashboard = await fetchDashboardData();
+            // If there's no dashboard or no meaningful data (no subjects and no study plan), show friendly message
+            if (!dashboard || (((!dashboard.subjects || dashboard.subjects.length === 0) && (!dashboard.studyPlan || dashboard.studyPlan.length === 0)))) {
+                document.querySelector('.container').insertAdjacentHTML('afterbegin', `
+                    <div class="error-message">
+                        No progress data available. Take some quizzes to see your progress!
+                    </div>
+                `);
+                return;
+            }
+
+            // Use attemptedSubjects only
+            const attempted = dashboard.attemptedSubjects || [];
+            const colors = generateColors(attempted.length);
+
+            // Only render charts if there are attempted subjects
+            if (attempted.length > 0) {
+                // Overall Progress Chart (avg score)
+                const overallCtx = document.getElementById('overallProgressChart').getContext('2d');
+                new Chart(overallCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: attempted.map(s => s.subject),
+                        datasets: [{
+                            label: 'Average Score',
+                            data: attempted.map(s => s.avgScore),
+                            borderColor: '#0ff',
+                            backgroundColor: attempted.map((_, i) => colors[i] || '#0ff'),
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false,
+                                position: 'top',
+                                labels: {
+                                    color: '#f0f0f0',
+                                    font: {
+                                        size: 12
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 100,
+                                grid: {
+                                    color: 'rgba(255, 255, 255, 0.1)',
+                                    borderColor: 'rgba(255, 255, 255, 0.2)'
+                                },
+                                ticks: {
+                                    color: '#f0f0f0',
+                                    font: {
+                                        size: 12
+                                    }
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    color: 'rgba(255, 255, 255, 0.1)',
+                                    borderColor: 'rgba(255, 255, 255, 0.2)'
+                                },
+                                ticks: {
+                                    color: '#f0f0f0',
+                                    font: {
+                                        size: 12
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+                // Subject Distribution Chart (attempt counts)
+                const distributionCtx = document.getElementById('subjectDistributionChart').getContext('2d');
+                new Chart(distributionCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: attempted.map(s => s.subject),
+                        datasets: [{
+                            data: attempted.map(s => s.attempts),
+                            backgroundColor: attempted.map((_, i) => colors[i] || '#0ff'),
+                            borderColor: '#111',
+                            borderWidth: 2,
+                            hoverOffset: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'right',
+                                labels: {
+                                    color: '#f0f0f0',
+                                    font: {
+                                        size: 12
+                                    },
+                                    padding: 20
+                                }
+                            }
+                        },
+                        cutout: '60%'
+                    }
+                });
+            }
+
+            // Update chart containers style
+            document.querySelectorAll('.chart-container').forEach(container => {
+                container.style.height = '300px';
+                container.style.margin = '1rem 0';
+                container.style.position = 'relative';
+            });
+
+            // Populate Subject Progress
+            const subjectProgressContainer = document.getElementById('subjectProgress');
+            subjectProgressContainer.innerHTML = ''; // Clear existing content
+            
+            let rowDiv = document.createElement('div');
+            rowDiv.className = 'row g-4';
+            
+            dashboard.subjects.forEach((subject, index) => {
+                const subjectCard = document.createElement('div');
+                subjectCard.className = 'col-md-4';
+                subjectCard.innerHTML = createSubjectCard(subject, colors, index);
+                rowDiv.appendChild(subjectCard);
+            });
+            
+            subjectProgressContainer.appendChild(rowDiv);
+
+            // Populate Study Plan
+            const studyPlanContainer = document.getElementById('studyPlan');
+            studyPlanContainer.innerHTML = ''; // Clear existing content
+            
+            if (!dashboard.studyPlan || dashboard.studyPlan.length === 0) {
+                studyPlanContainer.innerHTML = '<p class="text-muted">No study plan items available.</p>';
+                return;
+            }
+
+            dashboard.studyPlan.forEach(item => {
+                const planItem = document.createElement('div');
+                planItem.className = `study-plan-item priority-${item.priority}`;
+                planItem.innerHTML = createStudyPlanItem(item);
+                studyPlanContainer.appendChild(planItem);
+            });
+
+            // Populate Recent Attempts
+            const recentAttemptsContainer = document.getElementById('recentAttempts');
+            recentAttemptsContainer.innerHTML = '';
+            if (!dashboard.recentAttempts || dashboard.recentAttempts.length === 0) {
+                recentAttemptsContainer.innerHTML = '<p class="text-muted">No recent attempts found.</p>';
+            } else {
+                dashboard.recentAttempts.forEach(a => {
+                    const item = document.createElement('div');
+                    item.className = 'topic-progress mb-2';
+                    item.innerHTML = `
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong>${a.quizTitle}</strong>
+                                <div class="small text-muted">${a.subject} • ${new Date(a.completedAt).toLocaleString()}</div>
+                            </div>
+                            <div class="text-end">
+                                <div class="fw-bold">${a.score}${a.total ? ' / ' + a.total : ''}</div>
+                                <div class="small text-muted">Score</div>
+                            </div>
+                        </div>
+                    `;
+                    recentAttemptsContainer.appendChild(item);
+                });
+            }
+        }
+
+        // Initialize when page loads and Chart.js is ready
+        if (typeof Chart === 'undefined') {
+            document.querySelector('.container').insertAdjacentHTML('afterbegin', `
+                <div class="error-message">
+                    Failed to load Chart.js. Please check your internet connection and refresh the page.
+                </div>
+            `);
+        } else {
+            document.addEventListener('DOMContentLoaded', initializeDashboard);
+        }
+
+        function createSubjectCard(subject, colors, index) {
+            return `
+                <div class="card h-100">
+                    <div class="card-header">
+                        <h5><i class="fas fa-book me-2"></i>${subject.name}</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" 
+                                 style="width: ${subject.progress}%; background-color: ${colors[index]}" 
+                                 aria-valuenow="${subject.progress}" 
+                                 aria-valuemin="0" 
+                                 aria-valuemax="100">
+                                ${Math.round(subject.progress)}%
+                            </div>
+                        </div>
+                        <h6 class="mt-4 mb-3">Topics:</h6>
+                        ${subject.topics.map(topic => `
+                            <div class="topic-progress">
+                                <div class="topic-header">
+                                    <span class="topic-title">${topic.name}</span>
+                                    <span class="topic-percentage">${Math.round(topic.understanding)}%</span>
+                                </div>
+                                <div class="progress" style="height: 8px;">
+                                    <div class="progress-bar" role="progressbar" 
+                                         style="width: ${topic.understanding}%" 
+                                         aria-valuenow="${topic.understanding}" 
+                                         aria-valuemin="0" 
+                                         aria-valuemax="100">
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function createStudyPlanItem(item) {
+            return `
+                <div class="study-plan-item priority-${item.priority}">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h6 class="mb-0"><i class="fas fa-graduation-cap me-2"></i>${item.subject} - ${item.topic}</h6>
+                        <span class="badge bg-${item.priority === 'high' ? 'danger' : item.priority === 'medium' ? 'warning' : 'success'}">
+                            ${item.priority.toUpperCase()}
+                        </span>
+                    </div>
+                    <div class="recommended-resources">
+                        ${item.recommendedResources ? item.recommendedResources.map(resource => `
+                            <div class="resource-item">
+                                <i class="fas fa-${resource.type === 'video' ? 'video' : 
+                                                   resource.type === 'article' ? 'file-alt' : 
+                                                   resource.type === 'practice' ? 'code' : 'question-circle'} resource-icon me-2"></i>
+                                <a href="${resource.link}" target="_blank" class="resource-link">
+                                    <strong>${resource.title}</strong>
+                                </a>
+                                <p class="small text-muted mb-0">${resource.description}</p>
+                            </div>
+                        `).join('') : ''}
+                    </div>
+                    <div class="mt-2 text-muted">
+                        <i class="fas fa-calendar-alt me-2"></i>Deadline: ${new Date(item.deadline).toLocaleDateString()}
+                    </div>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html> 

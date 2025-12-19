@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Medicinal Plant Recognizer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root { --bg: #0f172a; --card: #1e293b; --accent: #4ade80; --text: #e2e8f0; }
+        body { font-family: 'Inter', system-ui, sans-serif; background-color: var(--bg); color: var(--text); }
+        .hidden { display: none; }
+        .video-container { position: relative; width: 100%; border-radius: 0.5rem; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.4); }
+        #videoFeed { transform: scaleX(-1); } /* Mirror the video feed */
+        #predictionOverlay {
+            position: absolute; bottom: 0; left: 0; right: 0;
+            background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(5px);
+            padding: 0.75rem 1rem; text-align: center; font-size: 1.25rem; font-weight: 600;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            transition: opacity 0.3s;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+
+    <main class="w-full max-w-xl bg-slate-800 rounded-xl shadow-2xl p-6 md:p-8 transition-all duration-300">
+        <!-- === SELECTION SCREEN === -->
+        <div id="selectionScreen">
+            <div class="text-center mb-6">
+                <h1 class="text-3xl font-bold text-white">Medicinal Plant Recognizer 🌿</h1>
+                <p class="text-slate-400 mt-2">Choose how to identify your plant.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <button id="showUploadBtn" class="bg-sky-600 hover:bg-sky-700 text-white font-bold py-4 px-6 rounded-lg text-lg transition-transform transform hover:scale-105">
+                    Upload an Image
+                </button>
+                <button id="showCameraBtn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-6 rounded-lg text-lg transition-transform transform hover:scale-105">
+                    Use Live Camera
+                </button>
+            </div>
+        </div>
+
+        <!-- === UPLOAD SCREEN === -->
+        <div id="uploadScreen" class="hidden">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-2xl font-bold text-white">Upload Image</h2>
+                <button class="goBackBtn text-slate-400 hover:text-white">&larr; Back</button>
+            </div>
+            <div class="uploader flex gap-2">
+                <input id="fileInput" type="file" accept="image/*" class="flex-1 p-2 bg-slate-700 border border-slate-600 rounded-md text-slate-300 file:mr-2 file:py-1 file:px-2 file:rounded-md file:border-0 file:bg-slate-600 file:text-slate-200">
+                <button id="predictBtn" class="bg-green-500 text-white font-bold py-2 px-4 rounded-lg" disabled>Predict</button>
+            </div>
+            <div class="preview flex justify-center mt-4">
+                <img id="previewImage" src="" alt="preview" class="max-w-full max-h-64 rounded-lg border border-slate-700 hidden" />
+            </div>
+            <div id="result" class="result mt-4 p-3 bg-slate-700/50 rounded-lg hidden">
+                <h3 class="font-bold text-lg">Prediction Result:</h3>
+                <p id="predTextUpload"></p>
+            </div>
+            <div id="statusUpload" class="status mt-2 text-sm text-slate-400"></div>
+        </div>
+
+        <!-- === CAMERA SCREEN === -->
+        <div id="cameraScreen" class="hidden">
+             <div class="flex items-center justify-between mb-4">
+                <h2 class="text-2xl font-bold text-white">Live Camera</h2>
+                <button class="goBackBtn text-slate-400 hover:text-white">&larr; Back</button>
+            </div>
+            <div class="video-container bg-slate-900 flex items-center justify-center min-h-[200px]">
+                <video id="videoFeed" autoplay playsinline muted class="w-full h-auto"></video>
+                <canvas id="canvas" class="hidden"></canvas>
+                <div id="predictionOverlay" class="opacity-0">
+                    <p id="predTextCamera">Initializing camera...</p>
+                </div>
+            </div>
+             <p id="errorMsg" class="text-red-400 mt-2 text-center"></p>
+        </div>
+    </main>
+
+    <script>
+        // --- Screen Elements ---
+        const selectionScreen = document.getElementById('selectionScreen');
+        const uploadScreen = document.getElementById('uploadScreen');
+        const cameraScreen = document.getElementById('cameraScreen');
+
+        // --- Buttons ---
+        const showUploadBtn = document.getElementById('showUploadBtn');
+        const showCameraBtn = document.getElementById('showCameraBtn');
+        const goBackBtns = document.querySelectorAll('.goBackBtn');
+        
+        // --- UPLOAD ELEMENTS ---
+        const fileInput = document.getElementById("fileInput");
+        const predictBtn = document.getElementById("predictBtn");
+        const previewImage = document.getElementById("previewImage");
+        const resultDiv = document.getElementById("result");
+        const predTextUpload = document.getElementById("predTextUpload");
+        const statusUpload = document.getElementById("statusUpload");
+        let selectedFile = null;
+
+        // --- CAMERA ELEMENTS ---
+        const videoFeed = document.getElementById('videoFeed');
+        const canvas = document.getElementById('canvas');
+        const predTextCamera = document.getElementById('predTextCamera');
+        const predictionOverlay = document.getElementById('predictionOverlay');
+        const errorMsg = document.getElementById('errorMsg');
+        let predictionInterval;
+        let stream;
+
+        // --- SCREEN NAVIGATION ---
+        showUploadBtn.addEventListener('click', () => {
+            selectionScreen.classList.add('hidden');
+            uploadScreen.classList.remove('hidden');
+        });
+
+        showCameraBtn.addEventListener('click', () => {
+            selectionScreen.classList.add('hidden');
+            cameraScreen.classList.remove('hidden');
+            startCamera();
+        });
+
+        goBackBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                uploadScreen.classList.add('hidden');
+                cameraScreen.classList.add('hidden');
+                selectionScreen.classList.remove('hidden');
+                stopCamera(); // Stop camera if it's running
+            });
+        });
+
+        // --- UPLOAD LOGIC ---
+        fileInput.addEventListener("change", (e) => {
+            const f = e.target.files[0];
+            if (!f) return;
+            selectedFile = f;
+            const url = URL.createObjectURL(f);
+            previewImage.src = url;
+            previewImage.classList.remove('hidden');
+            predictBtn.disabled = false;
+            resultDiv.classList.add('hidden');
+        });
+
+        predictBtn.addEventListener("click", async () => {
+            if (!selectedFile) return;
+            predictBtn.disabled = true;
+            statusUpload.textContent = "Uploading & predicting...";
+            const form = new FormData();
+            form.append("image", selectedFile);
+            try {
+                const resp = await makePrediction(form);
+                if (resp.success) {
+                    predTextUpload.innerHTML = `<strong>${resp.label}</strong> (confidence: ${(resp.confidence*100).toFixed(1)}%)`;
+                    resultDiv.classList.remove('hidden');
+                    statusUpload.textContent = "";
+                } else {
+                    statusUpload.textContent = "Prediction failed: " + (resp.error || "unknown");
+                }
+            } catch (err) {
+                statusUpload.textContent = "Error: " + err.message;
+            } finally {
+                predictBtn.disabled = false;
+            }
+        });
+
+        // --- CAMERA LOGIC ---
+        async function startCamera() {
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                errorMsg.textContent = "Your browser does not support camera access.";
+                return;
+            }
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+                videoFeed.srcObject = stream;
+                videoFeed.classList.remove('hidden');
+                predictionOverlay.classList.remove('opacity-0');
+                errorMsg.textContent = '';
+                predictionInterval = setInterval(captureAndPredict, 2000);
+            } catch (err) {
+                errorMsg.textContent = "Could not start camera. Please grant permission.";
+                console.error("Camera Error:", err);
+            }
+        }
+
+        function stopCamera() {
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+            }
+            clearInterval(predictionInterval);
+            videoFeed.srcObject = null;
+            predictionOverlay.classList.add('opacity-0');
+        }
+
+        async function captureAndPredict() {
+            if (videoFeed.readyState < 2) return;
+            const context = canvas.getContext('2d');
+            canvas.width = videoFeed.videoWidth;
+            canvas.height = videoFeed.videoHeight;
+            context.translate(canvas.width, 0);
+            context.scale(-1, 1);
+            context.drawImage(videoFeed, 0, 0, canvas.width, canvas.height);
+            canvas.toBlob(async (blob) => {
+                const formData = new FormData();
+                formData.append('image', blob, 'live_frame.jpg');
+                try {
+                    const data = await makePrediction(formData);
+                    if (data.success) {
+                        const confidence = (data.confidence * 100).toFixed(1);
+                        predTextCamera.innerHTML = `${data.label} <span class="text-sm font-normal text-slate-300">(${confidence}%)</span>`;
+                    } else {
+                        predTextCamera.textContent = "Could not identify.";
+                    }
+                } catch (err) {
+                    console.error("Prediction Error:", err);
+                    predTextCamera.textContent = "Prediction error...";
+                }
+            }, 'image/jpeg');
+        }
+
+        // --- SHARED PREDICTION FUNCTION ---
+        async function makePrediction(formData) {
+            const resp = await fetch("/predict", { method: "POST", body: formData });
+            if (!resp.ok) {
+                const txt = await resp.text();
+                throw new Error(txt || resp.statusText);
+            }
+            return await resp.json();
+        }
+    </script>
+</body>
+</html>
+

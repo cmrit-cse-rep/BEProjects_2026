@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Backend API Test</title>
+  </head>
+  <body>
+    <h1>Backend API Test</h1>
+    <button onclick="testPredictions()">Test Predictions API</button>
+    <div id="result"></div>
+
+    <script>
+      async function testPredictions() {
+        const resultDiv = document.getElementById("result");
+        resultDiv.innerHTML = "Testing predictions...";
+
+        try {
+          const response = await fetch(
+            "http://localhost:5002/api/predictions/RELIANCE.NS"
+          );
+          const data = await response.json();
+
+          if (response.ok) {
+            resultDiv.innerHTML =
+              "<h3>Success!</h3><pre>" +
+              JSON.stringify(data, null, 2) +
+              "</pre>";
+          } else {
+            resultDiv.innerHTML =
+              "<h3>Error:</h3><p>" + JSON.stringify(data) + "</p>";
+          }
+        } catch (error) {
+          resultDiv.innerHTML =
+            "<h3>Network Error:</h3><p>" + error.message + "</p>";
+        }
+      }
+    </script>
+  </body>
+</html>

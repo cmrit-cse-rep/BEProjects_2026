@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>NeuroPlay – Bubble Pop (Web)</title>
+
+  <!-- MediaPipe JS libs -->
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+
+  <style>
+    :root {
+      --bg: #f5f5f7;
+      --card-bg: #ffffff;
+      --accent: #34d399;
+      --accent-soft: #dcfce7;
+      --text-main: #111827;
+      --text-soft: #4b5563;
+      --radius-lg: 18px;
+      --radius-md: 12px;
+      --shadow-soft: 0 12px 30px rgba(15, 23, 42, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #dcfce7, #eff6ff 50%, #f5f5f7);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: var(--text-main);
+    }
+
+    .page-header {
+      margin-top: 18px;
+      text-align: center;
+      padding: 0 16px;
+    }
+
+    .page-header h2 {
+      font-size: 22px;
+      margin-bottom: 4px;
+    }
+
+    .page-header p {
+      margin: 0;
+      font-size: 14px;
+      color: var(--text-soft);
+      max-width: 640px;
+      margin-inline: auto;
+    }
+
+    #game-container {
+      margin: 20px 16px 32px;
+      background: var(--card-bg);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-soft);
+      padding: 16px 16px 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      max-width: 960px;
+      width: 100%;
+    }
+
+    #game-top {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    #gameCanvas {
+      border-radius: var(--radius-md);
+      background: radial-gradient(circle at top, #dcfce7, #eff6ff);
+      border: 1px solid #e5e7eb;
+      touch-action: none;
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    @media (min-width: 880px) {
+      #gameCanvas {
+        max-height: 520px;
+      }
+    }
+
+    #hud {
+      margin-top: 8px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      font-size: 13px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .badge {
+      padding: 4px 12px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: #047857;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .badge-label {
+      font-weight: 500;
+    }
+
+    #controls-row {
+      margin-top: 8px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    button {
+      border-radius: 999px;
+      border: none;
+      padding: 8px 18px;
+      font-size: 14px;
+      cursor: pointer;
+      background: #16a34a;
+      color: white;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: transform 0.08s ease, box-shadow 0.08s ease, background 0.12s;
+      box-shadow: 0 6px 18px rgba(34, 197, 94, 0.25);
+    }
+
+    button.secondary {
+      background: #e5e7eb;
+      color: #111827;
+      box-shadow: none;
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: default;
+      box-shadow: none;
+      transform: none;
+    }
+
+    button:not(:disabled):active {
+      transform: translateY(1px);
+      box-shadow: 0 3px 8px rgba(15, 23, 42, 0.15);
+    }
+
+    #status {
+      margin-top: 8px;
+      font-size: 13px;
+      color: var(--text-soft);
+      text-align: center;
+      min-height: 18px;
+    }
+
+    #camera-indicator {
+      margin-top: 2px;
+      font-size: 12px;
+      color: #6b7280;
+      text-align: center;
+      min-height: 16px;
+    }
+
+    #camera-row {
+      margin-top: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    #camera-wrapper {
+      background: #f3f4f6;
+      border-radius: var(--radius-md);
+      padding: 6px;
+      border: 1px solid #e5e7eb;
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    #camera-label {
+      font-size: 11px;
+      color: #6b7280;
+      margin-bottom: 4px;
+    }
+
+    video {
+      display: block;
+      width: 260px;
+      max-width: 100%;
+      height: auto;
+      border-radius: 10px;
+      background: #111827;
+    }
+
+    @media (max-width: 640px) {
+      #game-container {
+        margin-inline: 10px;
+        padding-inline: 12px;
+      }
+      #camera-wrapper {
+        width: 100%;
+      }
+      video {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-header">
+    <h2>Bubble Pop</h2>
+    <p>
+      Hold your hand in front of the camera. Move your open palm to guide the circle.
+      Gently make a soft fist to pop a bubble when it is inside the circle.
+      Movements are slow and calm – no need to rush.
+    </p>
+  </div>
+
+  <div id="game-container">
+    <div id="game-top">
+      <canvas id="gameCanvas" width="900" height="520"></canvas>
+
+      <div id="hud">
+        <span class="badge">
+          <span class="badge-label">Level</span>
+          <span id="level">1</span>
+        </span>
+        <span class="badge">
+          <span class="badge-label">Score</span>
+          <span id="score">0</span>
+        </span>
+        <span class="badge">
+          <span class="badge-label">Popped</span>
+          <span id="popped">0</span>
+        </span>
+        <span class="badge">
+          <span class="badge-label">Missed</span>
+          <span id="missed">0</span>
+        </span>
+      </div>
+
+      <div id="controls-row">
+        <button id="startBtn">▶ Start Session</button>
+        <button id="endBtn" class="secondary" disabled>⏹ End &amp; Save Session</button>
+      </div>
+      <a href="{{ url_for('dashboard') }}" id="backBtn">← Back to Dashboard</a>
+
+      <div id="status"></div>
+      <div id="camera-indicator"></div>
+    </div>
+
+    <div id="camera-row">
+      <div id="camera-wrapper">
+        <div id="camera-label">Hand camera preview</div>
+        <video id="inputVideo" playsinline muted></video>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const RECORD_SESSION_URL = "{{ record_session_url }}";
+    const USER_ID = {{ user_id | int }};
+
+    const canvas = document.getElementById("gameCanvas");
+    const ctx = canvas.getContext("2d");
+
+    const hudLevel = document.getElementById("level");
+    const hudScore = document.getElementById("score");
+    const hudPopped = document.getElementById("popped");
+    const hudMissed = document.getElementById("missed");
+    const startBtn = document.getElementById("startBtn");
+    const endBtn = document.getElementById("endBtn");
+    const statusEl = document.getElementById("status");
+    const cameraIndicator = document.getElementById("camera-indicator");
+    const videoElement = document.getElementById("inputVideo");
+
+    // ------------------------------
+    // Difficulty curve
+    // ------------------------------
+    function difficultyForLevel(level) {
+      level = Math.max(1, level);
+      const spawnInterval = Math.max(1100, 2600 - (level - 1) * 140); // ms
+      const maxBubbles = Math.min(3 + Math.floor(level / 2), 8);
+      const lifetime = Math.max(3500, 7000 - (level - 1) * 200);
+      const radius = Math.max(28, 52 - (level - 1) * 1.0);
+      return { spawnInterval, maxBubbles, lifetime, radius };
+    }
+
+    class Bubble {
+      constructor(params) {
+        const margin = 70;
+        this.x = margin + Math.random() * (canvas.width - margin * 2);
+        this.y = 90 + Math.random() * (canvas.height - 160);
+        this.radius = params.radius + (Math.random() * 8 - 4); // gentle variance
+        this.createdAt = performance.now();
+        this.lifetime = params.lifetime + (Math.random() * 600 - 300);
+        this.popped = false;
+        this.opacity = 1.0;
+
+        // Very soft upward drift
+        this.dy = -0.02 - Math.random() * 0.04;
+      }
+
+      update(now, dt) {
+        this.y += this.dy * dt;
+        if (this.y < 80) this.y = 80; // keep in view
+        // fade a bit near expiry
+        const age = now - this.createdAt;
+        const t = age / this.lifetime;
+        if (t > 0.8) {
+          this.opacity = Math.max(0, 1 - (t - 0.8) * 5);
+        }
+      }
+
+      draw() {
+        if (this.popped || this.opacity <= 0) return;
+        ctx.save();
+        ctx.globalAlpha = this.opacity;
+
+        const colors = ["#bfdbfe","#bbf7d0","#fed7e2","#ede9fe","#cffafe"];
+        const color = colors[Math.floor(Math.random() * colors.length)];
+
+        const grad = ctx.createRadialGradient(
+          this.x - this.radius*0.4, this.y - this.radius*0.5, this.radius*0.2,
+          this.x, this.y, this.radius
+        );
+        grad.addColorStop(0, "rgba(255,255,255,0.98)");
+        grad.addColorStop(1, color);
+
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI*2);
+        ctx.fill();
+
+        ctx.restore();
+      }
+
+      isExpired(now) {
+        return now - this.createdAt > this.lifetime || this.opacity <= 0;
+      }
+
+      containsPoint(x,y) {
+        const dx = x - this.x;
+        const dy = y - this.y;
+        return Math.sqrt(dx*dx + dy*dy) <= this.radius;
+      }
+    }
+
+    // ------------------------------
+    // Game state
+    // ------------------------------
+    let running = false;
+    let level = 1;
+    let bubbles = [];
+    let lastSpawnTime = 0;
+    let levelParams = difficultyForLevel(level);
+
+    let score = 0;
+    let poppedCount = 0;
+    let missedCount = 0;
+
+    let leftHandCount = 0;
+    let rightHandCount = 0;
+    let reactionTimes = [];
+    let handCoordination = {
+      left_success: 0,
+      right_success: 0,
+      left_miss: 0,
+      right_miss: 0,
+    };
+
+    let sessionStartTime = 0;
+
+    // webcam cursor controlled by palm
+    let cursorPos = null;
+    let lastCursorPos = null;
+
+    // palm gesture
+    let palmState = "open"; // "open" | "closed"
+    let lastPalmState = "open";
+
+    function resetSession() {
+      running = false;
+      level = 1;
+      bubbles = [];
+      lastSpawnTime = 0;
+      levelParams = difficultyForLevel(level);
+      score = 0;
+      poppedCount = 0;
+      missedCount = 0;
+      leftHandCount = 0;
+      rightHandCount = 0;
+      reactionTimes = [];
+      handCoordination = {
+        left_success: 0,
+        right_success: 0,
+        left_miss: 0,
+        right_miss: 0,
+      };
+      cursorPos = null;
+      lastCursorPos = null;
+      palmState = "open";
+      lastPalmState = "open";
+
+      hudLevel.textContent = level;
+      hudScore.textContent = score;
+      hudPopped.textContent = poppedCount;
+      hudMissed.textContent = missedCount;
+
+      statusEl.textContent =
+        "Press Start, show your open palm to move the soft circle, then gently close your hand to pop bubbles.";
+      drawIdle();
+    }
+
+    function startGame() {
+      resetSession();
+      running = true;
+      sessionStartTime = performance.now();
+      startBtn.disabled = true;
+      endBtn.disabled = false;
+      statusEl.textContent =
+        "Move your open palm to guide the circle. Softly close your hand to pop bubbles.";
+      requestAnimationFrame(gameLoop);
+    }
+
+    function endGame() {
+      running = false;
+      startBtn.disabled = false;
+      endBtn.disabled = true;
+      statusEl.textContent = "Saving session…";
+      sendSessionData();
+    }
+
+    function drawIdle() {
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      const grad = ctx.createLinearGradient(0,0,canvas.width,canvas.height);
+      grad.addColorStop(0,"#dcfce7");
+      grad.addColorStop(1,"#eff6ff");
+      ctx.fillStyle = grad;
+      ctx.fillRect(0,0,canvas.width,canvas.height);
+
+      ctx.fillStyle = "#065f46";
+      ctx.font = "24px system-ui";
+      ctx.textAlign = "center";
+      ctx.fillText("Bubble Pop", canvas.width/2, canvas.height/2 - 10);
+
+      ctx.fillStyle = "#4b5563";
+      ctx.font = "16px system-ui";
+      ctx.fillText(
+        "Open your hand to move. Gently close it to pop bubbles.",
+        canvas.width/2,
+        canvas.height/2 + 22
+      );
+    }
+
+    // ------------------------------
+    // Game loop
+    // ------------------------------
+    function gameLoop(now) {
+      if (!running) return;
+
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      const grad = ctx.createLinearGradient(0,0,canvas.width,canvas.height);
+      grad.addColorStop(0,"#dcfce7");
+      grad.addColorStop(1,"#eff6ff");
+      ctx.fillStyle = grad;
+      ctx.fillRect(0,0,canvas.width,canvas.height);
+
+      // spawn
+      if (!lastSpawnTime || now - lastSpawnTime > levelParams.spawnInterval) {
+        if (bubbles.length < levelParams.maxBubbles) {
+          bubbles.push(new Bubble(levelParams));
+          lastSpawnTime = now;
+        }
+      }
+
+      // update + draw bubbles
+      const dt = 16; // ms approx
+      for (const b of bubbles) {
+        b.update(now, dt);
+        b.draw();
+      }
+
+      // expire
+      bubbles = bubbles.filter((b) => {
+        if (b.popped) return false;
+        if (b.isExpired(now)) {
+          missedCount += 1;
+          hudMissed.textContent = missedCount;
+          // we don't know hand side of miss; keep "both" neutral
+          return false;
+        }
+        return true;
+      });
+
+      // draw cursor
+      if (cursorPos) {
+        // main circle
+        ctx.beginPath();
+        ctx.fillStyle = "rgba(59, 130, 246, 0.18)";
+        ctx.arc(cursorPos.x, cursorPos.y, 30, 0, Math.PI*2);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.strokeStyle = palmState === "closed" ? "#16a34a" : "#3b82f6";
+        ctx.lineWidth = 3;
+        ctx.arc(cursorPos.x, cursorPos.y, 22, 0, Math.PI*2);
+        ctx.stroke();
+
+        // inner dot
+        ctx.beginPath();
+        ctx.fillStyle = palmState === "closed" ? "#16a34a" : "#3b82f6";
+        ctx.arc(cursorPos.x, cursorPos.y, 6, 0, Math.PI*2);
+        ctx.fill();
+      }
+
+      // gentle level increase by time
+      const elapsedSec = (now - sessionStartTime) / 1000;
+      const newLevel = 1 + Math.floor(elapsedSec / 40);
+      if (newLevel !== level) {
+        level = newLevel;
+        levelParams = difficultyForLevel(level);
+        hudLevel.textContent = level;
+      }
+
+      requestAnimationFrame(gameLoop);
+    }
+
+    // ------------------------------
+    // Gesture: palm open/close and cursor pos
+    // ------------------------------
+    function updateCursorFromPalm(palmCenterX, palmCenterY) {
+      const alpha = 0.35;
+      const targetX = (1 - palmCenterX) * canvas.width; // flip horizontal
+      const targetY = palmCenterY * canvas.height;
+      if (lastCursorPos) {
+        cursorPos = {
+          x: lastCursorPos.x + alpha * (targetX - lastCursorPos.x),
+          y: lastCursorPos.y + alpha * (targetY - lastCursorPos.y),
+        };
+      } else {
+        cursorPos = { x: targetX, y: targetY };
+      }
+      lastCursorPos = cursorPos;
+    }
+
+    function detectPalmState(handLandmarks) {
+      // use palm center index 0 and fingertips 8,12,16,20
+      const palm = handLandmarks[0];
+      const tipsIdx = [8, 12, 16, 20];
+      let sumDist = 0;
+      for (const i of tipsIdx) {
+        const tip = handLandmarks[i];
+        const dx = tip.x - palm.x;
+        const dy = tip.y - palm.y;
+        sumDist += Math.sqrt(dx*dx + dy*dy);
+      }
+      const avgDist = sumDist / tipsIdx.length;
+
+      // simple thresholds tuned for "open vs closed"
+      if (avgDist > 0.21) return "open";
+      if (avgDist < 0.14) return "closed";
+      return palmState; // keep last
+    }
+
+    function triggerPalmClick(now) {
+      if (!cursorPos) return;
+      let hitBubble = null;
+      for (const b of bubbles) {
+        if (!b.popped && b.containsPoint(cursorPos.x, cursorPos.y)) {
+          hitBubble = b;
+          break;
+        }
+      }
+      if (hitBubble) {
+        hitBubble.popped = true;
+        poppedCount += 1;
+        hudPopped.textContent = poppedCount;
+        const rt = (now - hitBubble.createdAt) / 1000;
+        reactionTimes.push(rt);
+
+        // we don't have precise left/right here, so just treat as both use
+        leftHandCount += 0.5;
+        rightHandCount += 0.5;
+        handCoordination.left_success += 0.5;
+        handCoordination.right_success += 0.5;
+
+        score += Math.max(5, Math.round(20 - rt * 4));
+        hudScore.textContent = score;
+      }
+    }
+
+    // mouse/touch fallback
+    canvas.addEventListener("pointerdown", (evt) => {
+      const rect = canvas.getBoundingClientRect();
+      const x = (evt.clientX - rect.left) * (canvas.width / rect.width);
+      const y = (evt.clientY - rect.top) * (canvas.height / rect.height);
+      cursorPos = { x, y };
+      lastCursorPos = { x, y };
+      triggerPalmClick(performance.now());
+    });
+
+    // ------------------------------
+    // MediaPipe Hands
+    // ------------------------------
+    let camera = null;
+
+    function onHandResults(results) {
+      if (!results.multiHandLandmarks || results.multiHandLandmarks.length === 0) {
+        return;
+      }
+      const hand = results.multiHandLandmarks[0];
+      const now = performance.now();
+
+      // approximate palm center using landmarks 0 and 9
+      const wrist = hand[0];
+      const center = hand[9];
+      const palmCenterX = (wrist.x + center.x) / 2;
+      const palmCenterY = (wrist.y + center.y) / 2;
+
+      updateCursorFromPalm(palmCenterX, palmCenterY);
+
+      const newPalmState = detectPalmState(hand);
+      if (newPalmState !== palmState) {
+        lastPalmState = palmState;
+        palmState = newPalmState;
+
+        // detect open -> closed transition as a "click"
+        if (lastPalmState === "open" && palmState === "closed") {
+          triggerPalmClick(now);
+        }
+      }
+    }
+
+    function initHandTracking() {
+      try {
+        const hands = new Hands({
+          locateFile: (file) =>
+            `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`,
+        });
+        hands.setOptions({
+          maxNumHands: 1,
+          modelComplexity: 1,
+          minDetectionConfidence: 0.6,
+          minTrackingConfidence: 0.5,
+        });
+        hands.onResults(onHandResults);
+
+        videoElement.muted = true;
+
+        camera = new Camera(videoElement, {
+          onFrame: async () => {
+            await hands.send({ image: videoElement });
+          },
+          width: 640,
+          height: 480,
+        });
+
+        camera.start();
+        cameraIndicator.textContent =
+          "Camera ready. Open your hand to move, gently close to pop bubbles.";
+      } catch (err) {
+        console.error("Error initializing MediaPipe Hands:", err);
+        cameraIndicator.textContent =
+          "Camera tracking unavailable. You can still tap bubbles with mouse or touch.";
+      }
+    }
+
+    async function tryEnableCamera() {
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        cameraIndicator.textContent =
+          "Camera not available. You can still tap the bubbles.";
+        return;
+      }
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        videoElement.srcObject = stream;
+        videoElement.play().catch(() => {});
+        initHandTracking();
+      } catch (err) {
+        console.warn("User denied camera or no camera:", err);
+        cameraIndicator.textContent =
+          "Camera blocked. You can still tap the bubbles.";
+      }
+    }
+
+    // ------------------------------
+    // Session saving
+    // ------------------------------
+    async function sendSessionData() {
+      const sessionDuration = (performance.now() - sessionStartTime) / 1000;
+      const totalAttempts = poppedCount + missedCount;
+      const accuracy = totalAttempts ? (poppedCount / totalAttempts) * 100 : 0;
+
+      const payload = {
+        game_name: "bubble_pop",
+        user_id: USER_ID,
+        score: score,
+        level: level,
+        session_duration: sessionDuration,
+        total_attempts: totalAttempts,
+        successful_attempts: poppedCount,
+        left_hand_count: leftHandCount,
+        right_hand_count: rightHandCount,
+        reaction_times: reactionTimes,
+        hand_coordination: handCoordination,
+        squeeze_count: 0,
+        accuracy_percentage: accuracy,
+        timestamp: new Date().toISOString(),
+      };
+
+      try {
+        const res = await fetch(RECORD_SESSION_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+        if (res.ok) {
+          statusEl.textContent =
+            "Session saved. You can see gentle insights on your dashboard.";
+        } else {
+          statusEl.textContent = "Could not save session (server error).";
+        }
+      } catch (err) {
+        console.error(err);
+        statusEl.textContent =
+          "Could not reach the server – session not saved.";
+      }
+    }
+
+    // ------------------------------
+    // Buttons & init
+    // ------------------------------
+    startBtn.addEventListener("click", () => {
+      startGame();
+    });
+
+    endBtn.addEventListener("click", () => {
+      if (running) {
+        endGame();
+      }
+    });
+
+    resetSession();
+    tryEnableCamera();
+  </script>
+</body>
+</html>

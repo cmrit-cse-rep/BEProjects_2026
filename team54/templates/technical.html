@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Technical Quiz</title>
+
+  <!-- Load CSS from Flask static folder -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #74ebd5, #9face6);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding-top: 60px;
+    }
+
+    .container {
+      background-color: #ffffff;
+      width: 90%;
+      max-width: 700px;
+      padding: 40px 35px;
+      border-radius: 22px;
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+      animation: fadeIn 0.6s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { transform: translateY(30px); opacity: 0; }
+      to   { transform: translateY(0);    opacity: 1; }
+    }
+
+    h1 {
+      text-align: center;
+      color: #222;
+      margin-bottom: 28px;
+      font-size: 2.2rem;
+      font-weight: 700;
+    }
+
+    .form-group { margin-bottom: 22px; }
+
+    .form-group label {
+      font-weight: 600;
+      font-size: 1.05rem;
+    }
+
+    .form-group select {
+      width: 100%;
+      padding: 12px;
+      font-size: 1rem;
+      margin-top: 10px;
+      border-radius: 10px;
+      border: 2px solid #dcdcdc;
+      outline: none;
+      transition: 0.25s;
+    }
+
+    .form-group select:focus {
+      border-color: #5078f2;
+      box-shadow: 0 0 6px rgba(80, 120, 242, 0.4);
+    }
+
+    .question { margin-bottom: 25px; }
+
+    .question p {
+      font-size: 1.15rem;
+      font-weight: 600;
+      margin-bottom: 14px;
+      color: #333;
+    }
+
+    .options label {
+      display: block;
+      margin-bottom: 10px;
+      padding: 14px 20px;
+      background-color: #f5f7ff;
+      border: 2px solid transparent;
+      border-radius: 12px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .options label:hover {
+      background-color: #e2e9ff;
+      border-color: #5078f2;
+    }
+
+    input[type="radio"] {
+      margin-right: 12px;
+      transform: scale(1.2);
+      accent-color: #5078f2;
+    }
+
+    .btn {
+      width: 100%;
+      background-color: #5078f2;
+      color: #fff;
+      font-size: 1.05rem;
+      padding: 14px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      margin-top: 20px;
+      display: none;
+    }
+
+    .btn:hover {
+      background-color: #3651d3;
+      transform: scale(1.02);
+    }
+
+    .perf-btn {
+      width: 100%;
+      background: #ffb84c;
+      color: #3b3b3b;
+      font-size: 1.05rem;
+      font-weight: 600;
+      padding: 14px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      margin-top: 18px;
+      transition: 0.3s;
+      display: none; /* hidden until submit */
+    }
+
+    .perf-btn:hover {
+      background: #ff9900;
+      color: white;
+      transform: scale(1.02);
+    }
+
+    .footer {
+      text-align: center;
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-top: 25px;
+      color: #28a745;
+    }
+
+    .explanation {
+      font-size: 0.95rem;
+      margin-top: 4px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TIMER BAR -->
+  <div id="timer-bar" style="
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background-color: #ffffffcc;
+    padding: 12px 20px;
+    font-size: 18px;
+    font-weight: bold;
+    border-bottom: 1px solid #ddd;
+    z-index: 1000;
+    text-align: center;
+  ">
+    <span id="time-left">⏳ Time Left: 25:00</span>
+  </div>
+
+  <div class="container">
+    <h1>Technical Round</h1>
+
+    <!-- Topic selector -->
+    <div class="form-group">
+      <label for="topic">Choose a topic:</label>
+      <select id="topic" required>
+        <option value="">--Select Technical Topic--</option>
+        <option value="python">Python</option>
+        <option value="java">Java</option>
+        <option value="sql">SQL</option>
+        <option value="html">HTML</option>
+        <option value="css">CSS</option>
+        <option value="javascript">JavaScript</option>
+        <option value="flask">Flask</option>
+      </select>
+    </div>
+
+    <!-- Questions -->
+    <div id="quiz-container"></div>
+
+    <!-- Submit -->
+    <button id="submitBtn" class="btn">Submit</button>
+
+    <!-- Score + explanations -->
+    <div id="score" class="footer"></div>
+
+    <!-- Performance Button (shown only after submit) -->
+    <button id="graphBtn"
+      onclick="window.location.href='{{ url_for('performance') }}'"
+      class="perf-btn"> Performance
+     
+    </button>
+
+    <!-- Navigation Buttons -->
+    <button onclick="window.location.href='{{ url_for('home') }}'" 
+      class="btn" style="display:block;">🏠 Back to Home</button>
+
+    <button onclick="window.location.href='{{ url_for('aptitude') }}'"
+      class="btn" style="display:block;">📐 Go to Aptitude Test</button>
+
+  </div>
+
+  <!-- Load JS from Flask -->
+  <script src="{{ url_for('static', filename='js/technical.js') }}"></script>
+
+</body>
+</html>

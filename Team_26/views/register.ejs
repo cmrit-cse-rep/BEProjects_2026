@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Register</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background-image: url('/images/darkbg.png'); /* adjust if needed */
+      background-size: cover;
+      background-position: center;
+    }
+    .neon-hover:hover {
+      box-shadow: 0 0 10px rgb(197, 243, 243), 0 0 20px rgb(186, 247, 247), 0 0 30px rgb(184, 249, 249);
+      background-color: rgb(223, 249, 249);
+      color: #000 !important;
+    }
+  </style>
+</head>
+<body class="flex items-center justify-center min-h-screen text-white">
+
+  <!-- Back to Home Button -->
+  <div class="absolute top-4 left-4">
+    <a href="/" class="px-4 py-2 text-sm font-semibold text-white border border-white rounded transition duration-300 neon-hover">
+      ← Back to Home
+    </a>
+  </div>
+
+  <div class="bg-black/80 p-8 rounded shadow-lg w-full max-w-md border border-gray-700">
+    <h1 class="text-3xl font-bold mb-6 text-center text-white">Register</h1>
+
+    <% if (error) { %>
+      <div class="bg-red-600 text-white p-3 rounded mb-4 shadow-md">
+        <%= error %>
+      </div>
+    <% } %>
+
+    <form action="/users/register" method="POST" class="space-y-4">
+
+      <div>
+        <label class="block mb-1 text-gray-300">Full Name</label>
+        <input type="text" name="fullname" required class="w-full px-3 py-2 rounded bg-gray-800 border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-white"/>
+      </div>
+
+      <div>
+        <label class="block mb-1 text-gray-300">Email</label>
+        <input type="email" name="email" required class="w-full px-3 py-2 rounded bg-gray-800 border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-white"/>
+      </div>
+
+      <div>
+        <label class="block mb-1 text-gray-300">Password</label>
+        <input type="password" name="password" required class="w-full px-3 py-2 rounded bg-gray-800 border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-white"/>
+      </div>
+
+      <!-- Custom Subject Dropdown -->
+      <div class="relative">
+        <label class="block mb-1 text-gray-300">Select Subjects of Interest</label>
+
+        <div id="dropdown"
+             class="border border-gray-600 rounded px-3 py-2 cursor-pointer bg-gray-800 text-white"
+             role="button"
+             aria-haspopup="listbox"
+             aria-expanded="false"
+        >
+          <span id="selected-text" class="text-gray-300">Select subjects</span>
+        </div>
+
+        <div id="dropdown-menu"
+             class="absolute left-0 right-0 mt-1 bg-black border border-gray-600 rounded shadow max-h-48 overflow-auto hidden z-10"
+             role="listbox"
+        >
+          <% const subjects = ["Data Structures", "Algorithms", "Operating Systems", "Computer Networks", "DBMS", "Machine Learning", "Artificial Intelligence", "Cybersecurity", "Web Development", "Cloud Computing"]; %>
+          <% subjects.forEach(subject => { %>
+            <label class="block px-3 py-1 hover:bg-gray-700 cursor-pointer">
+              <input type="checkbox" name="subjects" value="<%= subject %>" onchange="updateSelected(this)" class="mr-2"> <%= subject %>
+            </label>
+          <% }); %>
+        </div>
+        <p class="text-xs text-gray-400 mt-1">Select any number of subjects</p>
+      </div>
+
+      <button class="w-full py-2 rounded border border-white text-white font-semibold transition duration-300 neon-hover">
+        Register
+      </button>
+    </form>
+
+    <p class="text-sm text-center mt-4 text-gray-300">
+      Already have an account? <a href="/users/login" class="text-white hover:underline">Login</a>
+    </p>
+  </div>
+
+  <script>
+    const dropdown = document.getElementById('dropdown');
+    const menu = document.getElementById('dropdown-menu');
+    const selectedText = document.getElementById('selected-text');
+
+    dropdown.addEventListener('click', (e) => {
+      e.stopPropagation();
+      menu.classList.toggle('hidden');
+    });
+
+    function updateSelected() {
+      const checkedBoxes = document.querySelectorAll('input[name="subjects"]:checked');
+      const selected = Array.from(checkedBoxes).map(cb => cb.value);
+      selectedText.innerText = selected.length > 0 ? selected.join(', ') : 'Select subjects';
+    }
+
+    document.addEventListener('click', () => {
+      menu.classList.add('hidden');
+    });
+
+    menu.addEventListener('click', (e) => {
+      e.stopPropagation();
+    });
+  </script>
+</body>
+</html>

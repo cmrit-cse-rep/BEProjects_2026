@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mindful AI – Diary</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Fonts & Icons -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+
+  <!-- Shared header styles -->
+  <link rel="stylesheet" href="css/header.css"/>
+
+  <!-- Optional: base landing styles (for background, waves, etc.) -->
+  <link rel="stylesheet" href="landingpage.css">
+
+  <style>
+    :root {
+      --navy-blue: #05445e;
+      --blue-grotto: #189ab4;
+      --blue-green: #75e6da;
+      --baby-blue: #d4f1f4;
+      --white: #ffffff;
+      --gray-100: #f3f4f6;
+      --gray-300: #d1d5db;
+      --gray-600: #4b5563;
+      --gray-800: #1f2937;
+      --shadow-soft: 0 8px 24px rgba(5, 68, 94, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top left, #e0f7ff 0, #ffffff 45%) fixed;
+      color: var(--navy-blue);
+      min-height: 100vh;
+    }
+
+    /* Soft animated background */
+    .wave-bg {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      opacity: 0.25;
+      background: linear-gradient(135deg, var(--blue-green), var(--baby-blue));
+      overflow: hidden;
+    }
+
+    .wave-bg::before {
+      content: "";
+      position: absolute;
+      width: 180%;
+      height: 180%;
+      top: -40%;
+      left: -40%;
+      background: radial-gradient(ellipse at center, transparent 0%, var(--baby-blue) 70%);
+      animation: slow-spin 22s linear infinite;
+    }
+
+    @keyframes slow-spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* -------- Page layout -------- */
+
+    .page-shell {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1.5rem 1rem 2.5rem;
+    }
+
+    .main-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 270px) minmax(0, 1fr);
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    @media (max-width: 960px) {
+      .main-layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    /* -------- Sidebar -------- */
+
+    .sidebar {
+      background: rgba(255, 255, 255, 0.96);
+      border-radius: 18px;
+      padding: 1.25rem 1.4rem;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .profile-summary {
+      text-align: center;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--baby-blue);
+      margin-bottom: 1rem;
+    }
+
+    .profile-pic {
+      width: 96px;
+      height: 96px;
+      border-radius: 999px;
+      margin: 0 auto 0.8rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: #fff;
+      background: linear-gradient(135deg, var(--blue-grotto), var(--blue-green));
+      box-shadow: 0 10px 26px rgba(24, 154, 180, 0.4);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .profile-pic:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 32px rgba(24, 154, 180, 0.5);
+    }
+
+    .user-name {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+      color: var(--navy-blue);
+    }
+
+    .user-status {
+      display: inline-block;
+      padding: 0.25rem 0.9rem;
+      border-radius: 999px;
+      background: var(--blue-green);
+      color: var(--navy-blue);
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .sidebar-menu {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      margin-top: 1rem;
+    }
+
+    .sidebar-menu li {
+      margin-bottom: 0.4rem;
+    }
+
+    .sidebar-menu a {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      padding: 0.55rem 0.6rem;
+      border-radius: 10px;
+      text-decoration: none;
+      color: var(--navy-blue);
+      font-size: 0.9rem;
+      transition: background 0.18s ease, transform 0.18s ease, color 0.18s;
+    }
+
+    .sidebar-menu a i {
+      width: 20px;
+      text-align: center;
+      font-size: 0.95rem;
+    }
+
+    .sidebar-menu a:hover {
+      background: var(--baby-blue);
+      transform: translateX(3px);
+    }
+
+    .sidebar-menu a.active {
+      background: var(--blue-green);
+      color: var(--navy-blue);
+      font-weight: 600;
+    }
+
+    /* -------- Diary card -------- */
+
+    .diary-card {
+      background: rgba(255, 255, 255, 0.96);
+      border-radius: 18px;
+      padding: 1.75rem 1.8rem;
+      box-shadow: var(--shadow-soft);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .diary-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top right, rgba(117, 230, 218, 0.22), transparent 60%);
+      pointer-events: none;
+    }
+
+    .diary-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    .diary-card h2 {
+      margin: 0 0 0.35rem;
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+
+    .diary-card h2 span {
+      font-size: 1.7rem;
+    }
+
+    .diary-subtitle {
+      margin: 0 0 1.25rem;
+      color: var(--gray-600);
+      font-size: 0.9rem;
+    }
+
+    /* Inputs */
+
+    .input-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      align-items: center;
+      margin-bottom: 0.8rem;
+    }
+
+    .input-row label {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--gray-800);
+    }
+
+    .input-row input[type="email"] {
+      flex: 1 1 220px;
+      padding: 0.45rem 0.6rem;
+      border-radius: 10px;
+      border: 1px solid var(--gray-300);
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.16s ease, box-shadow 0.16s ease;
+    }
+
+    .input-row input[type="email"]:focus {
+      border-color: var(--blue-grotto);
+      box-shadow: 0 0 0 1px rgba(24, 154, 180, 0.2);
+    }
+
+    .quick-prompts {
+      margin: 0.4rem 0 0.8rem;
+    }
+
+    .prompt-label {
+      font-size: 0.8rem;
+      color: var(--gray-600);
+      margin-bottom: 0.25rem;
+    }
+
+    .prompt-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    .prompt-pill {
+      padding: 0.3rem 0.7rem;
+      border-radius: 999px;
+      border: 1px solid rgba(5, 68, 94, 0.14);
+      background: #f8feff;
+      font-size: 0.76rem;
+      cursor: pointer;
+      color: var(--gray-800);
+      transition: background 0.14s ease, border-color 0.14s ease, transform 0.12s ease;
+    }
+
+    .prompt-pill:hover {
+      background: var(--blue-green);
+      border-color: var(--blue-green);
+      transform: translateY(-1px);
+      color: var(--navy-blue);
+      font-weight: 600;
+    }
+
+    .field-label {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--gray-800);
+      margin-bottom: 0.25rem;
+      margin-top: 0.4rem;
+    }
+
+    textarea {
+      width: 100%;
+      border-radius: 12px;
+      border: 1px solid var(--gray-300);
+      padding: 0.6rem 0.75rem;
+      font-size: 0.9rem;
+      resize: vertical;
+      min-height: 140px;
+      outline: none;
+      font-family: inherit;
+      transition: border-color 0.16s ease, box-shadow 0.16s ease, background 0.16s ease;
+      background: rgba(255, 255, 255, 0.98);
+    }
+
+    textarea:focus {
+      border-color: var(--blue-grotto);
+      box-shadow: 0 0 0 1px rgba(24, 154, 180, 0.22);
+      background: #fafdff;
+    }
+
+    textarea[readonly] {
+      background: #f9fafb;
+    }
+
+    .small-note {
+      font-size: 0.78rem;
+      color: var(--gray-600);
+      margin-top: 0.15rem;
+    }
+
+    .counter-row {
+      margin-top: 0.25rem;
+      font-size: 0.78rem;
+      color: var(--gray-600);
+      display: flex;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+
+    /* Buttons */
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-top: 0.75rem;
+    }
+
+    .btn-primary,
+    .btn-secondary {
+      border: none;
+      border-radius: 999px;
+      padding: 0.55rem 1.3rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      transition: transform 0.14s ease, box-shadow 0.14s ease, background 0.14s ease;
+    }
+
+    .btn-primary {
+      background: var(--blue-grotto);
+      color: #fff;
+      box-shadow: 0 9px 22px rgba(24, 154, 180, 0.45);
+    }
+
+    .btn-primary:hover {
+      background: #0e7fa0;
+      transform: translateY(-1px);
+      box-shadow: 0 11px 28px rgba(24, 154, 180, 0.55);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      box-shadow: none;
+      transform: none;
+    }
+
+    .btn-secondary {
+      background: #edf7ff;
+      color: var(--navy-blue);
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+    }
+
+    .btn-secondary:hover {
+      background: #dfefff;
+      transform: translateY(-1px);
+    }
+
+    /* Reframed & history */
+
+    .section-title {
+      margin-top: 1.8rem;
+      margin-bottom: 0.4rem;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .reframed {
+      color: #065f46;
+      font-style: italic;
+      font-size: 0.9rem;
+      background: #ecfdf5;
+      border-radius: 10px;
+      padding: 0.75rem 0.8rem;
+    }
+
+    .history-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 1.8rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .history-header h3 {
+      margin: 0;
+      font-size: 1.05rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .history-filter {
+      font-size: 0.8rem;
+      color: var(--gray-600);
+    }
+
+    .history-filter input {
+      border-radius: 999px;
+      border: 1px solid var(--gray-300);
+      padding: 0.25rem 0.5rem;
+      font-size: 0.8rem;
+      outline: none;
+    }
+
+    #history {
+      list-style: none;
+      padding: 0;
+      margin: 0.5rem 0 0;
+      max-height: 260px;
+      overflow-y: auto;
+    }
+
+    #history li {
+      margin-bottom: 0.6rem;
+      border-radius: 12px;
+      background: #f9fafb;
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
+      padding: 0.5rem 0.6rem;
+    }
+
+    #history details {
+      padding: 0.3rem 0.2rem;
+    }
+
+    #history summary {
+      cursor: pointer;
+      list-style: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--navy-blue);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    #history summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .history-date {
+      font-size: 0.8rem;
+      color: var(--gray-600);
+    }
+
+    .history-body {
+      margin-top: 0.4rem;
+      font-size: 0.82rem;
+      color: var(--gray-800);
+    }
+
+    .history-body .label {
+      font-weight: 600;
+      font-size: 0.8rem;
+      color: var(--navy-blue);
+    }
+
+    .history-body .reframed {
+      margin-top: 0.25rem;
+      font-size: 0.8rem;
+    }
+
+    .empty-state {
+      font-size: 0.85rem;
+      color: var(--gray-600);
+      margin-top: 0.4rem;
+    }
+
+    /* Toast */
+
+    .toast {
+      position: fixed;
+      right: 16px;
+      bottom: -80px;
+      min-width: 220px;
+      max-width: 320px;
+      padding: 0.6rem 0.8rem;
+      border-radius: 12px;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.22);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.28s ease, bottom 0.28s ease;
+      z-index: 2000;
+    }
+
+    .toast.show {
+      bottom: 16px;
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .toast-icon {
+      font-size: 1rem;
+      margin-top: 2px;
+    }
+
+    .toast-message {
+      flex: 1 1 auto;
+    }
+
+    .toast--success {
+      background: #dcfce7;
+      color: #065f46;
+    }
+
+    .toast--error {
+      background: #fee2e2;
+      color: #7f1d1d;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wave-bg"></div>
+
+  <!-- HEADER (shared styles from header.css) -->
+  <header>
+    <div class="container header-content">
+      <div class="logo">
+        <img src="https://i.ibb.co/ksr38h61/Mindful-Logo.png" alt="Mindful AI Logo" class="logo-img">
+        <span class="logo-text">Mindful AI</span>
+      </div>
+
+      <!-- Mobile menu toggle -->
+      <button id="menu-toggle" class="menu-toggle" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+
+      <nav>
+        <ul id="nav-menu" class="nav-list">
+          <li><a href="landingpage.html" class="nav-pill nav-link">Home</a></li>
+          <li><a href="articles.html" class="nav-pill nav-link">Articles</a></li>
+          <li><a href="resources.html" class="nav-pill nav-link">Resources</a></li>
+          <li><a href="dashboard.html" class="nav-pill nav-link">Dashboard</a></li>
+          <li><a href="services.html" class="nav-pill nav-link">Services</a></li>
+          <li><a href="community.html" class="nav-pill nav-link">Community</a></li>
+          <li><a href="about.html" class="nav-pill nav-link">About</a></li>
+          <li><a href="settings.html" class="nav-pill nav-link">Settings</a></li>
+          <li><a href="diary.html" class="nav-pill nav-link active">Diary</a></li>
+        </ul>
+      </nav>
+
+      <div class="user-profile">
+        <div class="user-avatar" id="user-avatar">U</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN PAGE CONTENT -->
+  <main class="page-shell">
+    <div class="main-layout">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <div class="profile-summary">
+          <div class="profile-pic" id="user-avatar-sidebar">U</div>
+          <div class="user-name" id="sidebar-user-name">User Name</div>
+          <span class="user-status" id="depression-level">Depression Level</span>
+        </div>
+
+        <ul class="sidebar-menu">
+          <li><a href="dashboard.html"><i class="fas fa-home"></i> Home</a></li>
+          <li><a href="mood.html"><i class="fas fa-chart-line"></i> Mood Tracker</a></li>
+          <li><a href="diary.html" class="active"><i class="fas fa-book"></i> Daily Log</a></li>
+          <li><a href="articles.html"><i class="fas fa-book-open"></i> Articles</a></li>
+          <li><a href="chatbot.html"><i class="fas fa-comment-dots"></i> Chat Support</a></li>
+          <li><a href="community.html"><i class="fas fa-users"></i> Community</a></li>
+          <li><a href="settings.html"><i class="fas fa-cog"></i> Settings</a></li>
+        </ul>
+      </aside>
+
+      <!-- Diary card -->
+      <section class="diary-card">
+        <div class="diary-inner">
+          <h2><span>📔</span> Your Personal Diary</h2>
+          <p class="diary-subtitle">
+            Capture your thoughts, let the AI help reframe them gently, and revisit your journey whenever you need.
+          </p>
+
+          <!-- Email row -->
+          <div class="input-row">
+            <label for="userEmail">Entry email (linked to your account):</label>
+            <input type="email" id="userEmail" placeholder="your-email@example.com" required>
+          </div>
+
+          <!-- Quick prompts -->
+          <div class="quick-prompts">
+            <div class="prompt-label">Quick prompts:</div>
+            <div class="prompt-list">
+              <button type="button" class="prompt-pill" data-template="Today I feel...">Today I feel…</button>
+              <button type="button" class="prompt-pill" data-template="One thing I'm grateful for is...">Gratitude</button>
+              <button type="button" class="prompt-pill" data-template="Something that challenged me today was...">Challenge of the day</button>
+              <button type="button" class="prompt-pill" data-template="A small win I achieved today is...">Small win</button>
+              <button type="button" class="prompt-pill" data-template="If I talk kindly to myself, I would say...">Self-compassion</button>
+            </div>
+          </div>
+
+          <!-- Diary text -->
+          <div class="input-group">
+            <div class="field-label">Diary entry</div>
+            <textarea id="diaryText" rows="8" placeholder="Write anything that’s on your mind…"></textarea>
+            <div class="counter-row">
+              <span id="wordCount">Words: 0</span>
+              <span id="charCount">Characters: 0</span>
+            </div>
+          </div>
+
+          <!-- Sentiment -->
+          <div class="input-group" style="margin-top:1rem;">
+            <div class="field-label">Sentiment analysis</div>
+            <textarea id="sentimentAnalysis" rows="3" placeholder="AI-generated sentiment summary will appear here…" readonly></textarea>
+            <div class="small-note">
+              This gives a gentle emotional summary of your writing. It’s not a diagnosis, just a reflection.
+            </div>
+          </div>
+
+          <!-- Buttons -->
+          <div class="button-row">
+            <button type="button" class="btn-secondary" id="btnReframe">
+              <span>✨</span><span>Analyze & Reframe</span>
+            </button>
+            <button type="button" class="btn-primary" id="btnSubmit">
+              <span>💾</span><span>Save Entry</span>
+            </button>
+          </div>
+
+          <!-- Reframed output -->
+          <h3 class="section-title"><span>🌱</span> Reframed positive version</h3>
+          <p id="reframedOutput" class="reframed">
+            Start by writing an entry above, then tap “Analyze & Reframe” or “Save Entry” to see a supportive version here.
+          </p>
+
+          <!-- History -->
+          <div class="history-header">
+            <h3><span>📚</span> Previous entries</h3>
+            <div class="history-filter">
+              <label for="historySearch">Search: </label>
+              <input type="text" id="historySearch" placeholder="keyword…">
+            </div>
+          </div>
+          <ul id="history"></ul>
+          <div id="historyEmpty" class="empty-state" style="display:none;">
+            No diary entries yet. Your first entry will appear here 💙
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Toast -->
+  <div id="toast" class="toast" role="status" aria-live="polite">
+    <span class="toast-icon">✅</span>
+    <span class="toast-message"></span>
+  </div>
+
+  <script src="diary.js"></script>
+</body>
+</html>

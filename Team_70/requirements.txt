@@ -1,0 +1,11 @@
+streamlit==1.44.1
+requests==2.31.0
+sentence-transformers==2.7.0
+faiss-cpu==1.10.0
+google-generativeai==0.3.0
+pymupdf==1.25.5
+pandas==2.2.3
+numpy==2.2.5
+gTTS==2.5.1
+deep-translator
+tqdm==4.67.1

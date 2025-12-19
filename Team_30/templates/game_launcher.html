@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ game_name }} - NeuroPlay</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .subtitle {
+            color: #666;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        #status {
+            background: #f0f0f0;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        #status-text {
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .instructions {
+            background: #fff9e6;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 4px solid #ffc107;
+        }
+        
+        .instructions h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .instructions ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .instructions li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+        
+        .instructions li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #4caf50;
+            font-weight: bold;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+        
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .btn-secondary {
+            background: #e0e0e0;
+            color: #333;
+        }
+        
+        .btn-secondary:hover {
+            background: #d0d0d0;
+            transform: translateY(-2px);
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 10px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .success {
+            color: #4caf50;
+        }
+        
+        .error {
+            color: #f44336;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>{{ game_name }}</h1>
+        <p class="subtitle">Get ready for an interactive experience!</p>
+        
+        <div id="status">
+            <p>Status: <span id="status-text">Ready to launch</span></p>
+        </div>
+        
+        <div class="instructions">
+            <h3>📋 Instructions:</h3>
+            <ul>
+                <li>A separate game window will open</li>
+                <li>Make sure your webcam is connected and enabled</li>
+                <li>Allow camera permissions when prompted</li>
+                <li>Your game data will be automatically saved</li>
+                <li>Close the game window when finished</li>
+            </ul>
+        </div>
+        
+        <div class="button-group">
+            <button id="launch-btn" class="btn btn-primary">🚀 Launch Game</button>
+            <a href="/games" class="btn btn-secondary">← Back to Games</a>
+        </div>
+    </div>
+    
+    <script>
+        const userId = {{ user_id }};
+        const gameScript = "{{ game_script }}";
+        const gameId = "{{ game_id }}";
+        
+        const launchBtn = document.getElementById('launch-btn');
+        const statusText = document.getElementById('status-text');
+        
+        launchBtn.addEventListener('click', async () => {
+            statusText.textContent = 'Launching game...';
+            statusText.className = '';
+            launchBtn.disabled = true;
+            launchBtn.innerHTML = '🚀 Launching... <span class="loading"></span>';
+            
+            try {
+                // Send launch request to API
+                const response = await fetch('/api/launch_game/' + gameId, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        user_id: userId
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.status === 'success') {
+                    statusText.textContent = 'Game launched successfully!';
+                    statusText.className = 'success';
+                    launchBtn.innerHTML = '✓ Game Launched';
+                    
+                    setTimeout(() => {
+                        statusText.textContent = 'Game is running. Check for the game window.';
+                    }, 2000);
+                    
+                    setTimeout(() => {
+                        statusText.textContent = 'You can close this page or launch another game.';
+                        launchBtn.disabled = false;
+                        launchBtn.innerHTML = '🚀 Launch Again';
+                    }, 5000);
+                    
+                } else {
+                    throw new Error(data.message || 'Failed to launch game');
+                }
+                
+            } catch (error) {
+                console.error('Error launching game:', error);
+                statusText.textContent = 'Error: ' + error.message;
+                statusText.className = 'error';
+                launchBtn.disabled = false;
+                launchBtn.innerHTML = '🔄 Try Again';
+            }
+        });
+    </script>
+</body>
+</html>

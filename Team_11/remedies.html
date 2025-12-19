@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Explore Remedies</title>
+<link rel="stylesheet" href="/css/remedies.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+          <div class="logo">
+            <img src="/images/logo.png" alt="Logo">
+          </div>
+          <h1>REMEDIES</h1>
+          <div class="right-controls">
+            <input type="text" placeholder="SEARCH BAR" class="search-bar">
+            <span class="bookmark" onclick="showBookmarks()">&#128278;</span>
+          </div>
+        </header>
+
+        <div class="controls-bar" id="controls-bar">
+          <button id="show-all-btn" class="show-all-btn" style="display: none;" onclick="window.location.href='/remedies'">
+              ← Show All Remedies
+          </button>
+        </div>
+
+<section class="content" id="content">
+
+  <div class="card" data-id="1">
+    <img src="/disease-image/Acidity.jpeg" alt="Acidity">
+    <h3>Acidity</h3>
+    <span class="bookmark-icon">🔖</span>
+  </div>
+
+  <div class="card" data-id="2">
+    <img src="/disease-image/Acne.webp" alt="Acne">
+    <h3>Acne</h3>
+    <span class="bookmark-icon">🔖</span>
+  </div>
+
+  <div class="card" data-id="3">
+    <img src="/disease-image/Allergies.jpg" alt="Allergies">
+    <h3>Allergies</h3>
+    <span class="bookmark-icon">🔖</span>
+  </div>
+
+  <div class="card" data-id="4">
+    <img src="/disease-image/Anemia.jpg" alt="Anemia">
+    <h3>Anemia</h3>
+    <span class="bookmark-icon">🔖</span>
+  </div>
+
+  <div class="card" data-id="5">
+    <img src="/disease-image/Asthma.jpeg" alt="Asthma">
+    <h3>Asthma</h3>
+    <span class="bookmark-icon">🔖</span>
+  </div>
+
+  <div class="card" data-id="6">
+    <img src="/disease-image/Back Pain.webp" alt="Back Pain">
+    <h3>Back Pain</h3>
+    <span class="bookmark-icon">🔖</span>
+  </div>
+
+  <div class="card" data-id="7">
+    <img src="/disease-image/Bad Breath.jpeg" alt="Bad Breath">
+    <h3>Bad Breath</h3>
+    <span class="bookmark-icon">🔖</span>
+  </div>
+
+  <div class="card" data-id="8">
+    <img src="/disease-image/Bloating.jpg" alt="Bloating">
+    <h3>Bloating</h3>
+    <span class="bookmark-icon">🔖</span>
+  </div>
+
+  <div class="card" data-id="9">
+    <img src="/disease-image/Bronchitis.jpeg" alt="Bronchitis">
+    <h3>Bronchitis</h3>
+    <span class="bookmark-icon">🔖</span>
+  </div>
+
+  <div class="card" data-id="10">
+    <img src="/disease-image/Burns (minor).jpeg" alt="Burn (Minor)">
+    <h3>Burn (Minor)</h3>
+    <span class="bookmark-icon">🔖</span>
+  </div>
+
+  <div class="card" data-id="11">
+    <img src="/disease-image/Cold Sores.webp" alt="Cold Sores">
+    <h3>Cold Sores</h3>
+    <span class="bookmark-icon">🔖</span>
+  </div>
+
+  <div class="card" data-id="12">
+    <img src="/disease-image/common_cold.jpg" alt="Common Cold">
+    <h3>Common Cold</h3>
+    <span class="bookmark-icon">🔖</span>
+  </div>
+
+  <div class="card" data-id="13">
+    <img src="/disease-image/Constipation.jpg" alt="Constipation">
+    <h3>Constipation</h3>
+    <span class="bookmark-icon">🔖</span>
+  </div>
+
+  <div class="card" data-id="14">
+    <img src="/disease-image/cough.jpg" alt="Cough">
+    <h3>Cough</h3>
+    <span class="bookmark-icon">🔖</span>
+  </div>
+
+  <div class="card" data-id="15">
+    <img src="/disease-image/Cracked Heels.jpeg" alt="Cracked Heels">
+    <h3>Cracked Heels</h3>
+    <span class="bookmark-icon">🔖</span>
+  </div>
+
+  <div class="card" data-id="16">
+    <img src="/disease-image/Cuts & Wounds.jpeg" alt="Cuts & Wounds">
+    <h3>Cuts & Wounds</h3>
+    <span class="bookmark-icon">🔖</span>
+  </div>
+
+  <div class="card" data-id="17">
+    <img src="/disease-image/Dandruff.jpg" alt="Dandruff">
+    <h3>Dandruff</h3>
+    <span class="bookmark-icon">🔖</span>
+  </div>
+
+  <div class="card" data-id="18">
+    <img src="/disease-image/Dark Circles.webp" alt="Dark Circles">
+    <h3>Dark Circles</h3>
+    <span class="bookmark-icon">🔖</span>
+  </div>
+
+  <div class="card" data-id="19">
+    <img src="/disease-image/Diabetes.jpg" alt="Diabetic">
+    <h3>Diabetic</h3>
+    <span class="bookmark-icon">🔖</span>
+  </div>
+
+  <div class="card" data-id="20">
+    <img src="/disease-image/Diarrhea.jpg" alt="Diarrhea">
+    <h3>Diarrhea</h3>
+    <span class="bookmark-icon">🔖</span>
+  </div>
+</section>
+
+  <script>
+    const BASE_REMEDY_URL = '/remedies'; // optional helper for client code
+  </script>
+
+<script src="/js/remedies.js"></script>
+
+</body>
+</html>

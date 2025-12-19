@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>🚨SentinelChain DApp</title>
+  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: linear-gradient(135deg, #1f1c2c, #928dab);
+      color: #fff;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      transition: background 0.3s ease;
+    }
+
+    body.light-mode {
+      background: #f5f5f5;
+      color: #222;
+    }
+
+    .container {
+      background: #2e2c3a;
+      padding: 2rem;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+      width: 100%;
+      max-width: 500px;
+      transition: background 0.3s ease;
+    }
+
+    body.light-mode .container {
+      background: #fff;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 1rem;
+      color: #f05365;
+    }
+
+    input, button {
+      width: 100%;
+      padding: 0.75rem;
+      margin-top: 0.75rem;
+      border-radius: 8px;
+      border: none;
+      font-size: 1rem;
+    }
+
+    input {
+      background: #444054;
+      color: #fff;
+    }
+
+    body.light-mode input {
+      background: #eaeaea;
+      color: #000;
+    }
+
+    button {
+      background: #f05365;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: #ff6f80;
+    }
+
+    #currentAlert {
+      margin-top: 1.5rem;
+      font-size: 1.1rem;
+      font-weight: bold;
+      background: #3d3b4e;
+      padding: 1rem;
+      border-radius: 10px;
+      text-align: center;
+    }
+
+    body.light-mode #currentAlert {
+      background: #f0f0f0;
+      color: #000;
+    }
+
+    #currentAccount {
+      font-size: 0.9rem;
+      color: #ccc;
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    ::placeholder {
+      color: #aaa;
+    }
+
+    #lastUpdated {
+      font-size: 0.85rem;
+      text-align: center;
+      margin-top: 0.5rem;
+    }
+
+    .toast {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #323232;
+      color: #fff;
+      padding: 12px 18px;
+      border-radius: 8px;
+      display: none;
+      z-index: 999;
+    }
+
+    .mode-toggle {
+      text-align: center;
+      margin-top: 10px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      color: #aaa;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>SentinelChain DApp</h1>
+    <p id="currentAccount">🧾 Account: Not connected</p>
+
+    <button onclick="getAlert()">📡 Get Current Alert</button>
+    <p id="currentAlert">Current Alert: ...</p>
+    <p id="lastUpdated"></p>
+
+    <input type="text" id="alertInput" placeholder="Enter threat alert" />
+    <button onclick="reportAlert()">🚨 Report Alert</button>
+
+    <div class="mode-toggle" onclick="toggleMode()">🌓 Toggle Light/Dark Mode</div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+  
+  <script src="static/script.js"></script>
+</body>
+</html>

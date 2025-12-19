@@ -1,0 +1,62 @@
+[  
+  {  
+    "subject": "Operating System",
+    "description": "Operating Systems (OS) are the software layer between hardware and applications. A comprehensive OS description includes: process and thread concepts; CPU scheduling algorithms (FCFS, SJF, Round-Robin, Priority); inter-process communication (pipes, sockets, shared memory); synchronization primitives (mutexes, semaphores, monitors), deadlock prevention/detection/recovery; virtual memory, paging, segmentation, page replacement algorithms (LRU, FIFO, Clock); file system design, directory structures, file permissions, journaling; I/O systems and device drivers; bootstrapping and system initialization; kernel architectures (monolithic, microkernel, hybrid); concurrency, race conditions, and performance considerations. Examples and use-cases (Linux, Windows, macOS), common commands, and troubleshooting are also included."
+  },
+  {
+    "subject": "Database Management System",
+    "description": "A Database Management System (DBMS) manages structured data and provides CRUD operations, query processing, and transaction management. Key concepts: relational model, tables/relations, normalization (1NF..BCNF), ACID properties (atomicity, consistency, isolation, durability), transactions and isolation levels, indexing strategies (B-tree, hash), query optimization and execution plans, joins and aggregations, stored procedures and triggers, backups and recovery, concurrency control (locking, optimistic concurrency), data modeling (ER diagrams), NoSQL alternatives (document, key-value, columnar, graph), CAP theorem, and scaling strategies (sharding, replication). Practical SQL examples (SELECT, INSERT, UPDATE, DELETE), schema design patterns, and common pitfalls are included."
+  },
+  {
+    "subject": "Computer Network",
+    "description": "Computer Networks enable communication between devices. This subject covers layered models (OSI and TCP/IP), physical and data-link layer concepts (Ethernet, MAC addressing), network layer (IP addressing, subnets, CIDR, routing algorithms, CIDR), transport layer protocols (TCP vs UDP, flow control, congestion control algorithms like TCP Tahoe/Reno), application layer protocols (HTTP, HTTPS, FTP, DNS, SMTP), switching and routing technologies, NAT, DHCP, VPNs, network topologies, sockets programming, network security basics (TLS/SSL, firewalling, IDS/IPS), QoS, and performance metrics (latency, throughput, jitter). Includes examples of packet flow, routing table concepts, and troubleshooting steps (ping, traceroute, netstat)."
+  },
+  {
+    "subject": "Data Structure",
+    "description": "Data Structures are organized formats for storing and accessing data efficiently. Core structures: arrays, linked lists (singly/doubly), stacks, queues, priority queues (heaps), trees (binary trees, BST, AVL, Red-Black), tries, graphs (representations: adjacency list/matrix), hash tables (collision resolution strategies: chaining, open addressing), disjoint set union (union-find), and specialized structures (segment trees, Fenwick trees). For each, cover operations (insert/delete/search), time and space complexity, typical use-cases, traversal algorithms (BFS/DFS), and implementation details. Discuss memory layout, pointers vs indices, iteration patterns, and trade-offs when choosing a structure for a problem."
+  },
+  {
+    "subject": "Algorithm",
+    "description": "Algorithm design and analysis focuses on problem-solving techniques and complexity analysis. Topics include algorithmic paradigms: brute force, divide and conquer (e.g., mergesort, quicksort), dynamic programming (memoization, tabulation examples like knapsack, LCS), greedy algorithms (activity selection, Huffman coding), backtracking, branch and bound, graph algorithms (Dijkstra, Bellman-Ford, Floyd-Warshall, Prim, Kruskal), string algorithms (KMP, Rabin-Karp, trie-based), computational complexity (Big-O, Big-Theta, Big-Omega), NP-completeness basics, approximation algorithms, and randomized algorithms. Also study amortized analysis, lower bounds, and practical algorithm engineering (optimizations, caching)."
+  },
+  {
+    "subject": "Software Engineering",
+    "description": "Software Engineering principles cover the systematic development of software. Content includes software development life cycle (requirements, design, implementation, testing, deployment, maintenance), software architecture patterns (MVC, microservices, layered), design principles (SOLID, DRY, KISS), UML and design modeling, version control workflows (git branching strategies), testing strategies (unit, integration, system, acceptance), CI/CD pipelines, code review practices, documentation, requirements elicitation, project estimation, risk management, and basics of DevOps collaboration. Includes sample templates for requirements and design, and best practices for maintainability and scalability."
+  },
+  {
+    "subject": "Computer Architecture",
+    "description": "Computer Architecture studies internal organization of computers. Topics: digital logic basics, instruction set architectures (RISC vs CISC), CPU design (datapath and control path), pipelining and hazards (structural, data, control), superscalar and out-of-order execution, cache hierarchy (L1/L2/L3), cache coherency protocols (MESI), memory hierarchy and virtual memory, addressing modes, interrupt handling, I/O and buses, parallel architectures (multicore, SIMD, MIMD), and performance measurement (CPI, throughput, latency). Includes assembly-level examples, pipeline diagrams, and trade-offs in architectural design."
+  },
+  {
+    "subject": "Programming Languages",
+    "description": "Programming Languages covers paradigms and language design. Topics: programming paradigms (procedural, object-oriented, functional, logic), language features (static vs dynamic typing, strong vs weak typing, polymorphism, closures), scoping and lifetime, memory management (manual, garbage collection), compilers vs interpreters, parsing basics (lexing, parsing, ASTs), runtime systems, concurrency models (threads, async/await, event-driven), and interoperability. Include examples in common languages and patterns for API design, error handling, and performance considerations."
+  },
+  {
+    "subject": "Machine Learning",
+    "description": "Machine Learning (ML) introduces algorithms that learn patterns from data. Comprehensive material includes supervised learning (regression, classification, loss functions, model evaluation metrics like precision/recall/F1, cross-validation), unsupervised learning (clustering, dimensionality reduction like PCA), model selection and regularization, feature engineering, linear models, decision trees, ensemble methods (bagging, boosting), neural networks and deep learning foundations (perceptron, backpropagation, architectures like CNNs/RNNs/Transformers), optimization algorithms (SGD, Adam), overfitting/underfitting, evaluation methodologies, and deployment considerations. Also include datasets, preprocessing pipelines, and practical examples in Python frameworks."
+  },
+  {
+    "subject": "Artificial Intelligence",
+    "description": "Artificial Intelligence (AI) covers methods for creating systems exhibiting intelligent behavior. Include search algorithms (uninformed/informed like A*), knowledge representation, propositional and predicate logic, reasoning techniques, planning, probabilistic models (Bayesian networks, Markov models), constraint satisfaction problems, learning as part of AI (links to ML), natural language understanding basics, and ethical considerations. Provide examples of agents, environment models, and simple implementations of search and planning algorithms."
+  },
+  {
+    "subject": "Web Development",
+    "description": "Web Development material explains building web applications end-to-end: HTTP basics, RESTful API design, frontend fundamentals (HTML, CSS, JavaScript), modern frontend frameworks (React, Vue, Angular), state management, accessibility, responsive design, backend development (Node.js/Express), templating, authentication and authorization (sessions, JWT, OAuth), databases and ORMs, deployment strategies, performance optimization, security best practices (XSS, CSRF, input validation), and monitoring. Include code examples and recommended tooling."
+  },
+  {
+    "subject": "Mobile Development",
+    "description": "Mobile Development covers native and cross-platform app building. Topics: mobile UI patterns and UX, platform differences (Android vs iOS), lifecycle management, performance and battery optimization, storage options (local DBs, preferences), networking on mobile, background tasks, push notifications, and frameworks (React Native, Flutter, native SDKs). Include design guidelines, debugging techniques, and release pipelines for app stores."
+  },
+  {
+    "subject": "Cybersecurity",
+    "description": "Cybersecurity material provides defensive and offensive fundamentals: cryptography basics (symmetric/asymmetric, hashing, TLS), authentication and authorization, secure coding practices, common vulnerabilities (OWASP Top 10: SQLi, XSS, CSRF, insecure deserialization), network security controls, incident response, penetration testing basics, threat modeling, access controls, and security monitoring. Include hands-on examples and mitigation strategies."
+  },
+  {
+    "subject": "Cloud Computing",
+    "description": "Cloud Computing covers services and architectures for on-demand computing: core cloud service models (IaaS, PaaS, SaaS), virtualization and containerization (Docker, Kubernetes), serverless architectures, storage options, networking in the cloud, identity and access management, cost optimization, high availability and disaster recovery patterns, CI/CD integration, and cloud-native design principles. Include practical sections on deploying sample apps and working with major cloud providers."
+  },
+  {
+    "subject": "DevOps",
+    "description": "DevOps content focuses on practices that unify development and operations: continuous integration and continuous delivery (CI/CD), infrastructure as code (Terraform, CloudFormation), configuration management (Ansible, Puppet), container orchestration (Kubernetes), monitoring and observability (Prometheus, ELK), automated testing, blue/green and canary deployments, and collaboration workflows. Include pipeline examples and best practices for automation and reliability."
+  }
+]

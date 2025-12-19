@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Learning Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .progress-bar {
+            background: linear-gradient(90deg, #4ade80, #22c55e);
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-white mb-2">Enhanced Learning Dashboard</h1>
+            <p class="text-white/80 text-lg">Track your progress and performance analytics</p>
+        </div>
+
+        <!-- Main Content -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Performance Overview -->
+            <div class="lg:col-span-2">
+                <div class="glass-card rounded-xl p-6 mb-6">
+                    <h2 class="text-2xl font-semibold text-white mb-4">Performance Overview</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="text-center">
+                            <div class="text-3xl font-bold text-green-400" id="overallScore">--</div>
+                            <div class="text-white/70">Overall Score</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-3xl font-bold text-blue-400" id="quizzesTaken">--</div>
+                            <div class="text-white/70">Quizzes Taken</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-3xl font-bold text-purple-400" id="timeSpent">--</div>
+                            <div class="text-white/70">Time Spent (min)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Performance Chart -->
+                <div class="glass-card rounded-xl p-6">
+                    <h3 class="text-xl font-semibold text-white mb-4">Performance Trends</h3>
+                    <canvas id="performanceChart" width="400" height="200"></canvas>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="space-y-6">
+                <!-- Recent Quiz Results -->
+                <div class="glass-card rounded-xl p-6">
+                    <h3 class="text-xl font-semibold text-white mb-4">Recent Results</h3>
+                    <div id="recentResults" class="space-y-3">
+                        <div class="text-white/70">Loading recent results...</div>
+                    </div>
+                </div>
+
+                <!-- Strengths & Weaknesses -->
+                <div class="glass-card rounded-xl p-6">
+                    <h3 class="text-xl font-semibold text-white mb-4">Analysis</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <h4 class="text-green-400 font-medium mb-2">Strengths</h4>
+                            <div id="strengths" class="text-white/70">Loading...</div>
+                        </div>
+                        <div>
+                            <h4 class="text-red-400 font-medium mb-2">Areas for Improvement</h4>
+                            <div id="weaknesses" class="text-white/70">Loading...</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="glass-card rounded-xl p-6">
+                    <h3 class="text-xl font-semibold text-white mb-4">Quick Actions</h3>
+                    <div class="space-y-3">
+                        <button onclick="window.location.href='/test-quiz.html'" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors">
+                            Take Another Quiz
+                        </button>
+                        <button onclick="window.location.href='/dashboard'" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 px-4 rounded-lg transition-colors">
+                            Go to Main Dashboard
+                        </button>
+                        <button onclick="window.location.href='/'" class="w-full bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-4 rounded-lg transition-colors">
+                            Home
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Detailed Analysis -->
+        <div class="mt-8">
+            <div class="glass-card rounded-xl p-6">
+                <h3 class="text-2xl font-semibold text-white mb-6">Detailed Analysis</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="text-lg font-medium text-white mb-3">Subject Performance</h4>
+                        <div id="subjectPerformance" class="space-y-2">
+                            <div class="text-white/70">Loading subject performance...</div>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="text-lg font-medium text-white mb-3">Skill Development</h4>
+                        <div id="skillDevelopment" class="space-y-2">
+                            <div class="text-white/70">Loading skill analysis...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Get attempt ID from URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const attemptId = urlParams.get('attempt');
+
+        // Mock data for demonstration (replace with actual API calls)
+        const mockData = {
+            overallScore: 85,
+            quizzesTaken: 12,
+            timeSpent: 45,
+            recentResults: [
+                { subject: 'Artificial Intelligence', score: 90, date: '2025-09-27' },
+                { subject: 'Data Structures', score: 75, date: '2025-09-26' },
+                { subject: 'Computer Networks', score: 88, date: '2025-09-25' }
+            ],
+            strengths: ['Problem Solving', 'Algorithm Design', 'Machine Learning'],
+            weaknesses: ['Database Design', 'System Architecture'],
+            subjectPerformance: [
+                { subject: 'Artificial Intelligence', score: 90, progress: 90 },
+                { subject: 'Data Structures', score: 75, progress: 75 },
+                { subject: 'Computer Networks', score: 88, progress: 88 }
+            ],
+            skillDevelopment: [
+                { skill: 'Understanding', level: 85 },
+                { skill: 'Application', level: 78 },
+                { skill: 'Analysis', level: 82 },
+                { skill: 'Evaluation', level: 70 }
+            ]
+        };
+
+        // Initialize dashboard
+        function initializeDashboard() {
+            // Update overview stats
+            document.getElementById('overallScore').textContent = mockData.overallScore + '%';
+            document.getElementById('quizzesTaken').textContent = mockData.quizzesTaken;
+            document.getElementById('timeSpent').textContent = mockData.timeSpent;
+
+            // Update recent results
+            const recentResultsDiv = document.getElementById('recentResults');
+            recentResultsDiv.innerHTML = mockData.recentResults.map(result => `
+                <div class="flex justify-between items-center p-3 bg-white/10 rounded-lg">
+                    <div>
+                        <div class="text-white font-medium">${result.subject}</div>
+                        <div class="text-white/60 text-sm">${result.date}</div>
+                    </div>
+                    <div class="text-2xl font-bold text-green-400">${result.score}%</div>
+                </div>
+            `).join('');
+
+            // Update strengths and weaknesses
+            document.getElementById('strengths').innerHTML = mockData.strengths.map(strength => 
+                `<span class="inline-block bg-green-500/20 text-green-300 px-2 py-1 rounded text-sm mr-2 mb-1">${strength}</span>`
+            ).join('');
+            
+            document.getElementById('weaknesses').innerHTML = mockData.weaknesses.map(weakness => 
+                `<span class="inline-block bg-red-500/20 text-red-300 px-2 py-1 rounded text-sm mr-2 mb-1">${weakness}</span>`
+            ).join('');
+
+            // Update subject performance
+            const subjectPerformanceDiv = document.getElementById('subjectPerformance');
+            subjectPerformanceDiv.innerHTML = mockData.subjectPerformance.map(subject => `
+                <div class="flex justify-between items-center">
+                    <span class="text-white">${subject.subject}</span>
+                    <div class="flex items-center space-x-2">
+                        <div class="w-24 bg-gray-700 rounded-full h-2">
+                            <div class="bg-blue-500 h-2 rounded-full" style="width: ${subject.progress}%"></div>
+                        </div>
+                        <span class="text-white font-medium">${subject.score}%</span>
+                    </div>
+                </div>
+            `).join('');
+
+            // Update skill development
+            const skillDevelopmentDiv = document.getElementById('skillDevelopment');
+            skillDevelopmentDiv.innerHTML = mockData.skillDevelopment.map(skill => `
+                <div class="flex justify-between items-center">
+                    <span class="text-white">${skill.skill}</span>
+                    <div class="flex items-center space-x-2">
+                        <div class="w-24 bg-gray-700 rounded-full h-2">
+                            <div class="bg-purple-500 h-2 rounded-full" style="width: ${skill.level}%"></div>
+                        </div>
+                        <span class="text-white font-medium">${skill.level}%</span>
+                    </div>
+                </div>
+            `).join('');
+
+            // Initialize performance chart
+            initializePerformanceChart();
+        }
+
+        // Initialize performance chart
+        function initializePerformanceChart() {
+            const ctx = document.getElementById('performanceChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+                    datasets: [{
+                        label: 'Performance Score',
+                        data: [65, 72, 78, 85],
+                        borderColor: '#4ade80',
+                        backgroundColor: 'rgba(74, 222, 128, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: 'white'
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: {
+                                color: 'white'
+                            },
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            }
+                        },
+                        y: {
+                            ticks: {
+                                color: 'white'
+                            },
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Load actual data if attempt ID is provided
+        async function loadAttemptData() {
+            if (!attemptId) {
+                console.log('No attempt ID provided, using mock data');
+                initializeDashboard();
+                return;
+            }
+
+            try {
+                console.log('Loading data for attempt:', attemptId);
+                // Here you would make API calls to get actual data
+                // For now, we'll use mock data
+                initializeDashboard();
+            } catch (error) {
+                console.error('Error loading attempt data:', error);
+                initializeDashboard();
+            }
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', loadAttemptData);
+    </script>
+</body>
+</html>

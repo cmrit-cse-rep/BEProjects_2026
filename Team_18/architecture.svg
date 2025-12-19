@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="860" viewBox="0 0 1280 860">
+  <defs>
+    <style>
+      .title{font:700 24px system-ui, -apple-system, Segoe UI, Roboto, Arial}
+      .h{font:700 16px system-ui, -apple-system, Segoe UI, Roboto, Arial}
+      .t{font:400 14px system-ui, -apple-system, Segoe UI, Roboto, Arial}
+      .box{fill:#ffffff;stroke:#1f2937;stroke-width:1.5}
+      .sub{fill:#f8fafc;stroke:#94a3b8;stroke-dasharray:6 4}
+      .artifact{fill:#f1f5f9;stroke:#64748b}
+      .external{fill:#fef3c7;stroke:#b45309}
+      .arrow{stroke:#1f2937;stroke-width:1.5;marker-end:url(#m)}
+    </style>
+    <marker id="m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#1f2937"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1280" height="860" fill="#ffffff"/>
+  <text x="640" y="40" text-anchor="middle" class="title">Landslide Risk Demo – System Architecture</text>
+
+  <!-- Client -->
+  <g transform="translate(40,80)">
+    <rect class="box" x="0" y="0" width="360" height="120" rx="10"/>
+    <text class="h" x="20" y="30">Client</text>
+    <text class="t" x="20" y="60">Browser UI (templates/index.html + JS)</text>
+    <text class="t" x="20" y="85">- By Location</text>
+    <text class="t" x="20" y="105">- By Image / Combined</text>
+  </g>
+
+  <!-- Backend container -->
+  <g transform="translate(440,80)">
+    <rect class="box" x="0" y="0" width="800" height="640" rx="12"/>
+    <text class="h" x="20" y="30">Backend API (Flask + Gunicorn)</text>
+
+    <!-- Routes -->
+    <g transform="translate(20,50)">
+      <rect class="sub" x="0" y="0" width="360" height="160" rx="10"/>
+      <text class="h" x="12" y="25">Routes</text>
+      <text class="t" x="12" y="55">GET / → serve UI</text>
+      <text class="t" x="12" y="80">GET /predict?location=…</text>
+      <text class="t" x="12" y="105">POST /image/predict</text>
+      <text class="t" x="12" y="130">POST /predict/combined</text>
+    </g>
+
+    <!-- Location Risk -->
+    <g transform="translate(20,230)">
+      <rect class="sub" x="0" y="0" width="360" height="240" rx="10"/>
+      <text class="h" x="12" y="25">Location Risk</text>
+      <rect class="box" x="12" y="40" width="150" height="40" rx="8"/>
+      <text class="t" x="24" y="65">Geocoding (geopy)</text>
+      <rect class="box" x="198" y="40" width="150" height="40" rx="8"/>
+      <text class="t" x="210" y="65">Simulate Environment</text>
+      <rect class="box" x="12" y="100" width="150" height="40" rx="8"/>
+      <text class="t" x="28" y="125">Rule-based Risk</text>
+      <rect class="box" x="198" y="100" width="150" height="40" rx="8"/>
+      <text class="t" x="224" y="125">Tabular ML (opt)</text>
+      <rect class="artifact" x="198" y="160" width="150" height="40" rx="8"/>
+      <text class="t" x="205" y="185">models/risk_model.joblib</text>
+      <line class="arrow" x1="162" y1="60" x2="198" y2="60"/>
+    </g>
+
+    <!-- Image Inference -->
+    <g transform="translate(410,230)">
+      <rect class="sub" x="0" y="0" width="360" height="240" rx="10"/>
+      <text class="h" x="12" y="25">Image Inference</text>
+      <rect class="box" x="12" y="40" width="150" height="40" rx="8"/>
+      <text class="t" x="26" y="65">Feature extraction</text>
+      <rect class="box" x="198" y="40" width="150" height="40" rx="8"/>
+      <text class="t" x="228" y="65">Heuristic</text>
+      <rect class="box" x="198" y="100" width="150" height="40" rx="8"/>
+      <text class="t" x="214" y="125">Image ML (opt)</text>
+      <rect class="artifact" x="198" y="160" width="150" height="40" rx="8"/>
+      <text class="t" x="205" y="185">models/image_model.joblib</text>
+      <line class="arrow" x1="162" y1="60" x2="198" y2="60"/>
+    </g>
+
+    <!-- Fusion / responses -->
+    <g transform="translate(20,490)">
+      <rect class="sub" x="0" y="0" width="750" height="110" rx="10"/>
+      <text class="h" x="12" y="25">Fusion & Responses</text>
+      <text class="t" x="12" y="55">- Combine image inference with location risk for /predict/combined</text>
+      <text class="t" x="12" y="80">- Return JSON: risk_level, risk_score, landslide_detected, history</text>
+    </g>
+  </g>
+
+  <!-- External Service -->
+  <g transform="translate(980,740)">
+    <rect class="external" x="0" y="0" width="260" height="80" rx="10"/>
+    <text class="h" x="12" y="28">External: Nominatim (OSM)</text>
+    <text class="t" x="12" y="54">Geocoding for location → lat/lon</text>
+  </g>
+
+  <!-- Artifacts box -->
+  <g transform="translate(40,740)">
+    <rect class="artifact" x="0" y="0" width="560" height="80" rx="10"/>
+    <text class="h" x="12" y="28">Model Artifacts</text>
+    <text class="t" x="12" y="54">models/risk_model.joblib · models/image_model.joblib (optional)</text>
+  </g>
+
+  <!-- Arrows between major blocks -->
+  <line class="arrow" x1="400" y1="140" x2="440" y2="140"/>
+  <line class="arrow" x1="1080" y1="700" x2="1080" y2="740"/>
+
+  <!-- Captions -->
+  <text class="t" x="260" y="170" text-anchor="middle">fetch()</text>
+</svg>
+
+

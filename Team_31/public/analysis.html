@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mental Chat Analysis</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+      body {
+        font-family: "Poppins", sans-serif;
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        padding: 2rem;
+        background: linear-gradient(135deg, #e0f7fa, #f1f8e9);
+      }
+
+      .container {
+        width: 95%;
+        max-width: 900px;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 20px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+        padding: 2rem;
+        backdrop-filter: blur(10px);
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 1.5rem;
+        font-size: 22px;
+        font-weight: lighter;
+        color: rgb(110, 101, 101);
+      }
+
+      .chart-container {
+        position: relative;
+        margin: 2rem 0;
+        background: linear-gradient(180deg, #ffffff, #e3f2fd);
+        border-radius: 16px;
+        padding: 1rem;
+        box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.05);
+      }
+
+      .chat-card {
+        border-radius: 16px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        background: #fff;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        border-left: 6px solid #6dd5ed;
+        position: relative;
+        display: none;
+        animation: fadeIn 0.4s ease-in-out;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .chat-card h3 {
+        margin: 0 0 0.8rem;
+        font-size: 1.25rem;
+        color: #222;
+      }
+
+      .chat-card p {
+        margin: 0;
+        line-height: 1.6;
+        color: #444;
+      }
+
+      .empty {
+        text-align: center;
+        color: #555;
+        padding: 2rem;
+        background: rgba(255, 255, 255, 0.7);
+        border-radius: 10px;
+        box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05);
+        font-size: 1.1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Chat Reflections</h1>
+      <div class="chart-container">
+        <canvas id="analysisChart"></canvas>
+      </div>
+      <div id="chat-history"></div>
+    </div>
+
+    <script>
+      const savedReports =
+        JSON.parse(localStorage.getItem("savedReports")) || [];
+      const chatHistoryContainer = document.getElementById("chat-history");
+
+      if (savedReports.length === 0) {
+        chatHistoryContainer.innerHTML =
+          '<div class="empty">No saved reflections found.<br>Start a conversation to analyze your thoughts 🌿</div>';
+      } else {
+        // Prepare data
+        const labels = savedReports.map(
+          (_, index) => `Reflection ${index + 1}`
+        );
+        const data = savedReports.map((report, index) => {
+          const mood = (report.currentMood || "").toLowerCase();
+          // assign numeric values to moods for trend visualization
+          if (mood.includes("happy") || mood.includes("calm")) return 5;
+          if (mood.includes("neutral")) return 3;
+          if (mood.includes("sad")) return 2;
+          if (mood.includes("angry") || mood.includes("anxious")) return 1;
+          return 3; // default neutral
+        });
+
+        const pointColors = savedReports.map((report) => {
+          const mood = (report.currentMood || "").toLowerCase();
+          if (mood.includes("happy") || mood.includes("calm")) return "#4CAF50";
+          if (mood.includes("sad")) return "#2196F3";
+          if (mood.includes("angry") || mood.includes("anxious"))
+            return "#f44336";
+          return "#9E9E9E";
+        });
+
+        const ctx = document.getElementById("analysisChart").getContext("2d");
+        const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+        gradient.addColorStop(0, "rgba(109,213,237,0.4)");
+        gradient.addColorStop(1, "rgba(255,255,255,0.1)");
+
+        new Chart(ctx, {
+          type: "line",
+          data: {
+            labels: labels,
+            datasets: [
+              {
+                label: "Mood Progress",
+                data: data,
+                borderColor: "#6dd5ed",
+                backgroundColor: gradient,
+                pointBackgroundColor: pointColors,
+                pointBorderColor: "#fff",
+                pointRadius: 6,
+                pointHoverRadius: 8,
+                borderWidth: 3,
+                tension: 0.4, // smooth curve
+                fill: true,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                backgroundColor: "rgba(255,255,255,0.9)",
+                titleColor: "#333",
+                bodyColor: "#555",
+                borderColor: "#ccc",
+                borderWidth: 1,
+                displayColors: false,
+                callbacks: {
+                  label: function (context) {
+                    const index = context.dataIndex;
+                    const report = savedReports[index];
+                    return `Mood: ${report.currentMood || "Unknown"}`;
+                  },
+                },
+              },
+            },
+            scales: {
+              y: {
+                min: 0,
+                max: 6,
+                ticks: {
+                  stepSize: 1,
+                  color: "#777",
+                  callback: function (value) {
+                    const moods = {
+                      1: "😡 Angry",
+                      2: "😢 Sad",
+                      3: "😐 Neutral",
+                      4: "🙂 Calm",
+                      5: "😊 Happy",
+                    };
+                    return moods[value] || "";
+                  },
+                },
+                grid: {
+                  color: "rgba(0,0,0,0.05)",
+                  drawBorder: false,
+                },
+              },
+              x: {
+                ticks: { color: "#777" },
+                grid: { display: false },
+              },
+            },
+            interaction: {
+              mode: "nearest",
+              intersect: true,
+            },
+            onClick: (event, elements, chart) => {
+              if (elements.length > 0) {
+                const index = elements[0].index;
+                const report = savedReports[index];
+                displayReportCard(report, index);
+              }
+            },
+            animation: {
+              duration: 1500,
+              easing: "easeOutQuart",
+            },
+          },
+        });
+
+        function displayReportCard(report, index) {
+          chatHistoryContainer.innerHTML = "";
+          const reportCard = document.createElement("div");
+          reportCard.className = "chat-card";
+
+          const reportTitle = document.createElement("h3");
+          reportTitle.textContent = `Reflection ${index + 1}`;
+
+          const reportContent = document.createElement("p");
+          reportContent.innerHTML = `
+          <strong>Situation:</strong> ${report.situation}<br>
+          <strong>Automatic Thought:</strong> ${report.automaticThought}<br>
+          <strong>Emotions:</strong> ${report.emotions}<br>
+          <strong>Cognitive Distortion:</strong> ${report.cognitiveDistortion}<br>
+          <strong>Reframed Thought:</strong> ${report.reframedThought}<br>
+          <strong>Initial Mood:</strong> ${report.initialMood}<br>
+          <strong>Current Mood:</strong> ${report.currentMood}
+        `;
+
+          reportCard.appendChild(reportTitle);
+          reportCard.appendChild(reportContent);
+          chatHistoryContainer.appendChild(reportCard);
+          reportCard.style.display = "block";
+        }
+      }
+    </script>
+  </body>
+</html>

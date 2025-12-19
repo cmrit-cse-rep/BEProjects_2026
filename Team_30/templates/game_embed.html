@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ game_title or 'Game' }} - NeuroPlay</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+        }
+
+        .game-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .game-title {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .game-icon {
+            font-size: 24px;
+        }
+
+        .game-info h1 {
+            font-size: 24px;
+            margin: 0;
+        }
+
+        .game-info p {
+            font-size: 14px;
+            opacity: 0.8;
+            margin: 0;
+        }
+
+        .game-controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #51cf66, #40c057);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(81, 207, 102, 0.4);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(45deg, #868e96, #6c757d);
+        }
+
+        .btn-secondary:hover {
+            box-shadow: 0 4px 15px rgba(108, 117, 125, 0.4);
+        }
+
+        .btn-danger {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a52);
+        }
+
+        .btn-danger:hover {
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+        }
+
+        .game-frame {
+            width: 100vw;
+            height: 100vh;
+            border: none;
+            background: transparent;
+        }
+
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 200;
+            transition: opacity 0.5s ease;
+        }
+
+        .loading-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #51cf66;
+            animation: spin 1s ease-in-out infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .loading-subtext {
+            font-size: 14px;
+            opacity: 0.8;
+            text-align: center;
+            max-width: 300px;
+        }
+
+        .error-message {
+            position: fixed;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 107, 107, 0.9);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 25px;
+            font-size: 16px;
+            z-index: 150;
+            display: none;
+        }
+
+        .fullscreen-btn {
+            font-size: 16px;
+        }
+
+        @media (max-width: 768px) {
+            .game-header {
+                padding: 10px 15px;
+            }
+
+            .game-info h1 {
+                font-size: 18px;
+            }
+
+            .game-info p {
+                font-size: 12px;
+            }
+
+            .btn {
+                padding: 8px 15px;
+                font-size: 12px;
+            }
+
+            .game-controls {
+                gap: 10px;
+            }
+        }
+
+        /* Fullscreen styles */
+        .game-container:-webkit-full-screen {
+            width: 100%;
+            height: 100%;
+        }
+
+        .game-container:-moz-full-screen {
+            width: 100%;
+            height: 100%;
+        }
+
+        .game-container:fullscreen {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <!-- Game Header -->
+    <div class="game-header">
+        <div class="game-title">
+            <div class="game-icon">
+                {% if game_icon %}
+                    {% if game_icon == 'dot-circle' %}🎯
+                    {% elif game_icon == 'circle' %}🫧
+                    {% else %}🎮
+                    {% endif %}
+                {% else %}🎮{% endif %}
+            </div>
+            <div class="game-info">
+                <h1>{{ game_title or 'NeuroPlay Game' }}</h1>
+                <p>{{ game_description or 'Interactive therapy game' }}</p>
+            </div>
+        </div>
+        
+        <div class="game-controls">
+            <button class="btn fullscreen-btn" onclick="toggleFullscreen()" title="Fullscreen">
+                📺 Fullscreen
+            </button>
+            <a href="{{ url_for('games') }}" class="btn btn-secondary">
+                🎮 More Games
+            </a>
+            <a href="{{ url_for('dashboard') }}" class="btn">
+                🏠 Dashboard
+            </a>
+        </div>
+    </div>
+
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="spinner"></div>
+        <div class="loading-text">Loading {{ game_title or 'Game' }}...</div>
+        <div class="loading-subtext">
+            Please allow camera access when prompted for the best experience.
+        </div>
+    </div>
+
+    <!-- Error Message -->
+    <div class="error-message" id="errorMessage">
+        Game failed to load. Please refresh the page and try again.
+    </div>
+
+    <!-- Game Container -->
+    <div class="game-container" id="gameContainer">
+        <iframe 
+            src="{{ game_url }}" 
+            class="game-frame" 
+            id="gameFrame"
+            allow="camera; microphone"
+            allowfullscreen>
+        </iframe>
+    </div>
+
+    <script>
+        let gameFrame;
+        let loadingScreen;
+        let errorMessage;
+        let loadTimeout;
+
+        // Initialize when page loads
+        window.addEventListener('load', function() {
+            gameFrame = document.getElementById('gameFrame');
+            loadingScreen = document.getElementById('loadingScreen');
+            errorMessage = document.getElementById('errorMessage');
+
+            // Set loading timeout (10 seconds)
+            loadTimeout = setTimeout(showError, 10000);
+
+            // Hide loading screen when game loads
+            gameFrame.addEventListener('load', function() {
+                clearTimeout(loadTimeout);
+                setTimeout(hideLoadingScreen, 1000); // Small delay for smooth transition
+            });
+
+            // Handle frame load errors
+            gameFrame.addEventListener('error', showError);
+        });
+
+        function hideLoadingScreen() {
+            loadingScreen.classList.add('hidden');
+            setTimeout(() => {
+                loadingScreen.style.display = 'none';
+            }, 500);
+        }
+
+        function showError() {
+            clearTimeout(loadTimeout);
+            loadingScreen.classList.add('hidden');
+            errorMessage.style.display = 'block';
+            
+            // Auto-hide error after 5 seconds
+            setTimeout(() => {
+                errorMessage.style.display = 'none';
+            }, 5000);
+        }
+
+        function toggleFullscreen() {
+            const container = document.getElementById('gameContainer');
+            
+            if (!document.fullscreenElement) {
+                // Enter fullscreen
+                if (container.requestFullscreen) {
+                    container.requestFullscreen();
+                } else if (container.webkitRequestFullscreen) {
+                    container.webkitRequestFullscreen();
+                } else if (container.msRequestFullscreen) {
+                    container.msRequestFullscreen();
+                }
+            } else {
+                // Exit fullscreen
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                } else if (document.msExitFullscreen) {
+                    document.msExitFullscreen();
+                }
+            }
+        }
+
+        // Handle fullscreen change
+        document.addEventListener('fullscreenchange', updateFullscreenButton);
+        document.addEventListener('webkitfullscreenchange', updateFullscreenButton);
+        document.addEventListener('msfullscreenchange', updateFullscreenButton);
+
+        function updateFullscreenButton() {
+            const btn = document.querySelector('.fullscreen-btn');
+            if (document.fullscreenElement) {
+                btn.innerHTML = '🔲 Exit Fullscreen';
+            } else {
+                btn.innerHTML = '📺 Fullscreen';
+            }
+        }
+
+        // Handle keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            // F11 for fullscreen
+            if (e.key === 'F11') {
+                e.preventDefault();
+                toggleFullscreen();
+            }
+            
+            // Escape to exit game
+            if (e.key === 'Escape' && !document.fullscreenElement) {
+                if (confirm('Exit game and return to games menu?')) {
+                    window.location.href = "{{ url_for('games') }}";
+                }
+            }
+        });
+
+        // Handle page visibility changes (pause game when tab not visible)
+        document.addEventListener('visibilitychange', function() {
+            if (gameFrame && gameFrame.contentWindow) {
+                try {
+                    // Try to communicate with the game iframe
+                    if (document.hidden) {
+                        // Page is hidden - pause game if possible
+                        gameFrame.contentWindow.postMessage({action: 'pause'}, '*');
+                    } else {
+                        // Page is visible - resume game if possible
+                        gameFrame.contentWindow.postMessage({action: 'resume'}, '*');
+                    }
+                } catch (e) {
+                    // Cross-origin restrictions - ignore
+                }
+            }
+        });
+
+        // Handle messages from game iframe
+        window.addEventListener('message', function(event) {
+            if (event.data && event.data.type === 'gameEvent') {
+                console.log('Game Event:', event.data);
+                
+                // Handle different game events
+                switch (event.data.action) {
+                    case 'started':
+                        console.log('Game started');
+                        break;
+                    case 'completed':
+                        console.log('Game completed:', event.data.data);
+                        break;
+                    case 'error':
+                        console.error('Game error:', event.data.error);
+                        showError();
+                        break;
+                }
+            }
+        });
+
+        // Prevent context menu on game area
+        document.addEventListener('contextmenu', function(e) {
+            if (e.target.closest('.game-container')) {
+                e.preventDefault();
+            }
+        });
+
+        // Add touch support for mobile
+        if ('ontouchstart' in window) {
+            document.body.classList.add('touch-device');
+        }
+    </script>
+</body>
+</html>

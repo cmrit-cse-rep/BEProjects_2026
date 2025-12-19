@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Fashion Recommendation System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Sans&display=swap" rel="stylesheet"/>
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous"/>
+    <!-- JavaScript Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+            crossorigin="anonymous"></script>
+
+    <style>
+        body {
+            background: linear-gradient(45deg, #f0f0f0, #e0e0e0, #ffffff);
+            background-size: 400% 400%;
+            animation: gradientAnimation 5s ease infinite;
+            font-family: 'Fira Sans', sans-serif;
+        }
+
+        @keyframes gradientAnimation {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .navbar {
+            background: linear-gradient(45deg, #03adfc, #00a1e0);
+            border-radius: 8px;
+            padding: 10px 15px;
+        }
+
+        .navbar-brand h2 {
+            font-weight: bold;
+            color: #ffffff;
+        }
+
+        .navbar .btn-light a {
+            color: black;
+            text-decoration: none;
+        }
+
+        .container {
+            margin-top: 30px;
+        }
+
+        .form-control {
+            border-radius: 20px;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
+            border-color: #007bff;
+            outline: none;
+        }
+
+        .card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-body {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .card-footer {
+            background-color: #e9ecef;
+            border-radius: 8px;
+        }
+
+        .btn-primary {
+            background-color: #0066cc;
+            border: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #005bb5;
+        }
+
+        .btn-success {
+            background-color: #28a745;
+            border: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-success:hover {
+            background-color: #218838;
+        }
+
+        .form-label h1, .form-label h2 {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .mb-3 input {
+            border-radius: 8px;
+        }
+
+        .card-title {
+            font-weight: 600;
+            color: #333;
+        }
+
+        /* Style for the header text */
+        .header-text {
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: #ffffff;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Adding some space between elements */
+        .form-container {
+            margin-top: 50px;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <a class="navbar-brand mx-2" href="#">
+            <h2 class="header-text">Fashion Recommendation System</h2>
+        </a>
+        <div class="ms-auto me-3">
+            <button class="btn btn-light">
+                <a href="http://localhost:8501/" style="text-decoration: none; color: black;">UPLOAD IMAGE</a>
+            </button>
+        </div>
+    </nav>
+
+    <div class="container my-4 form-container">
+        <div class="row px-3">
+            <form method="post" enctype="multipart/form-data" action="recommend_cloths">
+                <!-- CSRF token for form submission -->
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="exampleInputEmail1" class="form-label"><h2>What do you wanna buy?</h2></label>
+                    <input name="input_text" type="text" class="form-control" id="exampleInputEmail1"
+                           aria-describedby="emailHelp" placeholder="Enter a description of the clothing">
+                </div>
+                
+                <div class="form-group">
+                    <label for="exampleInputPassword1" class="form-label"><h2>List your range of options</h2></label>
+                    <input name="top_results" type="number" class="form-control" id="exampleInputPassword1"
+                           placeholder="Enter range of options">
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-lg">Search</button>
+            </form>
+            <br><br><br>
+            {% if recommendations %}
+                {% for i in recommendations %}
+                    <!-- Display recommendations if available -->
+                    <div class="card mx-2 my-2 card-img-top"
+                         style="width: 18rem; background: rgba(255, 255, 255, 0.9); box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); border-radius: 8px">
+                        <img src="{{i.img}}" alt="..."
+                             style="width: 100%; height: 240px; object-fit: contain; border-radius: 8px;">
+                        <div class="card-body">
+                            <h5 class="card-title">{{i.description}}</h5>
+                            <div class="card-footer text-center">
+                                <a href="{{i.url}}" class="btn btn-success btn-block">Visit Page</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+
+</body>
+
+</html>

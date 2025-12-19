@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Welcome <%= fullname %> | EduBot</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background-color: #000;
+      color: #eee;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .neon-hover:hover {
+      box-shadow: 0 0 10px rgb(230, 230, 230), 0 0 20px rgb(245, 245, 245), 0 0 30px rgb(255, 255, 255);
+      background-color: rgb(245, 245, 245);
+      color: #000 !important;
+      transition: all 0.3s ease;
+    }
+    .subject-selected {
+      background-color: #2563eb !important;
+      color: white !important;
+    }
+  </style>
+</head>
+<body class="min-h-screen font-sans bg-black text-gray-300">
+
+  <!-- Navbar -->
+  <nav class="bg-gray-900 shadow-md py-4 px-6 flex flex-wrap justify-between items-center rounded-b-md">
+    <div class="text-2xl font-bold text-gray-400">EduBot</div>
+    <div class="space-x-4 text-sm md:text-base">
+      <a href="/progress" class="text-gray-300 font-medium neon-hover px-2 py-1 rounded transition">👤 <%= fullname %></a>
+      <a href="/api/quiz/advanced" class="text-blue-400 neon-hover px-2 py-1 rounded transition">🧠 AI Quiz</a>
+      <a href="/api/quiz/advanced" class="text-gray-300 neon-hover px-2 py-1 rounded transition">Take Quiz</a>
+      <a href="/users/logout" class="text-red-500 neon-hover px-2 py-1 rounded transition">Logout</a>
+    </div>
+  </nav>
+
+  <!-- Welcome Message -->
+  <section class="text-center mt-6 px-6">
+    <h1 class="text-3xl font-semibold text-white">Welcome, <%= fullname %> 👋</h1>
+    <p class="text-lg text-gray-400 mt-2">Keep learning and stay curious! ✨</p>
+  </section>
+
+  <!-- Search -->
+  <div class="px-6 mt-6 max-w-2xl mx-auto">
+    <input
+      id="searchInput"
+      type="text"
+      placeholder="Search subjects or topics..."
+      class="w-full p-3 rounded-lg bg-gray-800 text-gray-200 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-white"
+      autocomplete="off"
+      spellcheck="false"
+    />
+  </div>
+
+  <!-- Subjects of Interest -->
+  <div class="flex flex-wrap gap-3 px-6 mt-6 justify-center" id="subjectsContainer">
+    <% if (user.subjects && user.subjects.length > 0) { %>
+      <% user.subjects.forEach(subject => { %>
+        <span
+          class="subject-filter bg-gray-600 text-white px-4 py-2 rounded-full text-sm neon-hover transition select-none cursor-pointer"
+          data-subject="<%= subject.toLowerCase() %>"
+        >
+          <%= subject %>
+        </span>
+      <% }) %>
+    <% } else { %>
+      <p class="text-gray-500 text-center w-full">No subjects selected. Update your profile to personalize content.</p>
+    <% } %>
+  </div>
+
+  <!-- Personalized Content Cards Container -->
+  <section class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 px-6 mt-10" id="contentGrid">
+    <% /* Server-side rendered initial videos */ %>
+    <% contentList.forEach(video => { %>
+      <div
+        class="video-card bg-gray-800 rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow neon-hover"
+        data-title="<%= video.title.toLowerCase() %>"
+        data-description="<%= (video.description || '').toLowerCase() %>"
+        data-subject="<%= video.subject ? video.subject.toLowerCase() : '' %>"
+      >
+        <img
+          src="<%= video.image %>"
+          alt="Thumbnail for <%= video.title %>"
+          class="h-40 w-full object-cover"
+        />
+        <div class="p-4">
+          <h2 class="text-xl font-semibold text-gray-200 mb-2"><%= video.title %></h2>
+          <p class="text-gray-400 mb-3">
+            <%= video.description && video.description.length > 120
+              ? video.description.substring(0, 120) + '...'
+              : (video.description || 'No description available') %>
+          </p>
+          <a
+            href="<%= video.link %>"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="view-content-btn inline-block mt-2 px-4 py-2 bg-gray-600 text-white rounded neon-hover transition"
+            data-subject="<%= video.subject %>"
+            data-title="<%= video.title %>"
+          >
+            ▶️ View Content
+          </a>
+        </div>
+      </div>
+    <% }) %>
+  </section>
+
+  <!-- Floating Action Buttons -->
+  <div class="fixed bottom-6 right-6 flex flex-col gap-3 z-50">
+    <a href="/api/quiz/advanced" class="px-6 py-3 bg-blue-600 text-white rounded-full shadow-lg neon-hover transition select-none">
+      🧠 AI Quiz
+    </a>
+    <a href="/api/quiz/advanced" class="px-6 py-3 bg-gray-700 text-white rounded-full shadow-lg neon-hover transition select-none">
+      📝 Take Quiz
+    </a>
+    <a href="/chat" class="px-6 py-3 bg-gray-700 text-white rounded-full shadow-lg neon-hover transition select-none">
+      🤖 Ask EduBot
+    </a>
+  </div>
+
+  <!-- Script for Filtering, Searching, and Tracking Interest -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const searchInput = document.getElementById('searchInput');
+      const subjectButtons = document.querySelectorAll('.subject-filter');
+      const contentGrid = document.getElementById('contentGrid');
+
+      let selectedSubject = null;
+
+      subjectButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          const subject = button.dataset.subject;
+
+          if (selectedSubject === subject) {
+            selectedSubject = null;
+            button.classList.remove('subject-selected');
+          } else {
+            subjectButtons.forEach(btn => btn.classList.remove('subject-selected'));
+            selectedSubject = subject;
+            button.classList.add('subject-selected');
+          }
+
+          fetchAndRenderContent();
+        });
+      });
+
+      searchInput.addEventListener('input', () => {
+        fetchAndRenderContent();
+      });
+
+      async function fetchAndRenderContent() {
+        const query = searchInput.value.trim();
+
+        try {
+          const url = new URL('/search', window.location.origin);
+          if (query) url.searchParams.append('q', query);
+
+          const res = await fetch(url);
+          if (!res.ok) throw new Error('Network response was not ok');
+
+          let videos = await res.json();
+
+          if (selectedSubject) {
+            videos = videos.filter(video => video.subject && video.subject.toLowerCase() === selectedSubject);
+          }
+
+          renderContent(videos);
+        } catch (error) {
+          console.error('Failed to fetch search results:', error);
+          contentGrid.innerHTML = '<p class="text-center text-red-500 col-span-full">Failed to load content. Please try again later.</p>';
+        }
+      }
+
+      function renderContent(videos) {
+        contentGrid.innerHTML = '';
+
+        if (!videos.length) {
+          contentGrid.innerHTML = '<p class="text-center col-span-full text-gray-400">No videos found.</p>';
+          return;
+        }
+
+        videos.forEach(video => {
+          const card = document.createElement('div');
+          card.className = 'video-card bg-gray-800 rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow neon-hover';
+          card.setAttribute('data-title', (video.title || '').toLowerCase());
+          card.setAttribute('data-description', (video.description || '').toLowerCase());
+          card.setAttribute('data-subject', (video.subject || '').toLowerCase());
+
+          card.innerHTML = `
+            <img src="${video.image || ''}" alt="Thumbnail for ${video.title || ''}" class="h-40 w-full object-cover" />
+            <div class="p-4">
+              <h2 class="text-xl font-semibold text-gray-200 mb-2">${video.title || 'Untitled'}</h2>
+              <p class="text-gray-400 mb-3">${video.description && video.description.length > 120 ? video.description.substring(0, 120) + '...' : (video.description || 'No description available')}</p>
+              <a href="${video.link || '#'}" target="_blank" rel="noopener noreferrer" class="inline-block mt-2 px-4 py-2 bg-gray-600 text-white rounded neon-hover transition view-content-btn" data-subject="${video.subject || ''}" data-title="${video.title || ''}">
+                ▶️ View Content
+              </a>
+            </div>
+          `;
+
+          contentGrid.appendChild(card);
+        });
+
+        attachViewContentTracking();
+      }
+
+      // Attach click event for tracking interest on all "View Content" buttons
+      function attachViewContentTracking() {
+        document.querySelectorAll('.view-content-btn').forEach(btn => {
+          btn.addEventListener('click', async () => {
+            const subject = btn.dataset.subject;
+            const title = btn.dataset.title;
+
+            try {
+              await fetch('/track-interest', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ subject, title })
+              });
+            } catch (err) {
+              console.error('Failed to track interest:', err);
+            }
+          });
+        });
+      }
+
+      // Initial attach for server-rendered buttons
+      attachViewContentTracking();
+
+      // No automatic initial fetch to avoid flicker; rely on server-rendered content
+    });
+  </script>
+
+</body>
+</html>

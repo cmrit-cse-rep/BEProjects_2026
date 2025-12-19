@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgroAI - Agricultural AI Platform</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-seedling"></i>
+                    <span>AgroAI</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                <li class="nav-item active">
+                    <a href="#home" class="nav-link">
+                        <i class="fas fa-home"></i>
+                        <span data-translate="nav.home">Home</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#live-prices" class="nav-link">
+                        <i class="fas fa-chart-line"></i>
+                        <span data-translate="nav.live-prices">Live Prices</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#price-predictions" class="nav-link">
+                        <i class="fas fa-chart-area"></i>
+                        <span data-translate="nav.price-predictions">Price Predictions</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#crop-advisory" class="nav-link">
+                        <i class="fas fa-leaf"></i>
+                        <span data-translate="nav.crop-advisory">Crop Advisory</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#ai-assistant" class="nav-link">
+                        <i class="fas fa-robot"></i>
+                        <span data-translate="nav.ai-assistant">AI Assistant</span>
+                    </a>
+                </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <h1 class="page-title" data-translate="nav.home">Home</h1>
+                    <div class="welcome-section">
+                        <h2 class="welcome-title" data-translate="home.title">Welcome to Agricultural AI</h2>
+                        <p class="welcome-subtitle" data-translate="home.subtitle">Your intelligent farming companion for market insights and crop management.</p>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <div class="header-controls">
+                        <div class="language-selector">
+                            <select>
+                                <option value="kn">ಕನ್ನಡ</option>
+                                <option value="hi">हिंदी</option>
+                                <option value="en">English</option>
+                                <option value="te">తెలుగు</option>
+                            </select>
+                        </div>
+                        <div class="toggle-switch">
+                            <span class="toggle-label" data-translate="toggle.off">OFF</span>
+                            <label class="switch">
+                                <input type="checkbox">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="notification-bell" onclick="showAlerts()">
+                            <i class="fas fa-bell"></i>
+                            <span class="notification-badge" id="alert-count">0</span>
+                        </div>
+                        <div class="theme-toggle">
+                            <i class="fas fa-moon"></i>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <div class="page-content">
+                <!-- Home Page -->
+                <div class="page active" id="home-page">
+                    <!-- Location Selection -->
+                    <div class="city-selection">
+                        <h3 class="section-title" data-translate="home.select-city">Select Location for Crop Advisory</h3>
+                        <div class="city-cards">
+                            <div class="city-card active" data-city="davangere">
+                                <div class="city-icon">
+                                    <i class="fas fa-city"></i>
+                                </div>
+                                <div class="city-info">
+                                    <h4 data-translate="city.davangere">Davangere</h4>
+                                    <p>Karnataka</p>
+                                </div>
+                            </div>
+                            <div class="city-card" data-city="gangavathi">
+                                <div class="city-icon">
+                                    <i class="fas fa-city"></i>
+                                </div>
+                                <div class="city-info">
+                                    <h4 data-translate="city.gangavathi">Gangavathi</h4>
+                                    <p>Koppal, Karnataka</p>
+                                </div>
+                            </div>
+                            <div class="city-card" data-city="hbhalli">
+                                <div class="city-icon">
+                                    <i class="fas fa-city"></i>
+                                </div>
+                                <div class="city-info">
+                                    <h4 data-translate="city.hbhalli">H.B. Halli</h4>
+                                    <p>Bellary, Karnataka</p>
+                                </div>
+                            </div>
+                            <div class="city-card" data-city="hospet">
+                                <div class="city-icon">
+                                    <i class="fas fa-city"></i>
+                                </div>
+                                <div class="city-info">
+                                    <h4 data-translate="city.hospet">Hospet</h4>
+                                    <p>Bellary, Karnataka</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                <!-- Location-specific Content -->
+                <div class="city-content">
+                    <!-- Davangere Content (Default) -->
+                    <div class="city-dashboard active" id="davangere-content">
+                        <div class="city-header">
+                            <h2 data-translate="advisory.section-title">Davangere Crop Advisory</h2>
+                            <p data-translate="advisory.section-subtitle">Agricultural insights for Davangere region</p>
+                        </div>
+                        
+                        <!-- Crops for Davangere -->
+                        <div class="crops-grid">
+                            <div class="crop-card">
+                                <div class="crop-icon">
+                                    <i class="fas fa-seedling"></i>
+                                </div>
+                                <div class="crop-info">
+                                    <h4 data-translate="crop.rice">Rice</h4>
+                                    <p class="crop-status" data-translate="crop.available">Available</p>
+                                    <p class="crop-price">Rs.2,400-3,500/quintal</p>
+                                </div>
+                                <div class="crop-actions">
+                                    <button class="btn-primary" data-translate="crop.view-details">View Details</button>
+                                </div>
+                            </div>
+                            
+                            <div class="crop-card">
+                                <div class="crop-icon">
+                                    <i class="fas fa-seedling"></i>
+                                </div>
+                                <div class="crop-info">
+                                    <h4 data-translate="crop.maize">Maize</h4>
+                                    <p class="crop-status" data-translate="crop.available">Available</p>
+                                    <p class="crop-price">Rs.2,230-2,310/quintal</p>
+                                </div>
+                                <div class="crop-actions">
+                                    <button class="btn-primary" data-translate="crop.view-details">View Details</button>
+                                </div>
+                            </div>
+                            
+                            <div class="crop-card">
+                                <div class="crop-icon">
+                                    <i class="fas fa-seedling"></i>
+                                </div>
+                                <div class="crop-info">
+                                    <h4 data-translate="crop.ragi">Ragi</h4>
+                                    <p class="crop-status" data-translate="crop.available">Available</p>
+                                    <p class="crop-price" data-translate="crop.price-varies">Price varies</p>
+                                </div>
+                                <div class="crop-actions">
+                                    <button class="btn-primary" data-translate="crop.view-details">View Details</button>
+                                </div>
+                            </div>
+                            
+                            <div class="crop-card">
+                                <div class="crop-icon">
+                                    <i class="fas fa-seedling"></i>
+                                </div>
+                                <div class="crop-info">
+                                    <h4 data-translate="crop.cotton">Cotton</h4>
+                                    <p class="crop-status">Available</p>
+                                    <p class="crop-price">Price varies</p>
+                                </div>
+                                <div class="crop-actions">
+                                    <button class="btn-primary" data-translate="crop.view-details">View Details</button>
+                                </div>
+                            </div>
+                            
+                            <div class="crop-card">
+                                <div class="crop-icon">
+                                    <i class="fas fa-seedling"></i>
+                                </div>
+                                <div class="crop-info">
+                                    <h4 data-translate="crop.tomato">Tomato</h4>
+                                    <p class="crop-status">Available</p>
+                                    <p class="crop-price">Rs.300-1,600/quintal</p>
+                                </div>
+                                <div class="crop-actions">
+                                    <button class="btn-primary" data-translate="crop.view-details">View Details</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Gangavathi Content -->
+                    <div class="city-dashboard" id="gangavathi-content">
+                        <div class="city-header">
+                            <h2 data-translate="advisory.section-title">Gangavathi Crop Advisory</h2>
+                            <p data-translate="advisory.section-subtitle">Agricultural insights for Gangavathi (Koppal) region</p>
+                        </div>
+                        
+                        <div class="crops-grid">
+                            <div class="crop-card">
+                                <div class="crop-icon">
+                                    <i class="fas fa-seedling"></i>
+                                </div>
+                                <div class="crop-info">
+                                    <h4>Rice</h4>
+                                    <p class="crop-status">Available</p>
+                                    <p class="crop-price">Rs.1,700-2,440/quintal</p>
+                                </div>
+                                <div class="crop-actions">
+                                    <button class="btn-primary" data-translate="crop.view-details">View Details</button>
+                                </div>
+                            </div>
+                            
+                            <div class="crop-card">
+                                <div class="crop-icon">
+                                    <i class="fas fa-seedling"></i>
+                                </div>
+                                <div class="crop-info">
+                                    <h4>Maize</h4>
+                                    <p class="crop-status">Available</p>
+                                    <p class="crop-price">Price varies</p>
+                                </div>
+                                <div class="crop-actions">
+                                    <button class="btn-primary" data-translate="crop.view-details">View Details</button>
+                                </div>
+                            </div>
+                            
+                            <div class="crop-card">
+                                <div class="crop-icon">
+                                    <i class="fas fa-seedling"></i>
+                                </div>
+                                <div class="crop-info">
+                                    <h4 data-translate="crop.ragi">Ragi</h4>
+                                    <p class="crop-status" data-translate="crop.available">Available</p>
+                                    <p class="crop-price" data-translate="crop.price-varies">Price varies</p>
+                                </div>
+                                <div class="crop-actions">
+                                    <button class="btn-primary" data-translate="crop.view-details">View Details</button>
+                                </div>
+                            </div>
+                            
+                            <div class="crop-card">
+                                <div class="crop-icon">
+                                    <i class="fas fa-seedling"></i>
+                                </div>
+                                <div class="crop-info">
+                                    <h4 data-translate="crop.cotton">Cotton</h4>
+                                    <p class="crop-status">Available</p>
+                                    <p class="crop-price">Price varies</p>
+                                </div>
+                                <div class="crop-actions">
+                                    <button class="btn-primary" data-translate="crop.view-details">View Details</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- H.B. Halli Content -->
+                    <div class="city-dashboard" id="hbhalli-content">
+                        <div class="city-header">
+                            <h2 data-translate="advisory.section-title">H.B. Halli Crop Advisory</h2>
+                            <p data-translate="advisory.section-subtitle">Agricultural insights for H.B. Halli (Bellary) region</p>
+                        </div>
+                        
+                        <div class="crops-grid">
+                            <div class="crop-card">
+                                <div class="crop-icon">
+                                    <i class="fas fa-seedling"></i>
+                                </div>
+                                <div class="crop-info">
+                                    <h4>Rice</h4>
+                                    <p class="crop-status">Available</p>
+                                    <p class="crop-price">Rs.1,300-1,800/quintal</p>
+                                </div>
+                                <div class="crop-actions">
+                                    <button class="btn-primary" data-translate="crop.view-details">View Details</button>
+                                </div>
+                            </div>
+                            
+                            <div class="crop-card">
+                                <div class="crop-icon">
+                                    <i class="fas fa-seedling"></i>
+                                </div>
+                                <div class="crop-info">
+                                    <h4>Maize</h4>
+                                    <p class="crop-status">Available</p>
+                                    <p class="crop-price">Price varies</p>
+                                </div>
+                                <div class="crop-actions">
+                                    <button class="btn-primary" data-translate="crop.view-details">View Details</button>
+                                </div>
+                            </div>
+                            
+                            <div class="crop-card">
+                                <div class="crop-icon">
+                                    <i class="fas fa-seedling"></i>
+                                </div>
+                                <div class="crop-info">
+                                    <h4 data-translate="crop.ragi">Ragi</h4>
+                                    <p class="crop-status" data-translate="crop.available">Available</p>
+                                    <p class="crop-price" data-translate="crop.price-varies">Price varies</p>
+                                </div>
+                                <div class="crop-actions">
+                                    <button class="btn-primary" data-translate="crop.view-details">View Details</button>
+                                </div>
+                            </div>
+                            
+                            <div class="crop-card">
+                                <div class="crop-icon">
+                                    <i class="fas fa-seedling"></i>
+                                </div>
+                                <div class="crop-info">
+                                    <h4 data-translate="crop.cotton">Cotton</h4>
+                                    <p class="crop-status">Available</p>
+                                    <p class="crop-price">Price varies</p>
+                                </div>
+                                <div class="crop-actions">
+                                    <button class="btn-primary" data-translate="crop.view-details">View Details</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Hospet Content -->
+                    <div class="city-dashboard" id="hospet-content">
+                        <div class="city-header">
+                            <h2 data-translate="advisory.section-title">Hospet Crop Advisory</h2>
+                            <p data-translate="advisory.section-subtitle">Agricultural insights for Hospet (Bellary) region</p>
+                        </div>
+                        
+                        <div class="crops-grid">
+                            <div class="crop-card">
+                                <div class="crop-icon">
+                                    <i class="fas fa-seedling"></i>
+                                </div>
+                                <div class="crop-info">
+                                    <h4>Rice</h4>
+                                    <p class="crop-status">Available</p>
+                                    <p class="crop-price">Rs.1,200-2,353/quintal</p>
+                                </div>
+                                <div class="crop-actions">
+                                    <button class="btn-primary" data-translate="crop.view-details">View Details</button>
+                                </div>
+                            </div>
+                            
+                            <div class="crop-card">
+                                <div class="crop-icon">
+                                    <i class="fas fa-seedling"></i>
+                                </div>
+                                <div class="crop-info">
+                                    <h4>Maize</h4>
+                                    <p class="crop-status">Available</p>
+                                    <p class="crop-price">Price varies</p>
+                                </div>
+                                <div class="crop-actions">
+                                    <button class="btn-primary" data-translate="crop.view-details">View Details</button>
+                                </div>
+                            </div>
+                            
+                            <div class="crop-card">
+                                <div class="crop-icon">
+                                    <i class="fas fa-seedling"></i>
+                                </div>
+                                <div class="crop-info">
+                                    <h4 data-translate="crop.ragi">Ragi</h4>
+                                    <p class="crop-status" data-translate="crop.available">Available</p>
+                                    <p class="crop-price" data-translate="crop.price-varies">Price varies</p>
+                                </div>
+                                <div class="crop-actions">
+                                    <button class="btn-primary" data-translate="crop.view-details">View Details</button>
+                                </div>
+                            </div>
+                            
+                            <div class="crop-card">
+                                <div class="crop-icon">
+                                    <i class="fas fa-seedling"></i>
+                                </div>
+                                <div class="crop-info">
+                                    <h4 data-translate="crop.tomato">Tomato</h4>
+                                    <p class="crop-status">Available</p>
+                                    <p class="crop-price">Price varies</p>
+                                </div>
+                                <div class="crop-actions">
+                                    <button class="btn-primary" data-translate="crop.view-details">View Details</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </div>
+
+                <!-- Live Prices Page -->
+                <div class="page" id="live-prices-page">
+                    <div class="page-header">
+                        <h2 data-translate="prices.title">Live Crop Prices</h2>
+                        <p data-translate="prices.subtitle">Real-time price updates from Agmarknet markets</p>
+                    </div>
+                    
+                    <div class="price-filters">
+                        <div class="filter-group">
+                            <label data-translate="prices.filter-location">Select Location:</label>
+                            <select id="price-location-filter">
+                                <option value="all" data-translate="prices.all-locations">All Locations</option>
+                                <option value="davangere" data-translate="city.davangere">Davangere</option>
+                                <option value="gangavathi" data-translate="city.gangavathi">Gangavathi</option>
+                                <option value="hbhalli" data-translate="city.hbhalli">H.B. Halli</option>
+                                <option value="hospet" data-translate="city.hospet">Hospet</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label data-translate="prices.filter-crop">Select Crop:</label>
+                            <select id="price-crop-filter">
+                                <option value="all" data-translate="prices.all-crops">All Crops</option>
+                                <option value="rice" data-translate="crop.rice">Rice</option>
+                                <option value="maize" data-translate="crop.maize">Maize</option>
+                                <option value="ragi" data-translate="crop.ragi">Ragi</option>
+                                <option value="cotton" data-translate="crop.cotton">Cotton</option>
+                                <option value="tomato" data-translate="crop.tomato">Tomato</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="price-table-container">
+                        <table class="price-table">
+                            <thead>
+                                <tr>
+                                    <th data-translate="prices.location">Location</th>
+                                    <th data-translate="prices.crop">Crop</th>
+                                    <th data-translate="prices.variety">Variety</th>
+                                    <th data-translate="prices.min-price">Min Price</th>
+                                    <th data-translate="prices.max-price">Max Price</th>
+                                    <th data-translate="prices.modal-price">Modal Price</th>
+                                    <th data-translate="prices.last-updated">Last Updated</th>
+                                </tr>
+                            </thead>
+                            <tbody id="price-table-body">
+                                <!-- Price data will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Price Predictions Page -->
+                <div class="page" id="price-predictions-page">
+                    <div class="page-header">
+                        <h2>Price Predictions</h2>
+                        <p>AI-powered price forecasting using LSTM models</p>
+                    </div>
+                    
+                    <div class="prediction-controls">
+                        <div class="control-group">
+                            <label>Select Location:</label>
+                            <select id="prediction-location">
+                                <option value="davangere">Davangere</option>
+                                <option value="gangavathi">Gangavathi</option>
+                                <option value="hbhalli">H.B. Halli</option>
+                                <option value="hospet">Hospet</option>
+                            </select>
+                        </div>
+                        <div class="control-group">
+                            <label>Select Crop:</label>
+                            <select id="prediction-crop">
+                                <option value="rice">Rice</option>
+                                <option value="maize">Maize</option>
+                                <option value="ragi">Ragi</option>
+                                <option value="cotton">Cotton</option>
+                                <option value="tomato">Tomato</option>
+                            </select>
+                        </div>
+                        <div class="control-group">
+                            <label>Prediction Period:</label>
+                            <select id="prediction-period">
+                                <option value="7">Next 7 days</option>
+                                <option value="15">Next 15 days</option>
+                                <option value="30">Next 30 days</option>
+                            </select>
+                        </div>
+                        <button class="btn-primary" onclick="generatePrediction()">Generate Prediction</button>
+                    </div>
+
+                    <div class="prediction-results" id="prediction-results">
+                        <div class="chart-container">
+                            <canvas id="prediction-chart"></canvas>
+                        </div>
+                        <div class="prediction-summary">
+                            <h3>Prediction Summary</h3>
+                            <div class="summary-cards">
+                                <div class="summary-card">
+                                    <div class="card-value" id="predicted-price">--</div>
+                                    <div class="card-label">Predicted Price</div>
+                                </div>
+                                <div class="summary-card">
+                                    <div class="card-value" id="price-trend">--</div>
+                                    <div class="card-label">Price Trend</div>
+                                </div>
+                                <div class="summary-card">
+                                    <div class="card-value" id="confidence">--</div>
+                                    <div class="card-label">Confidence</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Crop Advisory Page -->
+                <div class="page" id="crop-advisory-page">
+                    <div class="page-header">
+                        <h2 data-translate="advisory.title">Crop Advisory</h2>
+                        <p data-translate="advisory.subtitle">Get AI-powered recommendations based on soil, weather, and market conditions</p>
+                    </div>
+                    
+                    <div class="advisory-container">
+                        <!-- Input Parameters Card -->
+                        <div class="input-parameters-card">
+                            <h3 data-translate="advisory.input-parameters">Input Parameters</h3>
+                            <form id="crop-advisory-form" class="advisory-form">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="soil-type" data-translate="advisory.soil-type">Soil Type</label>
+                                        <select id="soil-type" name="soil-type" required>
+                                            <option value="" data-translate="advisory.soil-type">Select Soil Type</option>
+                                            <option value="clay" data-translate="soil.clay">Clay</option>
+                                            <option value="sandy" data-translate="soil.sandy">Sandy</option>
+                                            <option value="loamy" data-translate="soil.loamy">Loamy</option>
+                                            <option value="silty" data-translate="soil.silty">Silty</option>
+                                            <option value="red" data-translate="soil.red">Red Soil</option>
+                                            <option value="black" data-translate="soil.black">Black Soil</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="season" data-translate="advisory.season">Season</label>
+                                        <select id="season" name="season" required>
+                                            <option value="" data-translate="advisory.season">Select Season</option>
+                                            <option value="kharif" data-translate="season.kharif">Kharif (June-October)</option>
+                                            <option value="rabi" data-translate="season.rabi">Rabi (October-March)</option>
+                                            <option value="zaid" data-translate="season.zaid">Zaid (March-June)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="ph-level" data-translate="advisory.ph-level">pH Level</label>
+                                        <input type="number" id="ph-level" name="ph-level" value="6.5" min="4.0" max="9.0" step="0.1" required>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="area" data-translate="advisory.area">Area (Acres)</label>
+                                        <input type="number" id="area" name="area" value="5.0" min="0.1" max="1000" step="0.1" required>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="location" data-translate="advisory.location">Location</label>
+                                        <select id="location" name="location" required>
+                                            <option value="" data-translate="advisory.location">Select Location</option>
+                                            <option value="davangere" data-translate="city.davangere">Davangere</option>
+                                            <option value="gangavathi" data-translate="city.gangavathi">Gangavathi</option>
+                                            <option value="hbhalli" data-translate="city.hbhalli">H.B. Halli</option>
+                                            <option value="hospet" data-translate="city.hospet">Hospet</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="irrigation" data-translate="advisory.irrigation">Irrigation Type</label>
+                                        <select id="irrigation" name="irrigation" required>
+                                            <option value="" data-translate="advisory.irrigation">Select Irrigation</option>
+                                            <option value="rainfed" data-translate="irrigation.rainfed">Rainfed</option>
+                                            <option value="irrigated" data-translate="irrigation.irrigated">Irrigated</option>
+                                            <option value="drip" data-translate="irrigation.drip">Drip Irrigation</option>
+                                            <option value="sprinkler" data-translate="irrigation.sprinkler">Sprinkler</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <button type="submit" class="ai-recommendation-btn">
+                                    <span class="btn-icon">AI</span>
+                                    <span data-translate="advisory.get-recommendations">Get AI Recommendations</span>
+                                </button>
+                            </form>
+                        </div>
+                        
+                        <!-- Crop Recommendations Card -->
+                        <div class="recommendations-card">
+                            <h3 data-translate="advisory.recommendations">Crop Recommendations</h3>
+                            <div id="recommendations-content" class="recommendations-content">
+                                <div class="placeholder-content">
+                                    <div class="placeholder-icon">*</div>
+                                    <p data-translate="advisory.placeholder">Fill the form to get personalized crop recommendations</p>
+                                    <p class="placeholder-subtitle" data-translate="advisory.placeholder-subtitle">Our AI will analyze your parameters and suggest the best crops for your conditions</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AI Assistant Page -->
+                <div class="page" id="ai-assistant-page">
+                    <div class="page-header">
+                        <h2>AI Assistant</h2>
+                        <p>Get instant answers to your agricultural queries</p>
+                    </div>
+                    
+                    <div class="chat-container">
+                        <div class="chat-messages" id="chat-messages">
+                            <div class="message bot-message">
+                                <div class="message-content">
+                                    <p>Hello! I'm your AI agricultural assistant. I can help you with:</p>
+                                    <ul>
+                                        <li>Crop price information</li>
+                                        <li>Agricultural best practices</li>
+                                        <li>Weather impact on crops</li>
+                                        <li>Market trends and predictions</li>
+                                    </ul>
+                                    <p>How can I assist you today?</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="chat-input-container">
+                            <div class="quick-questions">
+                                <button class="quick-btn" onclick="askQuickQuestion('What are the current rice prices in Davangere?')">Rice Prices</button>
+                                <button class="quick-btn" onclick="askQuickQuestion('When is the best time to plant maize?')">Maize Planting</button>
+                                <button class="quick-btn" onclick="askQuickQuestion('How to control cotton pests?')">Cotton Pests</button>
+                                <button class="quick-btn" onclick="askQuickQuestion('Weather impact on crops?')">Weather Impact</button>
+                            </div>
+                            
+                            <div class="voice-controls">
+                                <button type="button" id="voice-input-btn" class="quick-btn">🎤 Start Voice</button>
+                                <button type="button" id="voice-output-toggle" class="quick-btn">🔊 Voice On</button>
+                            </div>
+                            <div class="voice-status" id="voice-status" aria-live="polite"></div>
+                            
+                            <div class="chat-input">
+                                <form id="chat-form">
+                                    <input type="text" id="chat-input" placeholder="Ask me anything about agriculture..." onkeypress="handleChatKeyPress(event)">
+                                    <button type="submit" class="send-btn">
+                                        <i class="fas fa-paper-plane"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Alert Notification Panel -->
+    <div id="alert-panel" class="alert-panel">
+        <div class="alert-header">
+            <h3>Price Alerts</h3>
+            <button class="close-alerts" onclick="hideAlerts()">&times;</button>
+        </div>
+        <div class="alert-content" id="alert-content">
+            <!-- Alerts will be dynamically added here -->
+        </div>
+        <div class="alert-settings">
+            <button class="btn-secondary" onclick="openAlertSettings()">Configure Alerts</button>
+        </div>
+    </div>
+
+    <!-- Alert Settings Modal -->
+    <div id="alert-settings-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Configure Price Alerts</h3>
+                <button class="close-modal" onclick="closeAlertSettings()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="alert-config">
+                    <h4>Set Profit Thresholds</h4>
+                    <p>Get notified when crop prices reach your target profit margins.</p>
+                    
+                    <div class="threshold-settings">
+                        <div class="setting-group">
+                            <label for="rice-threshold">Rice Profit Threshold (%):</label>
+                            <input type="number" id="rice-threshold" value="25" min="10" max="100">
+                        </div>
+                        
+                        <div class="setting-group">
+                            <label for="maize-threshold">Maize Profit Threshold (%):</label>
+                            <input type="number" id="maize-threshold" value="30" min="10" max="100">
+                        </div>
+                        
+                        <div class="setting-group">
+                            <label for="cotton-threshold">Cotton Profit Threshold (%):</label>
+                            <input type="number" id="cotton-threshold" value="35" min="10" max="100">
+                        </div>
+                        
+                        <div class="setting-group">
+                            <label for="tomato-threshold">Tomato Profit Threshold (%):</label>
+                            <input type="number" id="tomato-threshold" value="40" min="10" max="100">
+                        </div>
+                        
+                        <div class="setting-group">
+                            <label for="ragi-threshold">Ragi Profit Threshold (%):</label>
+                            <input type="number" id="ragi-threshold" value="28" min="10" max="100">
+                        </div>
+                    </div>
+                    
+                    <div class="notification-options">
+                        <h4>Notification Options</h4>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="enable-alerts" checked>
+                            Enable Price Alerts
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="sound-alerts">
+                            Play Sound for Alerts
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="email-alerts">
+                            Send Email Notifications
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-primary" onclick="saveAlertSettings()">Save Settings</button>
+                <button class="btn-secondary" onclick="closeAlertSettings()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="translations.js"></script>
+    <script src="script_attention.js"></script>
+</body>
+</html>

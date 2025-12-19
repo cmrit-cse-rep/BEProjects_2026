@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Your Performance</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(to right, #f8ffae, #43c6ac);
+      padding: 20px;
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 30px;
+      font-size: 2rem;
+      font-weight: 700;
+      color: #222;
+    }
+
+    #chart-container {
+      width: 80%;
+      max-width: 700px;
+      margin: auto;
+      background: #ffffff;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+    }
+
+    button {
+      margin: 25px 10px;
+      padding: 12px 25px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      background-color: #5078f2;
+      color: white;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background-color: #3651d3;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Your Performance Report</h1>
+
+  <div id="chart-container">
+      <canvas id="performanceChart"></canvas>
+  </div>
+
+  <button onclick="window.location.href='/'">🏠 Home</button>
+  <button onclick="window.location.href='/technical'">🔙 Take Another  Test</button>
+
+  <script>
+    const performanceData = JSON.parse(localStorage.getItem("performanceData")) || {};
+    const topics = Object.keys(performanceData);
+    const scores = topics.map(t =>
+      ((performanceData[t].score / performanceData[t].total) * 100).toFixed(2)
+    );
+
+    const ctx = document.getElementById("performanceChart").getContext("2d");
+
+    new Chart(ctx, {
+      type: "bar",
+      data: {
+        labels: topics.map(t => t.replace(/_/g, " ")),
+        datasets: [{
+          label: "Score (%)",
+          data: scores,
+          backgroundColor: "#5078f2"
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: { beginAtZero: true, max: 100 }
+        }
+      }
+    });
+  </script>
+
+</body>
+</html>

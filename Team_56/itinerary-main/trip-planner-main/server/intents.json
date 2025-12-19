@@ -1,0 +1,427 @@
+{
+    "intents": [
+      {
+        "tag": "greeting",
+        "patterns": ["Hello", "Hi", "Hey", "Greetings"],
+        "responses": [
+          "Hello! Welcome to TravelPal, your personal travel assistant. How can I assist you today?",
+          "Hi there! How can I help you with your travel plans?",
+          "Hey! It's great to see you. What can I do for you today?"
+        ]
+      },
+      {
+      "tag": "get_weather",
+      "patterns": [
+        "what is the weather in",
+        "weather forecast for",
+        "how hot is it in",
+        "tell me the weather"
+      ],
+      "responses": ["Getting weather information..."]
+    },
+    {
+      "tag": "get_travel_recommendations",
+      "patterns": [
+        "recommend some places in",
+        "what should I see in",
+        "travel ideas for",
+        "suggest some activities"
+      ],
+      "responses": ["Finding some recommendations..."]
+    },
+      {
+        "tag": "destination_recommendation",
+        "patterns": ["Recommend a destination", "Where should I go?", "Suggest a travel destination"],
+        "responses": [
+          "Sure! I can help you find the perfect destination. What type of vacation are you looking for?",
+          "Certainly! What kind of travel experience are you interested in? Let's find your dream destination.",
+          "Great choice! Let's start by exploring some travel destinations. What are your preferences?"
+        ]
+      },
+      {
+        "tag": "destination_preferences",
+        "patterns": ["I like beaches", "Adventure trip", "Cultural experience", "Surprise me"],
+        "responses": [
+          "That's fantastic! Beaches, adventure, and culture are all wonderful choices. Please provide your travel dates and preferred regions.",
+          "Excellent! Your interests sound exciting. To narrow it down, when are you planning to travel and where are you considering?",
+          "Sounds like you're open to adventure! To help you decide, could you share your travel dates and any region preferences?"
+        ]
+      },
+      {
+        "tag": "book_flight",
+        "patterns": ["Book a flight", "Flights", "I need to fly somewhere"],
+        "responses": [
+          "Excellent choice! Let's start by providing your departure and arrival cities and travel dates.",
+          "Great decision! To get you on your way, please tell me your departure and arrival cities and your preferred travel dates.",
+          "Sure thing! To book your flight, I'll need to know your departure and arrival cities, as well as your travel dates."
+        ]
+      },
+      {
+        "tag": "flight_details",
+        "patterns": ["I'm flying from [departure_city] to [arrival_city] on [travel_date]", "From [departure_city] to [arrival_city] on [travel_date]"],
+        "responses": [
+          "Thank you for providing your flight details. Now, let's find suitable accommodations. What are your check-in and check-out dates for your stay?",
+          "Got it! Your flight details are noted. Let's move on to booking your accommodations. When will you be checking in and out?",
+          "Perfect! Your flight details are confirmed. Next, please specify your check-in and check-out dates for accommodations."
+        ]
+      },
+      {
+        "tag": "book_accommodation",
+        "patterns": ["Book accommodation", "Hotels", "Where should I stay?"],
+        "responses": [
+          "Of course! I can assist you in finding suitable accommodations. Please specify your check-in and check-out dates.",
+          "Certainly! Let's explore lodging options. When do you plan to check in and check out?",
+          "Absolutely! To find you the perfect place to stay, could you provide your check-in and check-out dates?"
+        ]
+      },
+      {
+        "tag": "accommodation_dates",
+        "patterns": ["I'll be arriving on [check_in_date] and departing on [check_out_date]", "Check-in on [check_in_date] and check-out on [check_out_date]"],
+        "responses": [
+          "Thank you for providing your accommodation dates. What type of lodging are you interested in? (e.g., hotel, resort, Airbnb)",
+          "Great! Your accommodation dates are set. What type of lodging would you prefer? (e.g., hotel, resort, Airbnb)",
+          "Noted! Your check-in and check-out dates are confirmed. What kind of lodging are you looking for? (e.g., hotel, resort, Airbnb)"
+        ]
+      },
+      {
+        "tag": "accommodation_preferences",
+        "patterns": ["I prefer a [lodging_type] accommodation", "Any specific lodging preferences?"],
+        "responses": [
+          "Understood! Do you have any specific preferences for your chosen [lodging_type], or should I suggest a variety of options?",
+          "Great choice! Preferences make a difference. Do you have any specific requests for your [lodging_type], or should I provide a mix of options?",
+          "Noted! Preferences are important. Is there anything specific you'd like in your [lodging_type], or should I offer a range of choices?"
+        ]
+      },
+      {
+        "tag": "accommodation_budget",
+        "patterns": ["My budget is around $[budget_amount] per night", "Budget: $[budget_amount]", "I'm flexible with the budget"],
+        "responses": [
+          "Thank you for specifying your budget. I'll now search for accommodations that match your criteria. Please wait a moment.",
+          "Got it! I'll search for [budget_amount]-per-night accommodations within your preferences. This won't take long. Please hold on.",
+          "Noted! Your budget is set. I'll find you some great options within that range. Just a moment, please."
+        ]
+      },
+      {
+        "tag": "accommodation_suggestions",
+        "patterns": ["Show me the options", "What accommodations do you recommend?", "Find me some places to stay"],
+        "responses": [
+          "Certainly! Here are some accommodations that match your criteria:",
+          "Sure thing! Here are some lodging options that fit your preferences:",
+          "Of course! Below are some great choices for your stay:"
+        ]
+      },
+      {
+        "tag": "activity_recommendation",
+        "patterns": ["What activities are there?", "Suggest things to do", "Activities at my destination"],
+        "responses": [
+          "Of course! To provide you with the best recommendations, could you please tell me your interests or the type of activities you enjoy?",
+          "Certainly! I'd love to suggest some activities. What are your interests, or what type of activities do you have in mind?",
+          "Absolutely! Let's plan some activities. What are your interests or the type of activities you prefer?"
+        ]
+      },
+      {
+        "tag": "activity_preferences",
+        "patterns": ["I enjoy [activity_type]", "I'd like to go [activity_type]", "Surprise me"],
+        "responses": [
+          "That's wonderful! [activity_type] activities can be very exciting. Where would you like to explore these activities?",
+          "Excellent choice! [activity_type] is fantastic. Where would you like to experience these activities?",
+          "Great! [activity_type] it is. Where shall we plan these exciting activities?"
+        ]
+      },
+      {
+        "tag": "restaurant_recommendation",
+        "patterns": ["Recommend restaurants", "Where to eat", "Find me a restaurant"],
+        "responses": [
+          "Absolutely! To suggest the perfect restaurant, could you let me know your cuisine preferences or dietary restrictions?",
+          "Certainly! I can recommend some great restaurants. Do you have any cuisine preferences or dietary restrictions?",
+          "Of course! Let's find you a fantastic restaurant. Any specific cuisine preferences or dietary requirements?"
+        ]
+      },
+      {
+        "tag": "restaurant_preferences",
+        "patterns": ["I prefer [cuisine_type] cuisine", "I'm open to various cuisines", "I have dietary restrictions"],
+        "responses": [
+          "Thank you for sharing your preferences. I'll find some great restaurant options for you. Anything specific you're craving?",
+          "Noted! [cuisine_type] cuisine it is. I'll suggest some delicious options. Any specific dishes you're in the mood for?",
+          "Great! [cuisine_type] cuisine is on the menu. I'll find some top-notch restaurants for you. Any dietary restrictions I should be aware of?"
+        ]
+      },
+      {
+        "tag": "goodbye",
+        "patterns": ["Goodbye", "See you later", "Bye"],
+        "responses": [
+          "Goodbye! If you have any more questions or need assistance in the future, feel free to return. Have a fantastic trip!",
+          "See you later! Safe travels, and don't hesitate to reach out if you need help in the future.",
+          "Bye for now! Have an amazing trip, and remember, I'm here whenever you need travel assistance."
+        ]
+      },
+      {
+        "tag": "new_york",
+        "patterns": [
+            "Tell me about New York", "New York travel details", "I want to visit New York", "What can I do in New York?", "Plan a trip to New York"
+        ],
+        "responses": [
+            "New York City is a bustling hub of culture and entertainment. Top attractions include Times Square, Central Park, and the Statue of Liberty. For accommodation, consider staying at The Plaza Hotel or The Ritz-Carlton. Great restaurants include Le Bernardin for fine dining and Joe's Pizza for a quick bite. Flights are available from all major international airports to JFK, Newark, or LaGuardia."
+        ]
+    },
+    {
+      "tag": "paris",
+      "patterns": [
+          "Tell me about Paris", "Paris travel details", "I want to visit Paris", "What can I do in Paris?", "Plan a trip to Paris"
+      ],
+      "responses": [
+          "Paris, the City of Light, offers iconic attractions like the Eiffel Tower, Louvre Museum, and Notre-Dame Cathedral. Stay at luxurious hotels like Le Meurice or Hôtel Ritz. Enjoy French cuisine at Le Jules Verne or Café de Flore. Flights are available to Charles de Gaulle and Orly airports from major global cities."
+      ]
+  },
+  {
+      "tag": "tokyo",
+      "patterns": [
+          "Tell me about Tokyo", "Tokyo travel details", "I want to visit Tokyo", "What can I do in Tokyo?", "Plan a trip to Tokyo"
+      ],
+      "responses": [
+          "Tokyo, Japan's vibrant capital, features landmarks like the Tokyo Tower, Meiji Shrine, and Akihabara. Accommodations include The Peninsula Tokyo and Park Hyatt Tokyo. Dine at Sukiyabashi Jiro for sushi or Ichiran Ramen for a casual meal. Flights are available to Narita or Haneda airports from global destinations."
+      ]
+  },
+  {
+      "tag": "london",
+      "patterns": [
+          "Tell me about London", "London travel details", "I want to visit London", "What can I do in London?", "Plan a trip to London"
+      ],
+      "responses": [
+          "London offers iconic sites like the Tower of London, Buckingham Palace, and the British Museum. Stay at The Savoy or The Langham. For dining, visit Gordon Ramsay's restaurant or Dishoom for Indian cuisine. Flights arrive at Heathrow, Gatwick, and other London airports from around the world."
+      ]
+  },
+  {
+    "tag": "dubai",
+    "patterns": [
+        "Tell me about Dubai", "Dubai travel details", "I want to visit Dubai", "What can I do in Dubai?", "Plan a trip to Dubai"
+    ],
+    "responses": [
+        "Dubai is known for luxury and innovation, with attractions like the Burj Khalifa, Palm Jumeirah, and Dubai Mall. Stay at Burj Al Arab or Atlantis, The Palm. Enjoy dining at Zuma or Al Iwan. Flights are available to Dubai International Airport from major global hubs."
+    ]
+},
+{
+    "tag": "singapore",
+    "patterns": [
+        "Tell me about Singapore", "Singapore travel details", "I want to visit Singapore", "What can I do in Singapore?", "Plan a trip to Singapore"
+    ],
+    "responses": [
+        "Singapore is famous for its clean streets and iconic Marina Bay Sands, Gardens by the Bay, and Sentosa Island. Stay at Marina Bay Sands or Raffles Singapore. Savor dishes at Hawker centers or dine at Odette. Changi Airport connects Singapore to major global cities."
+    ]
+},
+{
+    "tag": "sydney",
+    "patterns": [
+        "Tell me about Sydney", "Sydney travel details", "I want to visit Sydney", "What can I do in Sydney?", "Plan a trip to Sydney"
+    ],
+    "responses": [
+        "Sydney features landmarks like the Sydney Opera House, Harbour Bridge, and Bondi Beach. Stay at Shangri-La Hotel or Park Hyatt Sydney. Enjoy Australian cuisine at Quay or casual dining at The Grounds of Alexandria. Flights arrive at Sydney Kingsford Smith Airport."
+    ]
+},
+{
+    "tag": "rome",
+    "patterns": [
+        "Tell me about Rome", "Rome travel details", "I want to visit Rome", "What can I do in Rome?", "Plan a trip to Rome"
+    ],
+    "responses": [
+        "Rome is a treasure trove of history with attractions like the Colosseum, Vatican City, and Trevi Fountain. Stay at Hotel de Russie or Hassler Roma. Relish Italian cuisine at La Pergola or Roscioli. Flights arrive at Leonardo da Vinci–Fiumicino Airport."
+    ]
+},
+{
+    "tag": "bangkok",
+    "patterns": [
+        "Tell me about Bangkok", "Bangkok travel details", "I want to visit Bangkok", "What can I do in Bangkok?", "Plan a trip to Bangkok"
+    ],
+    "responses": [
+        "Bangkok, Thailand's capital, is famous for the Grand Palace, Wat Arun, and vibrant markets. Stay at Mandarin Oriental or The Siam. Sample Thai dishes at Nahm or street food at Chatuchak Market. Flights arrive at Suvarnabhumi Airport."
+    ]
+},
+{
+    "tag": "barcelona",
+    "patterns": [
+        "Tell me about Barcelona", "Barcelona travel details", "I want to visit Barcelona", "What can I do in Barcelona?", "Plan a trip to Barcelona"
+    ],
+    "responses": [
+        "Barcelona boasts architectural wonders like Sagrada Família, Park Güell, and La Rambla. Stay at Hotel Arts or W Barcelona. Dine at Tickets for tapas or enjoy seafood at Can Majó. Flights arrive at Barcelona–El Prat Airport."
+    ]
+},
+{
+    "tag": "delhi",
+    "patterns": [
+        "Tell me about Delhi", "Delhi travel details", "I want to visit Delhi", "What can I do in Delhi?", "Plan a trip to Delhi"
+    ],
+    "responses": [
+        "Delhi, India's capital, is home to landmarks like the Red Fort, Qutub Minar, and India Gate. Stay at The Oberoi or Taj Palace. Enjoy dining at Indian Accent or Karim's. Flights arrive at Indira Gandhi International Airport."
+    ]
+},
+{
+    "tag": "mumbai",
+    "patterns": [
+        "Tell me about Mumbai", "Mumbai travel details", "I want to visit Mumbai", "What can I do in Mumbai?", "Plan a trip to Mumbai"
+    ],
+    "responses": [
+        "Mumbai, the City of Dreams, offers attractions like Gateway of India, Marine Drive, and Elephanta Caves. Stay at The Taj Mahal Palace or The Oberoi. Relish local delicacies at Leopold Cafe or street food at Juhu Beach. Flights arrive at Chhatrapati Shivaji Maharaj International Airport."
+    ]
+},
+{
+  "tag": "jaipur",
+  "patterns": [
+      "Tell me about Jaipur", "Jaipur travel details", "I want to visit Jaipur", "What can I do in Jaipur?", "Plan a trip to Jaipur"
+  ],
+  "responses": [
+      "Jaipur, the Pink City, is famous for the Amer Fort, City Palace, and Hawa Mahal. Stay at Rambagh Palace or The Oberoi Rajvilas. Enjoy Rajasthani cuisine at 1135 AD or Chokhi Dhani. Flights arrive at Jaipur International Airport."
+  ]
+},
+{
+  "tag": "chennai",
+  "patterns": [
+      "Tell me about Chennai", "Chennai travel details", "I want to visit Chennai", "What can I do in Chennai?", "Plan a trip to Chennai"
+  ],
+  "responses": [
+      "Chennai, a cultural hub, offers attractions like Marina Beach, Kapaleeshwarar Temple, and Fort St. George. Stay at Taj Coromandel or ITC Grand Chola. Savor South Indian delicacies at Dakshin or Saravana Bhavan. Flights arrive at Chennai International Airport."
+  ]
+},
+{
+  "tag": "kolkata",
+  "patterns": [
+      "Tell me about Kolkata", "Kolkata travel details", "I want to visit Kolkata", "What can I do in Kolkata?", "Plan a trip to Kolkata"
+  ],
+  "responses": [
+      "Kolkata, the City of Joy, features landmarks like Victoria Memorial, Howrah Bridge, and Dakshineswar Temple. Stay at The Oberoi Grand or ITC Sonar. Relish Bengali cuisine at 6 Ballygunge Place or Bhojohori Manna. Flights arrive at Netaji Subhas Chandra Bose International Airport."
+  ]
+},
+{
+  "tag": "Hyderabad",
+  "patterns": [
+      "Tell me about Hyderabad", "Hyderabad travel details", "I want to visit Hyderabad", "What can I do in Hyderabad?", "Plan a trip to Hyderabad"
+  ],
+  "responses": [
+      "Hyderabad, the City of Pearls, is famous for landmarks like Charminar, Golconda Fort, and Hussain Sagar Lake. Stay at Taj Falaknuma Palace or ITC Kohenur. Relish Hyderabadi biryani at Paradise or Bawarchi. Flights arrive at Rajiv Gandhi International Airport."
+  ]
+},
+{
+  "tag": "agra",
+  "patterns": [
+      "Tell me about Agra", "Agra travel details", "I want to visit Agra", "What can I do in Agra?", "Plan a trip to Agra"
+  ],
+  "responses": [
+      "Agra, home to the Taj Mahal, also features the Agra Fort and Fatehpur Sikri. Stay at The Oberoi Amarvilas or ITC Mughal. Enjoy Mughlai cuisine at Pinch of Spice or Esphahan. Flights arrive at Pandit Deen Dayal Upadhyay Airport in Agra or via Delhi."
+  ]
+},
+{
+  "tag": "Varanasi",
+  "patterns": [
+      "Tell me about Varanasi", "Varanasi travel details", "I want to visit Varanasi", "What can I do in Varanasi?", "Plan a trip to Varanasi"
+  ],
+  "responses": [
+      "Varanasi, the spiritual capital of India, offers experiences like Ganga Aarti, Kashi Vishwanath Temple, and boat rides on the Ganges. Stay at Brijrama Palace or Taj Ganges. Savor local sweets like Banarasi peda and street food. Flights arrive at Lal Bahadur Shastri International Airport."
+  ]
+},
+{
+  "tag": "Amritsar",
+  "patterns": [
+      "Tell me about Amritsar", "Amritsar travel details", "I want to visit Amritsar", "What can I do in Amritsar?", "Plan a trip to Amritsar"
+  ],
+  "responses": [
+      "Amritsar is renowned for the Golden Temple, Wagah Border ceremony, and Jallianwala Bagh. Stay at Taj Swarna or Hyatt Regency. Relish Punjabi cuisine at Kesar Da Dhaba or Bharawan Da Dhaba. Flights arrive at Sri Guru Ram Dass Jee International Airport."
+  ]
+},
+{
+  "tag": "kochi",
+  "patterns": [
+      "Tell me about Kochi", "Kochi travel details", "I want to visit Kochi", "What can I do in Kochi?", "Plan a trip to Kochi"
+  ],
+  "responses": [
+      "Kochi, known as the Queen of the Arabian Sea, offers attractions like Fort Kochi, Chinese fishing nets, and Mattancherry Palace. Stay at Brunton Boatyard or Taj Malabar Resort. Enjoy Kerala cuisine at Dhe Puttu or Fort House. Flights arrive at Cochin International Airport."
+  ]
+},
+{
+  "tag": "pune",
+  "patterns": [
+      "Tell me about Pune", "Pune travel details", "I want to visit Pune", "What can I do in Pune?", "Plan a trip to Pune"
+  ],
+  "responses": [
+      "Pune, known for its educational and cultural heritage, features attractions like Shaniwar Wada, Aga Khan Palace, and Sinhagad Fort. Stay at Conrad Pune or JW Marriott. Savor Maharashtrian cuisine at Vaishali or Kayani Bakery. Flights arrive at Pune International Airport."
+  ]
+},
+{
+  "tag": "mysore",
+  "patterns": [
+      "Tell me about Mysore", "Mysore travel details", "I want to visit Mysore", "What can I do in Mysore?", "Plan a trip to Mysore"
+  ],
+  "responses": [
+      "Mysore, famous for its royal heritage, offers attractions like Mysore Palace, Chamundi Hill, and Brindavan Gardens. Stay at Radisson Blu Plaza or Royal Orchid Metropole. Relish Mysore pak and other South Indian delicacies. Flights arrive at Mysore Airport or via Bengaluru."
+  ]
+},
+{
+  "tag": "goa",
+  "patterns": [
+      "Tell me about Goa", "Goa travel details", "I want to visit Goa", "What can I do in Goa?", "Plan a trip to Goa"
+  ],
+  "responses": [
+      "Goa, a beach paradise, is known for Calangute Beach, Basilica of Bom Jesus, and Dudhsagar Falls. Stay at Taj Exotica or Leela Goa. Enjoy Goan seafood at Martin's Corner or Britto's. Flights arrive at Dabolim International Airport."
+  ]
+},
+{
+  "tag": "manali",
+  "patterns": [
+      "Tell me about Manali", "Manali travel details", "I want to visit Manali", "What can I do in Manali?", "Plan a trip to Manali"
+  ],
+  "responses": [
+      "Manali, a hill station, is known for Solang Valley, Rohtang Pass, and Hadimba Temple. Stay at Manuallaya Resort or Span Resort. Relish local Himachali dishes like siddu. Reach Manali by road from Chandigarh or flights to Bhuntar Airport nearby."
+  ]
+},
+{
+  "tag": "bangalore",
+  "patterns": [
+      "Tell me about Bangalore", "Bangalore travel details", "I want to visit Bangalore", "What can I do in Bangalore?", "Plan a trip to Bangalore"
+  ],
+  "responses": [
+      "Bangalore, India's Silicon Valley, boasts attractions like Lalbagh Botanical Garden, Bangalore Palace, and Cubbon Park. Stay at The Leela Palace or Taj West End for a luxurious experience. Explore the vibrant streets of Commercial Street for shopping, or visit the bustling IT hubs like Whitefield and Electronic City."
+]
+}
+    ],
+    "context": {
+      "destination_recommendation": {
+        "next_intent": "destination_preferences",
+        "response": "Great! What type of vacation are you looking for? For example, beach, adventure, culture, etc."
+      },
+      "book_flight": {
+        "next_intent": "flight_details",
+        "response": "Excellent! Please provide your departure and arrival cities, as well as your travel dates."
+      },
+      "flight_details": {
+        "next_intent": "book_accommodation",
+        "response": "Thank you for providing your flight details. Now, let's find suitable accommodations. What are your check-in and check-out dates for your stay?"
+      },
+      "book_accommodation": {
+        "next_intent": "accommodation_dates",
+        "response": "Of course! Please specify your check-in and check-out dates."
+      },
+      "accommodation_dates": {
+        "next_intent": "accommodation_preferences",
+        "response": "Thank you for providing your accommodation dates. What type of lodging are you interested in? (e.g., hotel, resort, Airbnb)"
+      },
+      "accommodation_preferences": {
+        "next_intent": "accommodation_budget",
+        "response": "Got it! Do you have a budget range in mind for your lodging, or should I suggest options across different price ranges?"
+      },
+      "accommodation_budget": {
+        "next_intent": "accommodation_suggestions",
+        "response": "Thank you for specifying your budget. I'll now search for accommodations that match your criteria. Please wait a moment."
+      },
+      "activity_recommendation": {
+        "next_intent": "activity_preferences",
+        "response": "Of course! To provide you with the best recommendations, could you please tell me your interests or the type of activities you enjoy?"
+      },
+      "activity_preferences": {
+        "next_intent": "restaurant_recommendation",
+        "response": "That's wonderful! [activity_type] activities can be very exciting. Where would you like to explore these activities?"
+      },
+      "restaurant_recommendation": {
+        "next_intent": "goodbye",
+        "response": "Certainly! I'll find some great restaurant options for you. Anything specific you're craving?"
+      }
+    }
+  }
+  

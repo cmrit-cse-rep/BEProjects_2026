@@ -1,0 +1,741 @@
+[
+  {
+    "subject": "Data Structures",
+    "title": "Understanding Linked Lists",
+    "description": "Beginner's guide to Linked Lists",
+    "image": "https://i.ytimg.com/vi/DuDz6B4cqVc/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=DuDz6B4cqVc",
+    "tags": ["linked list", "data structure", "interview"]
+  },
+  {
+    "subject": "Web Development",
+    "title": "Responsive HTML/CSS Tutorial",
+    "description": "Make your first responsive site.",
+    "image": "https://i.ytimg.com/vi/srvUrASNj0s/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=srvUrASNj0s",
+    "tags": ["html", "css", "responsive", "frontend"]
+  },
+  {
+    "subject": "Algorithms",
+    "title": "Introduction to Sorting Algorithms",
+    "description": "Overview of bubble, insertion, and selection sort.",
+    "image": "https://i.ytimg.com/vi/7h1s2SojIRw/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=7h1s2SojIRw",
+    "tags": ["sorting", "algorithms", "basics"]
+  },
+  {
+    "subject": "Operating Systems",
+    "title": "Process Management in OS",
+    "description": "Understanding process life cycle and scheduling.",
+    "image": "https://i.ytimg.com/vi/8bZ3qPSM8RM/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=8bZ3qPSM8RM",
+    "tags": ["process", "operating systems", "scheduling"]
+  },
+  {
+    "subject": "Computer Networks",
+    "title": "OSI Model Explained",
+    "description": "Detailed explanation of OSI layers.",
+    "image": "https://i.ytimg.com/vi/7u3DW9J-W6s/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=7u3DW9J-W6s",
+    "tags": ["networking", "OSI model", "layers"]
+  },
+  {
+    "subject": "DBMS",
+    "title": "Introduction to SQL",
+    "description": "Basic SQL commands for beginners.",
+    "image": "https://i.ytimg.com/vi/HXV3zeQKqGY/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=HXV3zeQKqGY",
+    "tags": ["sql", "database", "dbms"]
+  },
+  {
+    "subject": "Machine Learning",
+    "title": "Machine Learning Basics",
+    "description": "Overview of supervised and unsupervised learning.",
+    "image": "https://i.ytimg.com/vi/GwIo3gDZCVQ/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=GwIo3gDZCVQ",
+    "tags": ["machine learning", "supervised", "unsupervised"]
+  },
+  {
+    "subject": "Artificial Intelligence",
+    "title": "What is Artificial Intelligence?",
+    "description": "Introduction to AI concepts and applications.",
+    "image": "https://i.ytimg.com/vi/2ePf9rue1Ao/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=2ePf9rue1Ao",
+    "tags": ["AI", "introduction", "artificial intelligence"]
+  },
+  {
+    "subject": "Cybersecurity",
+    "title": "Basics of Cybersecurity",
+    "description": "Understanding common cyber threats.",
+    "image": "https://i.ytimg.com/vi/inWWhr5tnEA/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=inWWhr5tnEA",
+    "tags": ["cybersecurity", "threats", "basics"]
+  },
+  {
+    "subject": "Cloud Computing",
+    "title": "Introduction to Cloud Computing",
+    "description": "Cloud computing models and services explained.",
+    "image": "https://i.ytimg.com/vi/fqMOX6JJhGo/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=fqMOX6JJhGo",
+    "tags": ["cloud computing", "AWS", "azure"]
+  },
+  {
+    "subject": "Data Structures",
+    "title": "Stacks and Queues",
+    "description": "Learn about stacks and queues data structures.",
+    "image": "https://i.ytimg.com/vi/N-2KDg8cD9M/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=N-2KDg8cD9M",
+    "tags": ["stack", "queue", "data structure"]
+  },
+  {
+    "subject": "Algorithms",
+    "title": "Dynamic Programming Introduction",
+    "description": "Concepts and examples of DP.",
+    "image": "https://i.ytimg.com/vi/OQ5jsbhAv_M/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=OQ5jsbhAv_M",
+    "tags": ["dynamic programming", "algorithms"]
+  },
+  {
+    "subject": "Operating Systems",
+    "title": "Memory Management",
+    "description": "Understanding paging and segmentation.",
+    "image": "https://i.ytimg.com/vi/YUsYEwqXa6g/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=YUsYEwqXa6g",
+    "tags": ["memory management", "OS", "paging"]
+  },
+  {
+    "subject": "Computer Networks",
+    "title": "TCP/IP Protocol Suite",
+    "description": "Overview of TCP/IP protocols and functions.",
+    "image": "https://i.ytimg.com/vi/N5KkywyDzHg/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=N5KkywyDzHg",
+    "tags": ["tcp/ip", "network", "protocols"]
+  },
+  {
+    "subject": "DBMS",
+    "title": "Normalization in DBMS",
+    "description": "Learn about database normalization forms.",
+    "image": "https://i.ytimg.com/vi/rJ_sA7qLmx0/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=rJ_sA7qLmx0",
+    "tags": ["normalization", "dbms", "database"]
+  },
+  {
+    "subject": "Machine Learning",
+    "title": "Linear Regression Explained",
+    "description": "Basics of linear regression in ML.",
+    "image": "https://i.ytimg.com/vi/ZkjP5RJLQF4/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=ZkjP5RJLQF4",
+    "tags": ["linear regression", "machine learning"]
+  },
+  {
+    "subject": "Artificial Intelligence",
+    "title": "Neural Networks Introduction",
+    "description": "Basics of neural networks and deep learning.",
+    "image": "https://i.ytimg.com/vi/aircAruvnKk/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=aircAruvnKk",
+    "tags": ["neural networks", "deep learning", "AI"]
+  },
+  {
+    "subject": "Cybersecurity",
+    "title": "Ethical Hacking Basics",
+    "description": "Introduction to ethical hacking techniques.",
+    "image": "https://i.ytimg.com/vi/3h6pA6LOAUY/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=3h6pA6LOAUY",
+    "tags": ["ethical hacking", "cybersecurity"]
+  },
+  {
+    "subject": "Cloud Computing",
+    "title": "AWS for Beginners",
+    "description": "Start your cloud journey with AWS.",
+    "image": "https://i.ytimg.com/vi/ulprqHHWlng/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=ulprqHHWlng",
+    "tags": ["AWS", "cloud computing"]
+  },
+  {
+    "subject": "Data Structures",
+    "title": "Trees Data Structure",
+    "description": "Introduction to binary trees and traversals.",
+    "image": "https://i.ytimg.com/vi/9H1yM6YSBJo/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=9H1yM6YSBJo",
+    "tags": ["trees", "data structure"]
+  },
+  {
+    "subject": "Algorithms",
+    "title": "Greedy Algorithms Explained",
+    "description": "Concepts and examples of greedy algorithms.",
+    "image": "https://i.ytimg.com/vi/L6rGxnYwWnQ/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=L6rGxnYwWnQ",
+    "tags": ["greedy", "algorithms"]
+  },
+  {
+    "subject": "Operating Systems",
+    "title": "Deadlock in Operating Systems",
+    "description": "Causes and prevention of deadlocks.",
+    "image": "https://i.ytimg.com/vi/4h9y7U7-QJk/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=4h9y7U7-QJk",
+    "tags": ["deadlock", "os", "operating systems"]
+  },
+  {
+    "subject": "Computer Networks",
+    "title": "HTTP and HTTPS Protocols",
+    "description": "Understanding web communication protocols.",
+    "image": "https://i.ytimg.com/vi/Tmz2j-mrDqM/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=Tmz2j-mrDqM",
+    "tags": ["http", "https", "networking"]
+  },
+  {
+    "subject": "DBMS",
+    "title": "Transactions in DBMS",
+    "description": "ACID properties and transaction management.",
+    "image": "https://i.ytimg.com/vi/5RRr8Xy0jRs/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=5RRr8Xy0jRs",
+    "tags": ["transactions", "dbms", "database"]
+  },
+  {
+    "subject": "Machine Learning",
+    "title": "K-Means Clustering",
+    "description": "Unsupervised learning clustering technique.",
+    "image": "https://i.ytimg.com/vi/4b5d3muPQmA/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=4b5d3muPQmA",
+    "tags": ["clustering", "machine learning"]
+  },
+  {
+    "subject": "Artificial Intelligence",
+    "title": "Natural Language Processing",
+    "description": "Introduction to NLP concepts and applications.",
+    "image": "https://i.ytimg.com/vi/8rXD5-xhemo/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=8rXD5-xhemo",
+    "tags": ["NLP", "AI", "language processing"]
+  },
+  {
+    "subject": "Cybersecurity",
+    "title": "Network Security Basics",
+    "description": "Fundamentals of securing computer networks.",
+    "image": "https://i.ytimg.com/vi/5K1Zq9s_CBM/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=5K1Zq9s_CBM",
+    "tags": ["network security", "cybersecurity"]
+  },
+  {
+    "subject": "Cloud Computing",
+    "title": "Introduction to Azure Cloud",
+    "description": "Microsoft Azure fundamentals for beginners.",
+    "image": "https://i.ytimg.com/vi/1FDyiUEn8mM/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=1FDyiUEn8mM",
+    "tags": ["azure", "cloud computing"]
+  },
+  {
+    "subject": "Data Structures",
+    "title": "Graphs Theory Basics",
+    "description": "Introduction to graphs and traversal algorithms.",
+    "image": "https://i.ytimg.com/vi/09_LlHjoEiY/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=09_LlHjoEiY",
+    "tags": ["graphs", "data structure"]
+  },
+  {
+    "subject": "Algorithms",
+    "title": "Backtracking Algorithm",
+    "description": "Learn backtracking with examples.",
+    "image": "https://i.ytimg.com/vi/FWAdDXzx1Cc/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=FWAdDXzx1Cc",
+    "tags": ["backtracking", "algorithms"]
+  },
+  {
+    "subject": "Operating Systems",
+    "title": "File Systems in OS",
+    "description": "Understanding file system architecture.",
+    "image": "https://i.ytimg.com/vi/Q14XgUO2iyw/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=Q14XgUO2iyw",
+    "tags": ["file system", "os", "operating systems"]
+  },
+  {
+    "subject": "Computer Networks",
+    "title": "Wireless Networks Basics",
+    "description": "Overview of Wi-Fi and wireless protocols.",
+    "image": "https://i.ytimg.com/vi/BsB-l7r46RQ/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=BsB-l7r46RQ",
+    "tags": ["wireless", "networking"]
+  },
+  {
+    "subject": "DBMS",
+    "title": "Indexes in Databases",
+    "description": "How indexing improves DB performance.",
+    "image": "https://i.ytimg.com/vi/R7xB63nUAXY/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=R7xB63nUAXY",
+    "tags": ["indexing", "dbms"]
+  },
+  {
+    "subject": "Machine Learning",
+    "title": "Decision Trees Explained",
+    "description": "Learn about decision tree classifiers.",
+    "image": "https://i.ytimg.com/vi/7VeUPuFGJHk/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=7VeUPuFGJHk",
+    "tags": ["decision tree", "machine learning"]
+  },
+  {
+    "subject": "Artificial Intelligence",
+    "title": "Reinforcement Learning Basics",
+    "description": "Introduction to RL and its applications.",
+    "image": "https://i.ytimg.com/vi/2pWv7GOvuf0/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=2pWv7GOvuf0",
+    "tags": ["reinforcement learning", "AI"]
+  },
+  {
+    "subject": "Cybersecurity",
+    "title": "Cryptography Essentials",
+    "description": "Basics of encryption and cryptography.",
+    "image": "https://i.ytimg.com/vi/3QnD2c4Xovk/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=3QnD2c4Xovk",
+    "tags": ["cryptography", "security"]
+  },
+  {
+    "subject": "Cloud Computing",
+    "title": "Docker for Beginners",
+    "description": "Containerization basics with Docker.",
+    "image": "https://i.ytimg.com/vi/fqMOX6JJhGo/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=fqMOX6JJhGo",
+    "tags": ["docker", "cloud computing"]
+  },
+  {
+    "subject": "Data Structures",
+    "title": "Heap Data Structure",
+    "description": "Understanding heaps and priority queues.",
+    "image": "https://i.ytimg.com/vi/t0Cq6tVNRBA/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=t0Cq6tVNRBA",
+    "tags": ["heap", "priority queue", "data structures"]
+  },
+  {
+    "subject": "Algorithms",
+    "title": "Graph Algorithms - BFS and DFS",
+    "description": "Breadth-first and Depth-first search explained.",
+    "image": "https://i.ytimg.com/vi/pcKY4hjDrxk/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=pcKY4hjDrxk",
+    "tags": ["graph", "bfs", "dfs"]
+  },
+  {
+    "subject": "Operating Systems",
+    "title": "Synchronization in OS",
+    "description": "Mutex, semaphore and monitors explained.",
+    "image": "https://i.ytimg.com/vi/0cVthCXXarI/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=0cVthCXXarI",
+    "tags": ["synchronization", "operating systems"]
+  },
+  {
+    "subject": "Computer Networks",
+    "title": "Subnetting Tutorial",
+    "description": "Learn how to subnet IP addresses.",
+    "image": "https://i.ytimg.com/vi/I7XZ1NSddwY/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=I7XZ1NSddwY",
+    "tags": ["subnetting", "networking"]
+  },
+  {
+    "subject": "DBMS",
+    "title": "SQL Joins Explained",
+    "description": "Inner, left, right and full joins.",
+    "image": "https://i.ytimg.com/vi/3Jc5MyGp7f4/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=3Jc5MyGp7f4",
+    "tags": ["sql", "joins", "dbms"]
+  },
+  {
+    "subject": "Machine Learning",
+    "title": "Support Vector Machines",
+    "description": "Understanding SVM classifiers.",
+    "image": "https://i.ytimg.com/vi/efR1C6CvhmE/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=efR1C6CvhmE",
+    "tags": ["svm", "machine learning"]
+  },
+  {
+    "subject": "Artificial Intelligence",
+    "title": "AI Ethics and Future",
+    "description": "Discussion on ethics in AI development.",
+    "image": "https://i.ytimg.com/vi/3tqNLq0hRtg/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=3tqNLq0hRtg",
+    "tags": ["AI", "ethics"]
+  },
+  {
+    "subject": "Cybersecurity",
+    "title": "Phishing Attacks Explained",
+    "description": "How phishing attacks work and prevention.",
+    "image": "https://i.ytimg.com/vi/U7Yx3kGcPYA/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=U7Yx3kGcPYA",
+    "tags": ["phishing", "cybersecurity"]
+  },
+  {
+    "subject": "Cloud Computing",
+    "title": "Kubernetes Basics",
+    "description": "Introduction to Kubernetes and container orchestration.",
+    "image": "https://i.ytimg.com/vi/X48VuDVv0do/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=X48VuDVv0do",
+    "tags": ["kubernetes", "cloud computing"]
+  },
+
+  {
+    "subject": "Data Structures",
+    "title": "Data Structures Easy to Advanced Course - Full Tutorial from a Google Engineer",
+    "description": "Learn and master the most common data structures in this full course from Google engineer William Fiset.",
+    "image": "https://i.ytimg.com/vi/RBSGKlAvoiM/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=RBSGKlAvoiM",
+    "tags": ["data structures", "arrays", "linked lists", "trees", "hash tables"]
+  },
+  {
+    "subject": "Data Structures",
+    "title": "Data Structures and Algorithms for Beginners",
+    "description": "Ace your coding interview by learning all about Big O, arrays, and linked lists in this beginner-friendly tutorial.",
+    "image": "https://i.ytimg.com/vi/BBpAmxU_NQo/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=BBpAmxU_NQo",
+    "tags": ["data structures", "algorithms", "Big O", "arrays", "linked lists"]
+  },
+  {
+    "subject": "Algorithms",
+    "title": "Algorithms and Data Structures Tutorial - Full Course for Beginners",
+    "description": "In this course, you will learn about algorithms and data structures, two of the fundamental topics in computer science.",
+    "image": "https://i.ytimg.com/vi/8hly31xKli0/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=8hly31xKli0",
+    "tags": ["algorithms", "data structures", "sorting", "searching", "recursion"]
+  },
+  {
+    "subject": "Algorithms",
+    "title": "Algorithms full tutorial",
+    "description": "Welcome to Algorithms, Part I! You're joining thousands of learners currently enrolled in the course.",
+    "image": "https://i.ytimg.com/vi/rGaB3VfpIIk/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=rGaB3VfpIIk",
+    "tags": ["algorithms", "graph theory", "sorting", "searching", "complexity"]
+  },
+  {
+    "subject": "Operating Systems",
+    "title": "Operating Systems Course for Beginners",
+    "description": "Learn fundamental and advanced operating system concepts in this comprehensive course.",
+    "image": "https://i.ytimg.com/vi/yK1uBHPdp30/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=yK1uBHPdp30",
+    "tags": ["operating systems", "processes", "threads", "memory management", "file systems"]
+  },
+  {
+    "subject": "Operating Systems",
+    "title": "Introduction to Operating System | Full Course for Beginners",
+    "description": "Listen to our full course on operating systems for beginners, covering key concepts and components.",
+    "image": "https://i.ytimg.com/vi/dOiA2nNJpc0/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=dOiA2nNJpc0",
+    "tags": ["operating systems", "introduction", "system calls", "scheduling", "virtual memory"]
+  },
+  {
+    "subject": "Computer Networks",
+    "title": "Computer Networking Full Course - OSI Model Deep Dive with Real Examples",
+    "description": "This video provides a deep dive into the OSI model with real-world examples to understand computer networking fundamentals.",
+    "image": "https://i.ytimg.com/vi/IPvYjXCsTg8/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=IPvYjXCsTg8",
+    "tags": ["computer networks", "OSI model", "networking", "protocols", "TCP/IP"]
+  },
+  {
+    "subject": "Computer Networks",
+    "title": "Networking Full Course For Beginners | Simplilearn",
+    "description": "This comprehensive course covers networking fundamentals, including network types, protocols, and architectures.",
+    "image": "https://i.ytimg.com/vi/fErDcUtd8fA/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=fErDcUtd8fA",
+    "tags": ["networking", "computer networks", "network protocols", "LAN", "WAN"]
+  },
+  {
+    "subject": "DBMS",
+    "title": "Learn Database Management System from Scratch | What is DBMS",
+    "description": "Shashank Mishra walks you through the A-Z of DBMS in this detailed video tutorial.",
+    "image": "https://i.ytimg.com/vi/c5HAwKX-suM/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=c5HAwKX-suM",
+    "tags": ["DBMS", "databases", "SQL", "relational databases", "data modeling"]
+  },
+  {
+    "subject": "DBMS",
+    "title": "Introduction to Database Management Systems",
+    "description": "This video provides an introduction to DBMS, covering key concepts and functionalities.",
+    "image": "https://i.ytimg.com/vi/6Iu45VZGQDk/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=6Iu45VZGQDk",
+    "tags": ["DBMS", "database systems", "SQL", "data storage", "query processing"]
+  },
+  {
+    "subject": "Machine Learning",
+    "title": "Machine Learning for Everybody – Full Course",
+    "description": "Learn Machine Learning in a way that is accessible to absolute beginners.",
+    "image": "https://i.ytimg.com/vi/i_LwzRVP7bg/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=i_LwzRVP7bg",
+    "tags": ["machine learning", "supervised learning", "unsupervised learning", "AI", "data science"]
+  },
+  {
+    "subject": "Machine Learning",
+    "title": "Machine Learning with Python and Scikit-Learn – Full Course",
+    "description": "This course teaches machine learning using Python and Scikit-Learn, covering various algorithms and techniques.",
+    "image": "https://i.ytimg.com/vi/hDKCxebp88A/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=hDKCxebp88A",
+    "tags": ["machine learning", "Python", "Scikit-Learn", "data analysis", "modeling"]
+  },
+  {
+    "subject": "Artificial Intelligence",
+    "title": "Google's AI Course for Beginners (in 10 minutes)!",
+    "description": "A quick overview of Google's AI course for beginners, introducing fundamental concepts.",
+    "image": "https://i.ytimg.com/vi/Yq0QkCxoTHM/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=Yq0QkCxoTHM",
+    "tags": ["artificial intelligence", "AI basics", "machine learning", "Google AI", "introduction"]
+  },
+  {
+    "subject": "Artificial Intelligence",
+    "title": "Artificial Intelligence Full Course 2025 | Simplilearn",
+    "description": "This full course covers artificial intelligence concepts and applications for beginners.",
+    "image": "https://i.ytimg.com/vi/FkqINm-l3q0/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=FkqINm-l3q0",
+    "tags": ["artificial intelligence", "AI", "machine learning", "deep learning", "neural networks"]
+  },
+  {
+    "subject": "Cybersecurity",
+    "title": "Cyber Security Training for Beginners | Edureka",
+    "description": "This Edureka playlist will help you learn Cyber Security from scratch.",
+    "image": "https://i.ytimg.com/vi/n8_Rje8ztkE/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=n8_Rje8ztkE",
+    "tags": ["cybersecurity", "network security", "ethical hacking", "information security", "security fundamentals"]
+  },
+  {
+    "subject": "Cybersecurity",
+    "title": "Cyber Security Full Course 2025 | Cybersecurity | Simplilearn",
+    "description": "A comprehensive cybersecurity tutorial for beginners, covering essential concepts and practices.",
+    "image": "https://i.ytimg.com/vi/scRK769quU0/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=scRK769quU0",
+    "tags": ["cybersecurity", "information security", "network security", "cyber attacks", "security protocols"]
+  },
+  {
+    "subject": "Web Development",
+    "title": "Responsive HTML/CSS Tutorial",
+    "description": "Make your first responsive site with this HTML and CSS tutorial.",
+    "image": "https://i.ytimg.com/vi/srvUrASNj0s/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=srvUrASNj0s",
+    "tags": ["html", "css", "responsive", "frontend", "web design"]
+  },
+  {
+    "subject": "Web Development",
+    "title": "HTML Full Course - Build a Website Tutorial",
+    "description": "Learn HTML from scratch and build your first website in this comprehensive tutorial.",
+    "image": "https://i.ytimg.com/vi/pQN-pnXPaVg/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=pQN-pnXPaVg",
+    "tags": ["html", "web development", "frontend", "website", "tutorial"]
+  },
+  {
+    "subject": "Cloud Computing",
+    "title": "Cloud Computing Tutorial For Beginners | Edureka",
+    "description": "An 11-hour comprehensive course covering the basics of cloud computing.",
+    "image": "https://i.ytimg.com/vi/2LaAJq1lB1Q/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=2LaAJq1lB1Q",
+    "tags": ["cloud computing", "edureka", "beginners", "tutorial"]
+  },
+  {
+    "subject": "Cloud Computing",
+    "title": "Cloud Computing Full Course 2025 | Simplilearn",
+    "description": "A complete cloud computing course updated for 2025.",
+    "image": "https://i.ytimg.com/vi/q3m1AB9ECXo/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=q3m1AB9ECXo",
+    "tags": ["cloud computing", "simplilearn", "full course", "2025"]
+  },
+  {
+    "subject": "Cloud Computing",
+    "title": "AWS Full Course 2025 | AWS Cloud Computing Tutorial for Beginners",
+    "description": "A comprehensive AWS tutorial for beginners.",
+    "image": "https://i.ytimg.com/vi/_1pz5ZPSnrM/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=_1pz5ZPSnrM",
+    "tags": ["AWS", "cloud computing", "beginners", "tutorial"]
+  },
+  {
+    "subject": "Cloud Computing",
+    "title": "Cloud Computing Simply Explained - The Ultimate Guide",
+    "description": "An easy-to-understand guide to cloud computing concepts.",
+    "image": "https://i.ytimg.com/vi/FxTEOuHF6bA/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=FxTEOuHF6bA",
+    "tags": ["cloud computing", "guide", "explained", "ultimate"]
+  },
+  {
+    "subject": "Cloud Computing",
+    "title": "AWS Cloud Engineer Full Course for Beginners",
+    "description": "A full course designed for aspiring AWS Cloud Engineers.",
+    "image": "https://i.ytimg.com/vi/j_StCjwpfmk/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=j_StCjwpfmk",
+    "tags": ["AWS", "cloud engineer", "beginners", "full course"]
+  },
+  {
+    "subject": "Cloud Computing",
+    "title": "Cloud Computing Full Course In 9 Hours [2025] | Edureka",
+    "description": "A 9-hour in-depth cloud computing course by Edureka.",
+    "image": "https://i.ytimg.com/vi/6b7m-gpwgsQ/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=6b7m-gpwgsQ",
+    "tags": ["cloud computing", "edureka", "full course", "2025"]
+  },
+  {
+    "subject": "Cloud Computing",
+    "title": "Cloud Computing Tutorial For Beginners | Simplilearn",
+    "description": "An introductory course on cloud computing by Simplilearn.",
+    "image": "https://i.ytimg.com/vi/Eg11Y_6MeMU/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=Eg11Y_6MeMU",
+    "tags": ["cloud computing", "simplilearn", "beginners", "tutorial"]
+  },
+  {
+    "subject": "Cloud Computing",
+    "title": "Cloud Computing In 6 Minutes | Simplilearn",
+    "description": "A quick overview of cloud computing concepts.",
+    "image": "https://i.ytimg.com/vi/M988_fsOSWo/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=M988_fsOSWo",
+    "tags": ["cloud computing", "simplilearn", "overview", "6 minutes"]
+  },
+  {
+    "subject": "Cloud Computing",
+    "title": "Cloud Computing For Beginners | Simplilearn",
+    "description": "A beginner-friendly introduction to cloud computing.",
+    "image": "https://i.ytimg.com/vi/RWgW-CgdIk0/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=RWgW-CgdIk0",
+    "tags": ["cloud computing", "simplilearn", "beginners", "introduction"]
+  },
+  {
+    "subject": "Cloud Computing",
+    "title": "Cloud Computing Full Course | Simplilearn",
+    "description": "A full course on cloud computing covering various topics.",
+    "image": "https://i.ytimg.com/vi/QVD_72LyCD0/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=QVD_72LyCD0",
+    "tags": ["cloud computing", "simplilearn", "full course", "tutorial"]
+  },
+  {
+    "subject": "Machine Learning",
+    "title": "Machine Learning with Python and Scikit-Learn – Full Course",
+    "description": "This course teaches machine learning using Python and Scikit-Learn, covering various algorithms and techniques.",
+    "image": "https://i.ytimg.com/vi/hDKCxebp88A/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=hDKCxebp88A",
+    "tags": ["machine learning", "Python", "Scikit-Learn", "data analysis", "modeling"]
+  },
+  {
+    "subject": "Machine Learning",
+    "title": "Machine Learning for Everybody – Full Course",
+    "description": "Learn Machine Learning in a way that is accessible to absolute beginners, covering the basics and practical applications.",
+    "image": "https://i.ytimg.com/vi/i_LwzRVP7bg/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=i_LwzRVP7bg",
+    "tags": ["machine learning", "beginner", "data science", "Python", "tutorial"]
+  },
+  {
+    "subject": "Machine Learning",
+    "title": "Stanford CS229: Machine Learning Full Course",
+    "description": "A comprehensive introduction to machine learning taught by Andrew Ng, covering various algorithms and techniques.",
+    "image": "https://i.ytimg.com/vi/8hly31xKli0/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=8hly31xKli0",
+    "tags": ["machine learning", "Stanford", "Andrew Ng", "CS229", "course"]
+  },
+  {
+    "subject": "Machine Learning",
+    "title": "Caltech CS156: Machine Learning Course",
+    "description": "An introductory course by Caltech Professor Yaser Abu-Mostafa on machine learning that covers basic theory and algorithms.",
+    "image": "https://i.ytimg.com/vi/lz0YFup8ynk/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=lz0YFup8ynk",
+    "tags": ["machine learning", "Caltech", "Yaser Abu-Mostafa", "CS156", "course"]
+  },
+  {
+    "subject": "Machine Learning",
+    "title": "Elements of AI – Introduction to Artificial Intelligence",
+    "description": "A free online course by the University of Helsinki that introduces the basics of artificial intelligence.",
+    "image": "https://i.ytimg.com/vi/6mSx_KJxcHI/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=6mSx_KJxcHI",
+    "tags": ["AI", "beginner", "online course", "university", "education"]
+  },
+  {
+    "subject": "Artificial Intelligence",
+    "title": "Google's AI Course for Beginners (in 10 minutes)!",
+    "description": "A quick overview of Google's AI course for beginners, introducing fundamental concepts.",
+    "image": "https://i.ytimg.com/vi/Yq0QkCxoTHM/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=Yq0QkCxoTHM",
+    "tags": ["artificial intelligence", "AI basics", "machine learning", "Google AI", "introduction"]
+  },
+  {
+    "subject": "Artificial Intelligence",
+    "title": "Artificial Intelligence Full Course 2025 | Simplilearn",
+    "description": "A comprehensive AI tutorial for beginners, covering various aspects of artificial intelligence.",
+    "image": "https://i.ytimg.com/vi/FkqINm-l3q0/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=FkqINm-l3q0",
+    "tags": ["artificial intelligence", "AI tutorial", "beginners", "Simplilearn", "course"]
+  },
+  {
+    "subject": "Artificial Intelligence",
+    "title": "Harvard CS50's Artificial Intelligence with Python",
+    "description": "Harvard's CS50 course that explores the concepts and algorithms at the foundation of modern AI.",
+    "image": "https://i.ytimg.com/vi/5NgNicANyqM/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=5NgNicANyqM",
+    "tags": ["AI", "Python", "Harvard", "CS50", "course"]
+  },
+  {
+    "subject": "Artificial Intelligence",
+    "title": "Artificial Intelligence Tutorial for Beginners | Edureka",
+    "description": "An AI tutorial for beginners that covers the basics of artificial intelligence and its applications.",
+    "image": "https://i.ytimg.com/vi/JMUxmLyrhSk/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=JMUxmLyrhSk",
+    "tags": ["artificial intelligence", "tutorial", "beginners", "Edureka", "course"]
+  },
+  {
+    "subject": "Artificial Intelligence",
+    "title": "Elements of AI – Building AI",
+    "description": "The second part of the Elements of AI course by the University of Helsinki, focusing on building AI systems.",
+    "image": "https://i.ytimg.com/vi/6mSx_KJxcHI/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=6mSx_KJxcHI",
+    "tags": ["AI", "building AI", "online course", "university", "education"]
+  },
+  {
+    "subject": "Artificial Intelligence",
+    "title": "Deep Learning Specialization by Andrew Ng",
+    "description": "A series of courses by Andrew Ng that delve into deep learning techniques and applications.",
+    "image": "https://i.ytimg.com/vi/8hly31xKli0/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=8hly31xKli0",
+    "tags": ["deep learning", "Andrew Ng", "specialization", "course", "AI"]
+  },
+  {
+    "subject": "Artificial Intelligence",
+    "title": "Fast.ai – Practical Deep Learning for Coders",
+    "description": "A practical deep learning course by Fast.ai that teaches deep learning techniques using Python.",
+    "image": "https://i.ytimg.com/vi/8hly31xKli0/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=8hly31xKli0",
+    "tags": ["deep learning", "Fast.ai", "Python", "course", "AI"]
+  },
+  {
+    "subject": "Artificial Intelligence",
+    "title": "Elements of AI – Ethics and Societal Impact",
+    "description": "A module from the Elements of AI course that discusses the ethical considerations and societal impact of AI.",
+    "image": "https://i.ytimg.com/vi/6mSx_KJxcHI/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=6mSx_KJxcHI",
+    "tags": ["AI", "ethics", "societal impact", "online course", "education"]
+  },
+  {
+    "subject": "Artificial Intelligence",
+    "title": "AI for Everyone by Andrew Ng",
+    "description": "A course by Andrew Ng that introduces AI concepts and how they can be applied in various industries.",
+    "image": "https://i.ytimg.com/vi/8hly31xKli0/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=8hly31xKli0",
+    "tags": ["AI", "Andrew Ng", "course", "introduction", "education"]
+  },
+  {
+    "subject": "Artificial Intelligence",
+    "title": "MIT Deep Learning for Computer Vision",
+    "description": "An MIT course that explores deep learning techniques for computer vision applications.",
+    "image": "https://i.ytimg.com/vi/8hly31xKli0/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=8hly31xKli0",
+    "tags": ["deep learning", "MIT", "computer vision", "course", "AI"]
+  },
+  {
+    "subject": "Artificial Intelligence",
+    "title": "Elements of AI – Problem Solving with AI",
+    "description": "A module from the Elements of AI course that focuses on problem-solving techniques using AI.",
+    "image": "https://i.ytimg.com/vi/6mSx_KJxcHI/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=6mSx_KJxcHI",
+    "tags": ["AI", "problem solving", "online course", "education", "techniques"]
+  },
+  {
+    "subject": "Artificial Intelligence",
+    "title": "AI in Practice – Real-World Applications",
+    "description": "A video that showcases real-world applications of AI in various industries.",
+    "image": "https://i.ytimg.com/vi/8hly31xKli0/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=8hly31xKli0",
+    "tags": ["AI", "real-world applications", "industry", "technology", "case studies"]
+  },
+  {
+    "subject": "Artificial Intelligence",
+    "title": "AI and Ethics – A Discussion",
+    "description": "A discussion on the ethical implications of AI technologies and their impact on society.",
+    "image": "https://i.ytimg.com/vi/8hly31xKli0/maxresdefault.jpg",
+    "link": "https://www.youtube.com/watch?v=8hly31xKli0",
+    "tags": ["AI", "ethics", "discussion", "society", "technology"]
+  }
+]
+  
+ 

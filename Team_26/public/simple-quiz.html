@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Quiz Test</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            margin: 0; 
+            padding: 20px; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container { 
+            max-width: 800px; 
+            margin: 0 auto; 
+            background: white; 
+            padding: 30px; 
+            border-radius: 15px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .step { 
+            margin: 20px 0; 
+            padding: 20px; 
+            border: 2px solid #e0e0e0; 
+            border-radius: 10px; 
+            background: #f9f9f9;
+        }
+        .success { background: #d4edda; border-color: #28a745; }
+        .error { background: #f8d7da; border-color: #dc3545; }
+        .info { background: #d1ecf1; border-color: #17a2b8; }
+        button { 
+            padding: 12px 24px; 
+            margin: 8px; 
+            background: #007bff; 
+            color: white; 
+            border: none; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-size: 16px;
+            font-weight: bold;
+        }
+        button:hover { background: #0056b3; }
+        button:disabled { background: #6c757d; cursor: not-allowed; }
+        .log { 
+            background: #f8f9fa; 
+            padding: 15px; 
+            margin: 15px 0; 
+            white-space: pre-wrap; 
+            font-family: monospace; 
+            border-radius: 8px; 
+            border: 1px solid #dee2e6;
+        }
+        .question { 
+            margin: 15px 0; 
+            padding: 20px; 
+            background: white; 
+            border-radius: 10px; 
+            border: 2px solid #e9ecef;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .options { margin: 10px 0; }
+        .option { 
+            margin: 8px 0; 
+            padding: 12px; 
+            background: #f8f9fa; 
+            border-radius: 8px; 
+            border: 1px solid #dee2e6;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .option:hover { background: #e9ecef; }
+        .option.selected { background: #007bff; color: white; }
+        .header { text-align: center; margin-bottom: 30px; }
+        .header h1 { color: #333; margin-bottom: 10px; }
+        .header p { color: #666; font-size: 18px; }
+        .dashboard-btn { 
+            background: #28a745; 
+            font-size: 18px; 
+            padding: 15px 30px;
+            display: block;
+            margin: 20px auto;
+        }
+        .dashboard-btn:hover { background: #218838; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧪 Simple Quiz Test</h1>
+            <p>Test the complete quiz flow with high-quality questions and dashboard redirect</p>
+        </div>
+        
+        <div class="step">
+            <h3>Step 1: Generate High-Quality Quiz</h3>
+            <button onclick="generateQuiz()" id="generateBtn">Generate Quiz</button>
+            <div id="quizLog" class="log">Click "Generate Quiz" to start...</div>
+        </div>
+        
+        <div class="step" id="questionsStep" style="display: none;">
+            <h3>Step 2: Answer Questions</h3>
+            <div id="questionsDisplay"></div>
+            <button onclick="submitQuiz()" id="submitBtn" disabled>Submit Quiz</button>
+        </div>
+        
+        <div class="step" id="submitStep" style="display: none;">
+            <h3>Step 3: Quiz Submitted</h3>
+            <div id="submitLog" class="log">Submitting quiz...</div>
+            <button onclick="goToDashboard()" id="dashboardBtn" class="dashboard-btn" style="display: none;">Go to Analytics Dashboard</button>
+        </div>
+    </div>
+
+    <script>
+        let currentQuiz = null;
+        let currentAttempt = null;
+        let selectedAnswers = {};
+        
+        async function generateQuiz() {
+            const log = document.getElementById('quizLog');
+            const generateBtn = document.getElementById('generateBtn');
+            
+            log.textContent = '🔄 Generating high-quality quiz...';
+            log.className = 'log info';
+            generateBtn.disabled = true;
+            generateBtn.textContent = 'Generating...';
+            
+            try {
+                const response = await fetch('/api/quiz/cold-start/Artificial%20Intelligence?totalQuestions=2');
+                const result = await response.json();
+                
+                if (result.success) {
+                    currentQuiz = result.quiz;
+                    log.textContent = `✅ Quiz Generated Successfully!\n\nQuiz ID: ${currentQuiz._id}\nQuestions: ${currentQuiz.questions.length}\nSource: ${currentQuiz.questions[0].source}\n\nQuestions are high-quality educational content!`;
+                    log.className = 'log success';
+                    
+                    // Display questions
+                    displayQuestions();
+                    
+                    // Show questions step
+                    document.getElementById('questionsStep').style.display = 'block';
+                    
+                    generateBtn.textContent = 'Quiz Generated!';
+                } else {
+                    log.textContent = `❌ Error: ${result.error}`;
+                    log.className = 'log error';
+                    generateBtn.disabled = false;
+                    generateBtn.textContent = 'Generate Quiz';
+                }
+            } catch (error) {
+                log.textContent = `❌ Error: ${error.message}`;
+                log.className = 'log error';
+                generateBtn.disabled = false;
+                generateBtn.textContent = 'Generate Quiz';
+            }
+        }
+        
+        function displayQuestions() {
+            const container = document.getElementById('questionsDisplay');
+            container.innerHTML = '';
+            
+            currentQuiz.questions.forEach((q, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'question';
+                questionDiv.innerHTML = `
+                    <h4>Question ${index + 1}: ${q.question}</h4>
+                    <div class="options">
+                        ${q.options.map((option, i) => `
+                            <div class="option" onclick="selectAnswer(${index}, ${i}, '${option.replace(/'/g, "\\'")}')" id="q${index}_${i}">
+                                ${option}
+                            </div>
+                        `).join('')}
+                    </div>
+                    <p><strong>Source:</strong> ${q.source} | <strong>Difficulty:</strong> ${q.difficulty}</p>
+                `;
+                container.appendChild(questionDiv);
+            });
+        }
+        
+        function selectAnswer(questionIndex, optionIndex, answer) {
+            // Remove previous selection
+            const questionDiv = document.querySelector(`#q${questionIndex}_0`).parentElement.parentElement;
+            questionDiv.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
+            
+            // Add selection to clicked option
+            document.getElementById(`q${questionIndex}_${optionIndex}`).classList.add('selected');
+            
+            // Store answer
+            selectedAnswers[questionIndex] = answer;
+            
+            // Enable submit button if all questions answered
+            const totalQuestions = currentQuiz.questions.length;
+            const answeredQuestions = Object.keys(selectedAnswers).length;
+            
+            if (answeredQuestions === totalQuestions) {
+                document.getElementById('submitBtn').disabled = false;
+                document.getElementById('submitBtn').textContent = 'Submit Quiz';
+            }
+        }
+        
+        async function submitQuiz() {
+            const log = document.getElementById('submitLog');
+            const submitBtn = document.getElementById('submitBtn');
+            const submitStep = document.getElementById('submitStep');
+            
+            log.textContent = '🔄 Submitting quiz...';
+            log.className = 'log info';
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+            submitStep.style.display = 'block';
+            
+            if (!currentQuiz) {
+                log.textContent = '❌ No quiz available. Generate quiz first.';
+                log.className = 'log error';
+                return;
+            }
+            
+            try {
+                // Prepare answers
+                const answers = [];
+                currentQuiz.questions.forEach((q, index) => {
+                    const userAnswer = selectedAnswers[index] || q.options[0]; // Default to first option if not selected
+                    answers.push({
+                        questionId: q._id,
+                        userAnswer: userAnswer,
+                        isCorrect: userAnswer === q.correctAnswer,
+                        timeSpent: 10
+                    });
+                });
+                
+                const response = await fetch('/api/quiz/submit-test', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        quizId: currentQuiz._id,
+                        answers: answers
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    currentAttempt = result.attempt;
+                    log.textContent = `✅ Quiz Submitted Successfully!\n\nAttempt ID: ${result.attempt._id}\nScore: ${result.attempt.score}%\nStrengths: ${result.attempt.analysis.strengths.join(', ')}\nWeaknesses: ${result.attempt.analysis.weaknesses.join(', ')}\n\nDashboard URL: /enhanced-dashboard?attempt=${result.attempt._id}`;
+                    log.className = 'log success';
+                    
+                    // Show dashboard button
+                    document.getElementById('dashboardBtn').style.display = 'block';
+                    submitBtn.textContent = 'Quiz Submitted!';
+                } else {
+                    log.textContent = `❌ Error: ${result.error}`;
+                    log.className = 'log error';
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Submit Quiz';
+                }
+            } catch (error) {
+                log.textContent = `❌ Error: ${error.message}`;
+                log.className = 'log error';
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Quiz';
+            }
+        }
+        
+        function goToDashboard() {
+            if (currentAttempt) {
+                const dashboardUrl = `/enhanced-dashboard?attempt=${currentAttempt._id}`;
+                console.log('Redirecting to dashboard:', dashboardUrl);
+                
+                // Test if dashboard is accessible first
+                fetch(dashboardUrl)
+                    .then(response => {
+                        if (response.ok) {
+                            console.log('Dashboard is accessible, redirecting...');
+                            window.location.href = dashboardUrl;
+                        } else {
+                            alert('Dashboard not accessible. Status: ' + response.status);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error accessing dashboard:', error);
+                        alert('Error accessing dashboard: ' + error.message);
+                    });
+            } else {
+                alert('No attempt data available. Please submit quiz first.');
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+Flask
+flask-cors
+gunicorn
+joblib
+scikit-learn
+numpy
+pandas
+twilio
+pickle-mixin
+python-dotenv
+requests

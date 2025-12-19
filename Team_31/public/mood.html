@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Mindful AI – Mood Tracker</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Fonts & Icons -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+
+  <!-- Global Header Styles (your shared header) -->
+  <style>
+    /* -------------------------------------------
+       Header CSS - Shared Across All Pages
+    -------------------------------------------- */
+
+    :root {
+      --navy: #05445e;
+      --blue: #189ab4;
+      --mint: #75e6da;
+      --white: #ffffff;
+      --bg-soft: #f4fbfd;
+      --gray-100: #f3f4f6;
+      --gray-300: #d1d5db;
+      --gray-600: #4b5563;
+      --gray-800: #1f2937;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top left, #e0f7ff 0, #ffffff 45%) fixed;
+      color: var(--navy);
+    }
+
+    header {
+      background: var(--white);
+      backdrop-filter: blur(4px);
+      box-shadow: 0 6px 18px rgba(5, 68, 94, 0.06);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .container.header-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      padding: 0.55rem 1rem;
+      min-height: 56px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex: 0 0 auto;
+      margin-right: 24px; /* spacing between logo & first nav item */
+    }
+
+    .logo-img {
+      height: 38px;
+      width: auto;
+      display: block;
+    }
+
+    .logo-text {
+      font-weight: 700;
+      color: var(--navy);
+      font-size: 1.05rem;
+      letter-spacing: 0.02em;
+    }
+
+    nav {
+      flex: 1 1 auto;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 0.75rem;
+    }
+
+    .nav-list {
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+      align-items: center;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .nav-list li { margin: 0; }
+
+    .nav-pill {
+      display: inline-block;
+      padding: 7px 11px;
+      border-radius: 999px;
+      background: transparent;
+      color: var(--navy);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: color 0.16s ease, background 0.16s ease, transform 0.12s ease;
+    }
+
+    .nav-pill:hover {
+      color: var(--blue);
+      background: rgba(24, 154, 180, 0.05);
+      transform: translateY(-1px);
+    }
+
+    .nav-pill.active {
+      background: var(--blue);
+      color: var(--white);
+    }
+
+    .nav-pill:focus {
+      outline: 3px solid rgba(24, 154, 180, 0.18);
+      outline-offset: 3px;
+    }
+
+    .menu-toggle {
+      display: none;
+      width: 36px;
+      height: 36px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 6px;
+      cursor: pointer;
+      background: transparent;
+      border: none;
+      padding: 0;
+    }
+
+    .menu-toggle span {
+      display: block;
+      width: 18px;
+      height: 2px;
+      background: var(--navy);
+      margin: 3px 0;
+      border-radius: 2px;
+      transition: transform 0.22s ease, opacity 0.18s ease;
+    }
+
+    .menu-toggle.active span:nth-child(1) {
+      transform: rotate(45deg) translate(3px, 3px);
+    }
+    .menu-toggle.active span:nth-child(2) {
+      opacity: 0;
+    }
+    .menu-toggle.active span:nth-child(3) {
+      transform: rotate(-45deg) translate(3px, -3px);
+    }
+
+    @media (max-width: 768px) {
+      .logo-text { display: none; }
+
+      nav {
+        justify-content: flex-end;
+      }
+
+      .menu-toggle {
+        display: flex;
+      }
+
+      .nav-list {
+        position: fixed;
+        top: 56px;
+        right: -100%;
+        width: 100%;
+        height: calc(100vh - 56px);
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.98),
+          rgba(242, 251, 251, 0.98)
+        );
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 1.25rem;
+        transition: right 0.28s ease;
+        backdrop-filter: blur(8px);
+        z-index: 999;
+        padding: 1.5rem 0;
+      }
+
+      .nav-list.active { right: 0; }
+
+      .nav-pill {
+        display: block;
+        width: 84%;
+        text-align: center;
+        padding: 12px 18px;
+        border-radius: 999px;
+        background: var(--white);
+        box-shadow: 0 8px 20px rgba(5, 68, 94, 0.04);
+        font-size: 1.05rem;
+      }
+
+      .container.header-content {
+        padding: 0.5rem 0.9rem;
+        min-height: 52px;
+      }
+    }
+
+    /* -------------------------------------------
+       Mood Page Layout & Components
+    -------------------------------------------- */
+
+    .page-shell {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1.75rem 1rem 2.5rem;
+    }
+
+    .page-heading {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .page-heading h1 {
+      margin: 0;
+      font-size: clamp(1.7rem, 2.1vw, 2.1rem);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .page-heading h1 span.emoji {
+      font-size: 1.8rem;
+    }
+
+    .page-heading p {
+      margin: 0;
+      color: var(--gray-600);
+      font-size: 0.95rem;
+    }
+
+    .mood-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.3fr);
+      gap: 1.5rem;
+    }
+
+    @media (max-width: 900px) {
+      .mood-layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 18px;
+      padding: 1.25rem 1.4rem;
+      box-shadow: 0 10px 35px rgba(5, 68, 94, 0.08);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top right, rgba(117, 230, 218, 0.22), transparent 55%);
+      opacity: 0.7;
+      pointer-events: none;
+    }
+
+    .card-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    .card-title {
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin-bottom: 0.7rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .card-title span.icon {
+      font-size: 1.2rem;
+    }
+
+    .card-subtitle {
+      font-size: 0.85rem;
+      color: var(--gray-600);
+      margin-bottom: 1rem;
+    }
+
+    /* Mood options */
+
+    .mood-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-bottom: 0.9rem;
+    }
+
+    .mood-option {
+      flex: 1 1 80px;
+      min-width: 80px;
+      border-radius: 14px;
+      border: 1px solid rgba(5, 68, 94, 0.12);
+      background: var(--bg-soft);
+      padding: 0.55rem 0.4rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.2rem;
+      cursor: pointer;
+      transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease, background 0.16s ease;
+    }
+
+    .mood-option .mood-emoji {
+      font-size: 1.4rem;
+    }
+
+    .mood-option .mood-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--navy);
+    }
+
+    .mood-option .mood-score {
+      font-size: 0.7rem;
+      color: var(--gray-600);
+    }
+
+    .mood-option:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 18px rgba(5, 68, 94, 0.12);
+      border-color: rgba(24, 154, 180, 0.6);
+      background: #f0fbff;
+    }
+
+    .mood-option.selected {
+      border-color: var(--blue);
+      background: rgba(24, 154, 180, 0.08);
+      box-shadow: 0 10px 24px rgba(24, 154, 180, 0.25);
+    }
+
+    /* Intensity slider */
+
+    .slider-row {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      margin-bottom: 0.9rem;
+      margin-top: 0.3rem;
+    }
+
+    .slider-row label {
+      font-size: 0.8rem;
+      color: var(--gray-600);
+      white-space: nowrap;
+    }
+
+    input[type="range"] {
+      flex: 1 1 auto;
+      accent-color: var(--blue);
+    }
+
+    .slider-value-pill {
+      min-width: 32px;
+      padding: 0.18rem 0.45rem;
+      border-radius: 999px;
+      background: var(--blue);
+      color: #fff;
+      font-size: 0.75rem;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    /* Quick tags */
+
+    .tag-label {
+      font-size: 0.8rem;
+      color: var(--gray-600);
+      margin-bottom: 0.3rem;
+    }
+
+    .mood-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .tag-pill {
+      border-radius: 999px;
+      border: 1px solid rgba(5, 68, 94, 0.14);
+      padding: 0.25rem 0.7rem;
+      background: #f8feff;
+      font-size: 0.75rem;
+      color: var(--gray-800);
+      cursor: pointer;
+      transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+    }
+
+    .tag-pill.active,
+    .tag-pill:hover {
+      background: var(--mint);
+      border-color: var(--mint);
+      color: var(--navy);
+      font-weight: 600;
+    }
+
+    /* Notes */
+
+    textarea#moodNotes {
+      width: 100%;
+      min-height: 80px;
+      border-radius: 10px;
+      border: 1px solid var(--gray-300);
+      padding: 0.6rem 0.7rem;
+      font-family: inherit;
+      font-size: 0.85rem;
+      resize: vertical;
+      outline: none;
+      transition: border-color 0.16s ease, box-shadow 0.16s ease;
+      margin-bottom: 0.9rem;
+    }
+
+    textarea#moodNotes:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 1px rgba(24, 154, 180, 0.2);
+    }
+
+    /* Primary button */
+
+    .btn-primary {
+      border: none;
+      border-radius: 999px;
+      padding: 0.6rem 1.4rem;
+      background: var(--blue);
+      color: #fff;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      box-shadow: 0 10px 25px rgba(24, 154, 180, 0.45);
+      transition: transform 0.14s ease, box-shadow 0.14s ease, background 0.14s ease;
+    }
+
+    .btn-primary:hover {
+      background: #0e7fa0;
+      transform: translateY(-1px);
+      box-shadow: 0 12px 30px rgba(24, 154, 180, 0.55);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+      box-shadow: none;
+      transform: none;
+    }
+
+    /* Stats */
+
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    @media (max-width: 600px) {
+      .stats-row {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    .stat-card {
+      border-radius: 14px;
+      padding: 0.65rem 0.75rem;
+      background: #f5fbff;
+      border: 1px solid rgba(5, 68, 94, 0.06);
+    }
+
+    .stat-label {
+      font-size: 0.75rem;
+      color: var(--gray-600);
+      margin-bottom: 0.25rem;
+    }
+
+    .stat-value {
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+
+    .stat-caption {
+      font-size: 0.75rem;
+      color: var(--gray-600);
+      margin-top: 0.1rem;
+    }
+
+    /* Filter row */
+
+    .filter-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.6rem;
+      flex-wrap: wrap;
+    }
+
+    .filter-row select {
+      padding: 0.35rem 0.6rem;
+      border-radius: 999px;
+      border: 1px solid var(--gray-300);
+      font-size: 0.8rem;
+      background: #f8feff;
+    }
+
+    /* Mood history list */
+
+    .history-list {
+      margin-top: 0.6rem;
+      max-height: 260px;
+      overflow-y: auto;
+      padding-right: 0.25rem;
+    }
+
+    .mood-entry {
+      display: grid;
+      grid-template-columns: 80px 40px minmax(0, 1fr);
+      align-items: flex-start;
+      gap: 0.35rem 0.6rem;
+      padding: 0.45rem 0.4rem;
+      border-radius: 10px;
+      background: rgba(244, 251, 255, 0.6);
+      margin-bottom: 0.25rem;
+    }
+
+    .entry-date {
+      font-size: 0.8rem;
+      color: var(--gray-600);
+    }
+
+    .entry-mood {
+      font-size: 1.2rem;
+      text-align: center;
+    }
+
+    .entry-label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--navy);
+    }
+
+    .entry-notes {
+      font-size: 0.78rem;
+      color: var(--gray-600);
+      margin-top: 0.1rem;
+      font-style: italic;
+    }
+
+    .no-data {
+      font-size: 0.85rem;
+      color: var(--gray-600);
+      text-align: center;
+      padding: 1rem 0.3rem;
+    }
+
+    /* Chart block */
+
+    .chart-wrapper {
+      border-radius: 14px;
+      background: #f8feff;
+      padding: 0.6rem;
+      border: 1px solid rgba(5, 68, 94, 0.06);
+      margin-bottom: 0.7rem;
+    }
+
+    canvas#moodChart {
+      width: 100%;
+      max-height: 220px;
+    }
+
+    /* Toast */
+
+    .toast {
+      position: fixed;
+      right: 16px;
+      bottom: -80px;
+      min-width: 220px;
+      max-width: 320px;
+      padding: 0.6rem 0.8rem;
+      border-radius: 12px;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.22);
+      color: #0f172a;
+      background: #e0fbea;
+      opacity: 0;
+      pointer-events: none;
+      transition: transform 0.28s ease, opacity 0.28s ease, bottom 0.28s ease;
+      z-index: 2000;
+    }
+
+    .toast.show {
+      bottom: 16px;
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .toast-icon {
+      font-size: 1rem;
+      margin-top: 2px;
+    }
+
+    .toast--error {
+      background: #fee2e2;
+      color: #7f1d1d;
+    }
+
+    .toast--success {
+      background: #dcfce7;
+      color: #065f46;
+    }
+
+    .toast-message {
+      flex: 1 1 auto;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="container header-content">
+      <div class="logo">
+        <img src="https://i.ibb.co/ksr38h61/Mindful-Logo.png" alt="Mindful AI Logo" class="logo-img">
+        <span class="logo-text">Mindful AI</span>
+      </div>
+
+      <nav>
+        <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation">
+          <span></span><span></span><span></span>
+        </button>
+        <ul class="nav-list" id="navList">
+          <li><a href="landingpage.html" class="nav-pill">Home</a></li>
+          <li><a href="articles.html" class="nav-pill">Articles</a></li>
+          <li><a href="resources.html" class="nav-pill">Resources</a></li>
+          <li><a href="dashboard.html" class="nav-pill">Dashboard</a></li>
+          <li><a href="services.html" class="nav-pill">Services</a></li>
+          <li><a href="community.html" class="nav-pill">Community</a></li>
+          <li><a href="about.html" class="nav-pill">About</a></li>
+          <li><a href="settings.html" class="nav-pill">Settings</a></li>
+          <li><a href="mood.html" class="nav-pill active">Mood</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Page Content -->
+  <main class="page-shell">
+    <section class="page-heading">
+      <h1><span class="emoji">📈</span> Mood Tracker</h1>
+      <p>Log today’s mood, reflect with a short note, and watch your wellbeing trends over time.</p>
+    </section>
+
+    <section class="mood-layout">
+      <!-- LEFT: Today mood card -->
+      <article class="card">
+        <div class="card-inner">
+          <h2 class="card-title">
+            <span class="icon">🌤️</span> How are you feeling today?
+          </h2>
+          <p class="card-subtitle">Tap a face that matches your day, add a small note, and save.</p>
+
+          <!-- Mood options -->
+          <div class="mood-options">
+            <button type="button" class="mood-option" data-mood="2" data-label="Very Low">
+              <span class="mood-emoji">😞</span>
+              <span class="mood-label">Very Low</span>
+              <span class="mood-score">2/10</span>
+            </button>
+            <button type="button" class="mood-option" data-mood="4" data-label="Low">
+              <span class="mood-emoji">☁️</span>
+              <span class="mood-label">Low</span>
+              <span class="mood-score">4/10</span>
+            </button>
+            <button type="button" class="mood-option" data-mood="6" data-label="Okay">
+              <span class="mood-emoji">😐</span>
+              <span class="mood-label">Okay</span>
+              <span class="mood-score">6/10</span>
+            </button>
+            <button type="button" class="mood-option" data-mood="8" data-label="Good">
+              <span class="mood-emoji">🙂</span>
+              <span class="mood-label">Good</span>
+              <span class="mood-score">8/10</span>
+            </button>
+            <button type="button" class="mood-option" data-mood="10" data-label="Great">
+              <span class="mood-emoji">🌈</span>
+              <span class="mood-label">Great</span>
+              <span class="mood-score">10/10</span>
+            </button>
+          </div>
+
+          <!-- Intensity slider -->
+          <div class="slider-row">
+            <label for="moodSlider">Fine-tune intensity:</label>
+            <input type="range" id="moodSlider" min="1" max="10" value="6">
+            <div class="slider-value-pill" id="moodSliderValue">6</div>
+          </div>
+
+          <!-- Quick tags -->
+          <div class="tag-label">What influenced your mood?</div>
+          <div class="mood-tags">
+            <button type="button" class="tag-pill" data-tag="Work">Work</button>
+            <button type="button" class="tag-pill" data-tag="Studies">Studies</button>
+            <button type="button" class="tag-pill" data-tag="Family">Family</button>
+            <button type="button" class="tag-pill" data-tag="Friends">Friends</button>
+            <button type="button" class="tag-pill" data-tag="Health">Health</button>
+            <button type="button" class="tag-pill" data-tag="Sleep">Sleep</button>
+          </div>
+
+          <!-- Notes -->
+          <textarea id="moodNotes" placeholder="Write a quick note about your day (optional)…"></textarea>
+
+          <!-- Submit -->
+          <button id="submitMood" class="btn-primary" disabled>
+            <span class="icon">💾</span>
+            <span>Save today’s mood</span>
+          </button>
+        </div>
+      </article>
+
+      <!-- RIGHT: Stats + chart + history -->
+      <article class="card">
+        <div class="card-inner">
+          <h2 class="card-title">
+            <span class="icon">📊</span> Your mood trends
+          </h2>
+          <p class="card-subtitle">See how your mood has been evolving over time.</p>
+
+          <!-- Stats -->
+          <div class="stats-row">
+            <div class="stat-card">
+              <div class="stat-label">Average mood</div>
+              <div class="stat-value" id="avgMood">-</div>
+              <div class="stat-caption">Across all entries</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Entries logged</div>
+              <div class="stat-value" id="totalEntries">0</div>
+              <div class="stat-caption">Total days recorded</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Current streak</div>
+              <div class="stat-value" id="streakDays">0</div>
+              <div class="stat-caption">Days in a row</div>
+            </div>
+          </div>
+
+          <!-- Filter + chart -->
+          <div class="filter-row">
+            <span style="font-size:0.8rem;color:var(--gray-600);">
+              Tip: aim for consistency, not perfection ✨
+            </span>
+            <select id="historyFilter">
+              <option value="7">Last 7 days</option>
+              <option value="14">Last 14 days</option>
+              <option value="30">Last 30 days</option>
+              <option value="all">All time</option>
+            </select>
+          </div>
+
+          <div class="chart-wrapper">
+            <canvas id="moodChart" aria-label="Mood over time chart"></canvas>
+          </div>
+
+          <!-- Recent history -->
+          <div class="history-list" id="moodHistory"></div>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <!-- Toast notification -->
+  <div id="toast" class="toast" role="status" aria-live="polite">
+    <span class="toast-icon">✅</span>
+    <span class="toast-message"></span>
+  </div>
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+  <!-- Mood logic -->
+  <script src="mood.js"></script>
+
+  <!-- Small script for mobile nav toggle -->
+  <script>
+    const menuToggle = document.getElementById('menuToggle');
+    const navList = document.getElementById('navList');
+
+    if (menuToggle && navList) {
+      menuToggle.addEventListener('click', () => {
+        menuToggle.classList.toggle('active');
+        navList.classList.toggle('active');
+      });
+    }
+  </script>
+</body>
+</html>

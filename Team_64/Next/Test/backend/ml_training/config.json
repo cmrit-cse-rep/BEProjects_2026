@@ -1,0 +1,21 @@
+{
+  "default_settings": {
+    "sequence_length": 60,
+    "test_size": 0.2,
+    "epochs": 50,
+    "batch_size": 32,
+    "learning_rate": 0.001
+  },
+  "model_settings": {
+    "lstm_units": [
+      50,
+      50
+    ],
+    "dropout_rate": 0.2,
+    "validation_split": 0.1
+  },
+  "data_settings": {
+    "default_period": "5y",
+    "min_data_points": 60
+  }
+}

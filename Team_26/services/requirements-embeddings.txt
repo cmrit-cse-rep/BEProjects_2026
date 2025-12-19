@@ -1,0 +1,3 @@
+sentence-transformers>=2.2.2
+# Note: sentence-transformers will pull a suitable PyTorch/Torch dependencies.
+# Install with: pip install -r services/requirements-embeddings.txt

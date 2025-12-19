@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Voice Performance Report</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    body {
+      background: linear-gradient(to right, #89f7fe, #66a6ff);
+      font-family: 'Poppins', sans-serif;
+      padding: 25px;
+      text-align: center;
+    }
+
+    h1 {
+      color: #222;
+      margin-bottom: 20px;
+    }
+
+    #chartBox {
+      width: 80%;
+      max-width: 800px;
+      margin: auto;
+      background: white;
+      padding: 25px;
+      border-radius: 18px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 12px 22px;
+      border: none;
+      border-radius: 10px;
+      background: #333;
+      color: white;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+
+<h1>🎤 Voice Interview Performance</h1>
+
+<div id="chartBox">
+  <canvas id="emotionChart"></canvas>
+</div>
+
+<button onclick="window.location.href='/'">🏠 Home</button>
+
+<script>
+const data = JSON.parse(localStorage.getItem("voicePerformance")) || [];
+
+const labels = data.map(item => item.question);
+const emotions = data.map(item => {
+    if (item.emotion === "confident") return 3;
+    if (item.emotion === "neutral") return 2;
+    return 1;  // sad or unknown
+});
+
+new Chart(document.getElementById("emotionChart"), {
+  type: "line",
+  data: {
+    labels: labels,
+    datasets: [{
+      label: "Emotion Score (Higher = Better)",
+      data: emotions,
+      borderColor: "#ff4d4d",
+      backgroundColor: "rgba(255,77,77,0.3)",
+      tension: 0.4
+    }]
+  },
+  options: {
+    scales: {
+      y: { min: 0, max: 3 }
+    }
+  }
+});
+</script>
+
+</body>
+</html>

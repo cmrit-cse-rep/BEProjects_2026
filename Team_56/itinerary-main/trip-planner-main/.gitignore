@@ -1,0 +1,26 @@
+node_modules
+.env
+server/env/Lib/site-packages/clang/native/libclang.dll
+server/env/Lib/site-packages/tensorflow/python/_pywrap_tensorflow_internal.pyd
+__pycache__
+appp.py
+# Virtual Environments (Never upload these!)
+env/
+venv/
+.venv/
+
+# Environment Variables (Secrets)
+.env
+
+# Python Cache (Useless files)
+__pycache__/
+*.py[cod]
+
+# IDE Settings (VS Code, etc.)
+.vscode/
+.idea/
+
+# Legacy/Old Files (Optional, but good for cleanup)
+chatbot.py
+flask_server.py
+test.py

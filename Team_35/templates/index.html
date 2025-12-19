@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeepISL: Real-Time Sign Language Translation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.min.js"></script>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body class="bg-gray-50 text-gray-800 p-8">
+    <div class="max-w-7xl mx-auto">
+        <div id="connection-status" class="connection-status disconnected">Disconnected</div>
+        
+        <header class="text-center mb-12">
+            <h1 class="main-header">DeepISL 🤟</h1>
+            <p class="sub-header">Real-time Indian Sign Language Translation</p>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div class="space-y-6">
+                <div class="flex space-x-4 p-1 rounded-full bg-gray-200">
+                    <button id="isl-to-text-btn" class="flex-1 py-2 px-4 rounded-full font-bold bg-white text-gray-800 shadow-md transition-colors">ISL → Text</button>
+                    <button id="text-to-isl-btn" class="flex-1 py-2 px-4 rounded-full font-bold text-gray-600 transition-colors">Text → ISL</button>
+                </div>
+
+                <div id="isl-to-text-section">
+                    <h2 class="text-2xl font-semibold mb-4">Real-time Sign Detection</h2>
+                    <div class="video-container">
+                        <canvas id="live-canvas" class="w-full h-full"></canvas>
+                        <p id="video-placeholder" class="text-gray-400 absolute">Your webcam feed will appear here.</p>
+                    </div>
+                    <div class="flex space-x-4 mt-4">
+                        <button id="start-btn" class="w-full py-3 px-6 rounded-xl font-bold bg-green-500 text-white hover:bg-green-600 transition-colors">▶️ Start Signing</button>
+                        <button id="stop-btn" class="w-full py-3 px-6 rounded-xl font-bold bg-red-500 text-white hover:bg-red-600 transition-colors">⏹️ Stop Signing</button>
+                        <button id="clear-btn" class="w-full py-3 px-6 rounded-xl font-bold bg-blue-500 text-white hover:bg-blue-600 transition-colors">🗑️ Clear Text</button>
+                    </div>
+                    <div class="mt-4 text-sm text-gray-600">
+                        <p>💡 <strong>Tips for better recognition:</strong></p>
+                        <ul class="list-disc list-inside mt-2">
+                            <li>Ensure good lighting on your hands and face</li>
+                            <li>Keep your hands within the camera view</li>
+                            <li>Make clear, distinct signs</li>
+                            <li>Allow the system to capture complete gestures</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div id="text-to-isl-section" class="hidden">
+                    <h2 class="text-2xl font-semibold mb-4">Text to Sign Animation</h2>
+                    <textarea id="text-input" class="w-full p-4 rounded-xl border border-gray-300 resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" rows="4" placeholder="e.g., What is your name?"></textarea>
+                    <button id="generate-btn" class="w-full mt-4 py-3 px-6 rounded-xl font-bold bg-blue-500 text-white hover:bg-blue-600 transition-colors">✨ Generate Animation</button>
+                    <div id="animation-placeholder" class="video-container mt-4">
+                        <video id="animation-video" class="w-full h-full hidden" autoplay loop controls></video>
+                        <p id="animation-text-placeholder" class="text-gray-400 absolute">Your animation will appear here.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-6">
+                <h2 class="text-2xl font-semibold">Translation Output</h2>
+                
+                <div id="status-display" class="status-box">
+                    <span class="title">STATUS</span><br>
+                    <span id="status-value" class="value">IDLE</span>
+                    <div id="confidence-meter" class="mt-2 hidden">
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div id="confidence-bar" class="bg-green-500 h-2 rounded-full transition-all" style="width: 0%"></div>
+                        </div>
+                        <div id="confidence-text" class="text-xs mt-1">Confidence: 0%</div>
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="flex justify-between items-center mb-2">
+                        <h3 class="text-lg font-semibold">Detected Sentence</h3>
+                        <span id="word-count" class="text-sm text-gray-500">0 words</span>
+                    </div>
+                    <textarea id="detected-text" class="w-full p-4 rounded-xl border border-gray-300 bg-white resize-none" rows="5" readonly placeholder="Your translated text will appear here..."></textarea>
+                </div>
+                
+                <div class="bg-yellow-50 p-4 rounded-xl">
+                    <h4 class="font-semibold mb-2">Recent Signs</h4>
+                    <div id="recent-signs" class="text-sm text-gray-600">
+                        No signs detected yet...
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/holistic/holistic.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+    
+    <!-- Load modules in correct order -->
+    <script src="js/config.js"></script>
+    <script src="js/websocket-manager.js"></script>
+    <script src="js/ui-manager.js"></script>
+    <script src="js/mediapipe-manager.js"></script>
+    <script src="js/translation-manager.js"></script>
+    <script src="js/animation-manager.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

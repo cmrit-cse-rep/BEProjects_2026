@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fraud Detection using GNNs</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+    <style>
+    :root {
+        /* Your exact palette */
+        --deep: #1B3C53;           /* deep teal (more prominent) */
+        --mid: #456882;            /* steel blue */
+        --sand: #D2C1B6;           /* sand (reduced usage) */
+        --linen: #F9F3EF;          /* linen */
+
+        /* Theme tokens using all 4 shades */
+        --bg: var(--linen);
+        --surface: #ffffff;
+        --elev-1: #ffffff;        /* less sand in inputs */
+        --text: var(--deep);
+        --muted: var(--mid);
+        --primary: var(--deep);   /* deepen primary */
+        --primary-light: #E6EDF3; /* light tint from deep/mid */
+        --accent: var(--deep);
+        --success: var(--mid);
+        --danger: #ef4444;
+        --warning: var(--sand);
+        --border: rgba(27,60,83,0.25); /* deep-based border */
+        --shadow: 0 8px 24px rgba(27,60,83,0.14);
+        --shadow-hover: 0 14px 36px rgba(27,60,83,0.24);
+        --radius: 16px;
+        --radius-sm: 12px;
+        --sidebar: #ffffff;       /* reduce sand in sidebar */
+    }
+
+    html, body { height: 100%; }
+    html { scroll-behavior: smooth; }
+    body {
+        background:
+          radial-gradient(1200px 600px at -10% -10%, rgba(27,60,83,0.08), transparent 60%),
+          radial-gradient(1000px 500px at 110% -20%, rgba(69,104,130,0.08), transparent 60%),
+          radial-gradient(800px 400px at 50% 50%, rgba(210,193,182,0.15), transparent 70%),
+          var(--bg);
+        color: var(--text);
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+
+    .app-header {
+        background: linear-gradient(180deg, rgba(27,60,83,0.08), rgba(27,60,83,0.0)),
+                    linear-gradient(90deg, rgba(69,104,130,0.10), rgba(210,193,182,0.08));
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        padding: 18px 22px;
+    }
+
+    .btn-primary-modern {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--mid) 100%);
+        border: none;
+        color: white;
+        border-radius: 10px;
+        padding: 10px 16px;
+        font-weight: 600;
+        box-shadow: 0 8px 20px rgba(27,60,83,0.25);
+        transition: transform 0.08s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+    }
+    .btn-primary-modern:hover { transform: translateY(-1px); box-shadow: var(--shadow-hover); }
+
+    .btn-secondary-modern {
+        background: transparent;
+        border: 1px solid var(--border);
+        color: var(--text);
+        border-radius: 10px;
+        padding: 10px 16px;
+        font-weight: 600;
+    }
+
+    .card, .chart-container, .transactions-table, .alert, .card-header, .card-body {
+        background: var(--surface) !important;
+        color: var(--text) !important;
+        border: 1px solid var(--border) !important;
+        border-radius: var(--radius) !important;
+        box-shadow: var(--shadow) !important;
+    }
+    .card-header { font-weight: 700; letter-spacing: .2px; }
+    .form-control, select, input[type="number"], input[type="email"], input[type="password"] {
+        background: var(--elev-1); color: var(--text); border: 1px solid var(--border);
+        border-radius: 10px; transition: all 0.3s ease;
+        padding: 8px 10px;
+        font-size: 15px;
+        min-width: 135px;
+        box-sizing: border-box;
+    }
+    .form-label { color: var(--muted); font-weight: 600; }
+
+    /* keep your other CSS unchanged */
+
+
+
+
+        /* existing */
+        #results {
+            margin-top: 20px;
+            font-size: 1.2em;
+            color: #555;
+        }
+
+
+        #graph-container {
+            display: none;
+            text-align: center;
+        }
+
+
+        .floating-box {
+            position: absolute;
+            z-index: 1000;
+            background-color: white;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+
+
+        /* Dashboard styles */
+        .summary-card {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            text-align: center;
+        }
+        .summary-value {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+        .summary-label {
+            color: #6c757d;
+            font-size: 13px;
+        }
+        .chart-container {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+        .transactions-table { background: var(--surface); }
+    </style>
+</head>
+
+
+<body>
+    <!-- Login Screen Overlay -->
+    
+<style>
+    .login-wrapper {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #0f172a, #1b263b);
+    }
+
+    .login-card {
+        background: rgba(255, 255, 255, 0.06);
+        border-radius: 16px;
+        padding: 40px 32px;
+        text-align: center;
+        width: 100%;
+        max-width: 380px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+    }
+
+    .login-card img {
+        width: 90px;
+        margin-bottom: 20px;
+    }
+
+    .login-card h1 {
+        font-size: 24px;
+        font-weight: 800;
+        margin-bottom: 6px;
+        color: #ffd369;
+    }
+
+    .login-card p {
+        font-size: 14px;
+        margin-bottom: 24px;
+        color: #e5e7eb;
+        opacity: 0.85;
+    }
+
+    .login-card input {
+        width: 100%;
+        padding: 12px 14px;
+        margin: 10px 0;
+        border: none;
+        border-radius: 8px;
+        font-size: 14px;
+        background: #f8fafc;
+    }
+
+    .login-card button {
+        width: 100%;
+        padding: 12px;
+        background: linear-gradient(135deg, #f7c14a, #d9a21b);
+        border: none;
+        border-radius: 30px;
+        color: #111;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        margin-top: 16px;
+        transition: 0.3s ease;
+    }
+
+    .login-card button:hover {
+        background: linear-gradient(135deg, #ffd369, #e0a800);
+    }
+
+    .forgot {
+        margin-top: 14px;
+        font-size: 13px;
+    }
+
+    .forgot a {
+        color: #ffd369;
+        text-decoration: none;
+    }
+
+    .forgot a:hover {
+        text-decoration: underline;
+    }
+</style>
+
+<div id="loginScreen" class="login-wrapper">
+    <div class="login-card">
+        <img src="/static/img.jpg" alt="Login Icon">
+        <h1>FinShield</h1>
+        <p>Fraud Detection Portal</p>
+        <form id="loginForm">
+            <input type="email" id="email" placeholder="Email" required>
+            <input type="password" id="password" placeholder="Password" required>
+            <button type="submit">Login</button>
+        </form>
+        <div class="forgot">
+            <a href="#">Forgot Password?</a>
+        </div>
+    </div>
+</div>
+
+
+
+    <!-- App Screen -->
+    <div id="appScreen" class="container-fluid m-2" style="display:none;">
+        <div class="row m-4 align-items-center w-100 app-header">
+            <div class="col-md-8">
+                <h1 style="font-weight:800;">Fraud Detection using GNNs</h1>
+                <p class="mb-0" style="color:var(--muted)">Interactive GNN interface with analyst dashboard</p>
+            </div>
+            <div class="col-md-4 text-right">
+                <a href="/" class="btn btn-primary-modern ml-2">Sign Out</a>
+            </div>
+        </div>
+        <div class="row m-2">
+            <div class="col-md-6" id="main-container">
+                <div class="alert alert-info" role="alert">
+                    This experimental application leverages Graph Neural Networks (GNNs) to predict fraud in financial
+                    transactions.
+                    It utilizes a pre-existing synthetic dataset to train a Graph Convolutional Network (GCN) model
+                    using TensorFlow and Spektral.
+                    The interactive graph on the right visualizes accounts and their aggregated transaction
+                    relationships.
+                    The model evaluates new transactions by analyzing the sender, receiver, and amount, predicting the
+                    likelihood of fraud.
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        Instructions
+                    </div>
+                    <div class="card-body">
+                        <ol>
+                            <li>At the right in the graph, select one edge</li>
+                            <li>Fill the amount of money</li>
+                            <li>Click the PREDICT button.</li>
+                        </ol>
+                    </div>
+                </div>
+                <form class="mt-4 row g-3">
+                    <div class="col-md-4">
+                        <label for="from" class="form-label">From</label>
+                        <select id="from" class="form-control">
+                            <option value="" disabled selected>Please choose account ID</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="to" class="form-label">To</label>
+                        <select id="to" class="form-control">
+                            <option value="" disabled selected>Please choose account ID</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="amount" class="form-label">Amount</label>
+                        <input type="number" id="amount" class="form-control" placeholder="Enter transaction amount">
+                    </div>
+                </form>
+                <div class="mt-4">
+                    <button type="button" class="btn btn-danger disabled" id="predict-btn"
+                        onclick="predictFraud()">Predict</button>
+                    <button type="button" class="btn btn-secondary" onclick="clearFields()">Clear</button>
+                </div>
+                <div id="results-loading" style="display: none;" class="mt-4">Predicting...</div>
+                <div id="results" class="mt-3 text-muted" style="display: none;">
+                   
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Sender</th>
+                                <th>Receiver</th>
+                                <th>Is Fraud?</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td id="sender-prob"></td>
+                                <td id="receiver-prob"></td>
+                                <td id="is-fraud"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div id="failure-panel" class="alert alert-danger mt-3" role="alert" style="display: none;">
+                    Failed to predict fraud. Please try again.
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        Graph Information
+                    </div>
+                    <div class="card-body">
+                        <p id="graph-info">Accounts (nodes): 0, Transactions (edges): 0</p>
+                        <div id="graph" style="width: 100%; height: 600px; position: relative;"></div>
+                        <div class="container row">
+                            <p class="text-danger m-1">Fraud</p>
+                            <p class="text-secondary m-1">Non-Fraud</p>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+
+
+        <!-- Dashboard Section (Real data) -->
+        <div class="row m-2">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        Analyst Dashboard
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="summary-card">
+                                    <div id="summary-total-transactions" class="summary-value text-primary">0</div>
+                                    <div class="summary-label">Total Transactions (edges)</div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="summary-card">
+                                    <div id="summary-fraud-cases" class="summary-value text-danger">0</div>
+                                    <div class="summary-label">High-Risk Edges (> 50% fraud)</div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="summary-card">
+                                    <div id="summary-risk-percentage" class="summary-value">0%</div>
+                                    <div class="summary-label">Risk Percentage</div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="summary-card">
+                                    <div id="summary-total-amount" class="summary-value text-success">$0</div>
+                                    <div class="summary-label">Total Amount (sum of edges)</div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="chart-container">
+                                    <h5 class="mb-3">Fraud vs Non-Fraud Edges</h5>
+                                    <canvas id="fraudSplitChart" height="160"></canvas>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="chart-container">
+                                    <h5 class="mb-3">Fraud Proportion Histogram</h5>
+                                    <canvas id="fraudHistogramChart" height="160"></canvas>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="transactions-table mt-2">
+                            <h5 class="mb-3">Flagged Edges (Top by fraud_proportion)</h5>
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Sender</th>
+                                            <th>Receiver</th>
+                                            <th>Total Amount</th>
+                                            <th>Total Transactions</th>
+                                            <th>Fraud %</th>
+                                            <th>Risk</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="flaggedEdgesBody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script type="module">
+        import Graph from 'https://cdn.skypack.dev/graphology';
+        import Sigma from 'https://cdn.skypack.dev/sigma';
+        import { parse } from 'https://cdn.skypack.dev/graphology-graphml';
+        import circlepack from 'https://cdn.skypack.dev/graphology-layout';
+
+
+        const container = document.getElementById('graph');
+        const graphInfo = document.getElementById('graph-info');
+        const edgeDetails = document.getElementById('edge-details');
+
+
+        graphInfo.textContent = 'Loading graph...';
+
+
+        fetch('/graphml')
+            .then(response => response.text())
+            .then(graphml => {
+                const parser = new DOMParser();
+                const graph = parse(Graph, graphml);
+
+
+                graph.forEachNode((node, attributes) => {
+                    graph.setNodeAttribute(node, 'x', Math.random());
+                    graph.setNodeAttribute(node, 'y', Math.random());
+                    graph.setNodeAttribute(node, 'type', 'circle'); // Ensure node type is set to a recognized type
+                    graph.setNodeAttribute(node, 'label', attributes.label || node); // Set node label
+                });
+
+
+                graphInfo.textContent = `Accounts (nodes): ${graph.order}, Transactions (edges): ${graph.size}`;
+
+
+                console.log(graph.nodes().length, graph.edges().length);
+
+
+                // With options
+                console.log(circlepack);
+                const positions = circlepack.circlepack(graph, {
+                    hierarchyAttributes: ['degree', 'community'],
+                    // rng: customRngFunction
+                });
+
+
+                // To directly assign the positions to the nodes:
+                circlepack.circlepack.assign(graph);
+                let state = { type: "idle" }
+                const renderer = new Sigma(graph, container, {
+                    enableEdgeEvents: true,
+                    zIndex: true,
+                    renderEdgeLabels: true,
+                    renderLabels: true, // Enable label rendering
+                    defaultEdgeType: 'arrow', // Set default edge type to arrow
+                    edgeReducer: (edge, attributes) => {
+                        const res = { ...attributes };
+                        let edgeColor = '#cccccc';
+
+
+                        const fraudProportion = attributes.fraud_proportion;
+                        if (fraudProportion > 0.5) {
+                            edgeColor = '#FF0000'
+                        } else {
+                            edgeColor = '#cccccc';
+                        }
+
+
+                        const fadedEdgeColor = '#f0f0f0';
+                        // Hover
+                        if (state.type === "hovered") {
+                            if (edge === state.edge) {
+                                res.size = (res.size || 1) * 1.5;
+                                res.zIndex = 1;
+                                res.color = edgeColor;
+                                res.label = `Fraud: ${(fraudProportion * 100).toFixed(2)}% \nAmount: ${attributes.total_amount}\nTransactions: ${attributes.total_transactions}`;
+
+
+                                // Set form fields
+                                document.getElementById('from').value = graph.source(edge);
+                                document.getElementById('to').value = graph.target(edge);
+                            } else {
+                                res.color = fadedEdgeColor;
+                                res.zIndex = 0;
+                            }
+                        } else {
+                            res.color = edgeColor;
+                            res.label = null
+                        }
+
+
+
+
+                        return res;
+                    },
+                    nodeReducer: (node, attributes) => {
+                        const res = { ...attributes };
+
+
+                        const isFraud = attributes.is_fraud;
+                        let nodeColor = '#282928';
+                        if (isFraud) {
+                            nodeColor = '#FF0000'
+                        }
+
+
+                        // Hover
+                        if (state.type === "hovered") {
+                            if (node === state.source || node === state.target) {
+                                res.highlighted = true;
+                                res.zIndex = 1;
+                                res.color = nodeColor;
+                            } else {
+                                res.label = undefined;
+                                res.zIndex = 0;
+                                res.color = '#cccccc';
+                            }
+                        } else {
+                            res.color = nodeColor;
+                        }
+
+
+                        return res;
+                    },
+                });
+
+
+                // Add event listener for edge selection
+                renderer.on("clickEdge", ({ edge }) => {
+                    state = { type: "hovered", edge, source: graph.source(edge), target: graph.target(edge) };
+                    renderer.refresh();
+                });
+
+
+                renderer.on("clickStage", () => {
+                    document.getElementById('from').value = null
+                    document.getElementById('to').value = null
+                    state = { type: "idle" };
+                    renderer.refresh();
+                });
+
+
+                // Initialize dashboard metrics and charts using this graph
+                initializeDashboardFromGraph(graph);
+            });
+    </script>
+
+
+    <script>
+
+
+        function fetchAccounts() {
+            fetch('/accounts')
+                .then(response => response.json())
+                .then(data => {
+                    const fromSelect = document.getElementById('from');
+                    const toSelect = document.getElementById('to');
+
+
+                    data.sort((a, b) => a.id - b.id);
+                    data.forEach(account => {
+                        const option = document.createElement('option');
+                        option.value = account.id;
+                        option.textContent = account.id;
+
+
+                        fromSelect.appendChild(option.cloneNode(true));
+                        toSelect.appendChild(option);
+                    });
+                });
+        }
+
+
+        function checkFields() {
+            const from = document.getElementById('from').value;
+            const to = document.getElementById('to').value;
+            const amount = document.getElementById('amount').value;
+            const predictBtn = document.getElementById('predict-btn');
+
+
+            if (from && to && amount) {
+                predictBtn.classList.remove('disabled');
+            } else {
+                predictBtn.classList.add('disabled');
+            }
+        }
+
+
+        document.getElementById('from').addEventListener('change', checkFields);
+        document.getElementById('to').addEventListener('change', checkFields);
+        document.getElementById('amount').addEventListener('input', checkFields);
+
+
+        function predictFraud() {
+            const from = document.getElementById('from').value;
+            const to = document.getElementById('to').value;
+            const amount = document.getElementById('amount').value;
+
+
+            if (!amount || !from || !to) {
+                return;
+            }
+
+
+            // Show the loading indicator
+            document.getElementById('results-loading').style.display = 'block';
+            document.getElementById('results').style.display = 'none';
+
+
+            fetch('/transactions/new', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ "sender_id": from, "receiver_id": to, "total_amount": amount })
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        return response.json().then(errorData => {
+                            throw new Error(errorData.error);
+                        });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const senderProb = (data.nodes.sender * 100).toFixed(2) + '%';
+                    const receiverProb = (data.nodes.receiver * 100).toFixed(2) + '%';
+                    const isFraud = data.is_fraud ? 'Yes' : 'No';
+
+
+                    document.getElementById('sender-prob').textContent = senderProb;
+                    document.getElementById('receiver-prob').textContent = receiverProb;
+                    document.getElementById('is-fraud').textContent = isFraud;
+
+
+                    // Hide the loading indicator
+                    document.getElementById('results-loading').style.display = 'none';
+                    document.getElementById('results').style.display = 'block';
+                    document.getElementById('failure-panel').style.display = 'none';
+                })
+                .catch(error => {
+                    // Hide the loading indicator
+                    document.getElementById('results-loading').style.display = 'none';
+                    const resultsElement = document.getElementById('results');
+                    resultsElement.textContent = '';
+                    resultsElement.style.display = 'none';
+                    const failureElement = document.getElementById('failure-panel');
+                    failureElement.style.display = 'block';
+                    failureElement.textContent = "Failed to predict fraud: " + error.message;
+                });
+        }
+
+
+        function clearFields() {
+            document.getElementById('from').selectedIndex = 0;
+            document.getElementById('to').selectedIndex = 0;
+            document.getElementById('amount').value = '';
+            const resultsElement = document.getElementById('results');
+            resultsElement.textContent = 'Results: n% fraudulent';
+            resultsElement.style.display = 'none';
+        }
+
+
+        // Login toggle
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('email').value.trim();
+            const pwd = document.getElementById('password').value;
+            // Simple demo validation
+            if (email && pwd) {
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('appScreen').style.display = 'block';
+                fetchAccounts();
+            } else {
+                alert('Please enter valid credentials.');
+            }
+        });
+
+
+        // Auto-fill demo credentials
+        
+
+
+        // Theme toggle
+        (function() {
+            const root = document.documentElement;
+            const key = 'theme';
+            const saved = localStorage.getItem(key);
+            if (saved === 'light') root.setAttribute('data-theme', 'light');
+            document.getElementById('themeToggle').addEventListener('click', function(){
+                const isLight = root.getAttribute('data-theme') === 'light';
+                if (isLight) {
+                    root.removeAttribute('data-theme');
+                    localStorage.setItem(key, 'dark');
+                } else {
+                    root.setAttribute('data-theme', 'light');
+                    localStorage.setItem(key, 'light');
+                }
+            });
+        })();
+
+
+        // Dashboard logic (computed from real graph)
+        function initializeDashboardFromGraph(graph) {
+            const edges = graph.edges();
+            const edgeAttrs = edges.map(e => ({
+                id: e,
+                source: graph.source(e),
+                target: graph.target(e),
+                attrs: graph.getEdgeAttributes(e)
+            }));
+
+
+            const totalTransactions = edges.length;
+            const totalAmount = edgeAttrs.reduce((sum, e) => sum + (Number(e.attrs.total_amount) || 0), 0);
+            const highRisk = edgeAttrs.filter(e => Number(e.attrs.fraud_proportion) > 0.5);
+            const riskPct = totalTransactions > 0 ? (highRisk.length / totalTransactions) * 100 : 0;
+
+
+            document.getElementById('summary-total-transactions').textContent = totalTransactions.toLocaleString();
+            document.getElementById('summary-fraud-cases').textContent = highRisk.length.toLocaleString();
+            document.getElementById('summary-risk-percentage').textContent = `${riskPct.toFixed(2)}%`;
+            document.getElementById('summary-total-amount').textContent = `$${totalAmount.toLocaleString(undefined, { maximumFractionDigits: 2 })}`;
+
+
+            // Charts
+            const fraudCount = highRisk.length;
+            const nonFraudCount = Math.max(totalTransactions - fraudCount, 0);
+
+
+            const splitCtx = document.getElementById('fraudSplitChart').getContext('2d');
+            new Chart(splitCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['High-Risk (>0.5)', 'Other'],
+                    datasets: [{
+                        data: [fraudCount, nonFraudCount],
+                        backgroundColor: ['#dc3545', '#17a2b8'],
+                        borderWidth: 0
+                    }]
+                },
+                options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+            });
+
+
+            // Histogram of fraud_proportion in 10 bins
+            const proportions = edgeAttrs.map(e => Number(e.attrs.fraud_proportion) || 0);
+            const bins = new Array(10).fill(0);
+            proportions.forEach(p => {
+                const idx = Math.min(9, Math.max(0, Math.floor(p * 10)));
+                bins[idx] += 1;
+            });
+            const histCtx = document.getElementById('fraudHistogramChart').getContext('2d');
+            new Chart(histCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['0-10%','10-20%','20-30%','30-40%','40-50%','50-60%','60-70%','70-80%','80-90%','90-100%'],
+                    datasets: [{
+                        label: 'Edge count',
+                        data: bins,
+                        backgroundColor: '#6c757d'
+                    }]
+                },
+                options: { responsive: true, scales: { y: { beginAtZero: true } } }
+            });
+
+
+            // Flagged edges table: top 50 by fraud_proportion
+            edgeAttrs.sort((a, b) => (Number(b.attrs.fraud_proportion) || 0) - (Number(a.attrs.fraud_proportion) || 0));
+            const tbody = document.getElementById('flaggedEdgesBody');
+            tbody.innerHTML = '';
+            edgeAttrs.slice(0, 50).forEach(e => {
+                const p = Number(e.attrs.fraud_proportion) || 0;
+                const amt = Number(e.attrs.total_amount) || 0;
+                const txs = Number(e.attrs.total_transactions) || 0;
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><code>${e.source}</code></td>
+                    <td><code>${e.target}</code></td>
+                    <td><strong>$${amt.toLocaleString(undefined, { maximumFractionDigits: 2 })}</strong></td>
+                    <td>${txs}</td>
+                    <td>${(p * 100).toFixed(2)}%</td>
+                    <td><span class="badge ${p>0.5 ? 'badge-danger' : 'badge-secondary'}">${p>0.5 ? 'High' : 'Low'}</span></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+
+    </script>
+</body>
+
+
+</html>

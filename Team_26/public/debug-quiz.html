@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Quiz - Step by Step</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #f5f5f5; }
+        .step { background: white; margin: 10px 0; padding: 15px; border-radius: 5px; border-left: 4px solid #007bff; }
+        .success { border-left-color: #28a745; }
+        .error { border-left-color: #dc3545; }
+        .warning { border-left-color: #ffc107; }
+        button { background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin: 5px; }
+        button:hover { background: #0056b3; }
+        .log { background: #f8f9fa; padding: 10px; border-radius: 3px; font-family: monospace; white-space: pre-wrap; }
+    </style>
+</head>
+<body>
+    <h1>🔍 Quiz Debug Tool</h1>
+    <p>This will test each step of the quiz process to identify where the issue is.</p>
+
+    <div class="step" id="step1">
+        <h3>Step 1: Test Server Connection</h3>
+        <button onclick="testServerConnection()">Test Server</button>
+        <div id="step1-result"></div>
+    </div>
+
+    <div class="step" id="step2">
+        <h3>Step 2: Test Quiz Generation</h3>
+        <button onclick="testQuizGeneration()">Generate Quiz</button>
+        <div id="step2-result"></div>
+    </div>
+
+    <div class="step" id="step3">
+        <h3>Step 3: Test Quiz Submission</h3>
+        <button onclick="testQuizSubmission()">Submit Quiz</button>
+        <div id="step3-result"></div>
+    </div>
+
+    <div class="step" id="step4">
+        <h3>Step 4: Test Dashboard Access</h3>
+        <button onclick="testDashboard()">Test Dashboard</button>
+        <div id="step4-result"></div>
+    </div>
+
+    <div class="step">
+        <h3>Debug Log</h3>
+        <div id="debug-log" class="log"></div>
+        <button onclick="clearLog()">Clear Log</button>
+    </div>
+
+    <script>
+        let debugQuiz = null;
+        let debugAnswers = [];
+
+        function log(message) {
+            const logDiv = document.getElementById('debug-log');
+            const timestamp = new Date().toLocaleTimeString();
+            logDiv.textContent += `[${timestamp}] ${message}\n`;
+            console.log(message);
+        }
+
+        function clearLog() {
+            document.getElementById('debug-log').textContent = '';
+        }
+
+        function setStepResult(stepId, success, message) {
+            const step = document.getElementById(stepId);
+            const result = document.getElementById(stepId + '-result');
+            
+            step.className = success ? 'step success' : 'step error';
+            result.innerHTML = `<div class="log">${message}</div>`;
+        }
+
+        async function testServerConnection() {
+            log('Testing server connection...');
+            try {
+                const response = await fetch('http://localhost:5000/');
+                if (response.ok) {
+                    setStepResult('step1', true, '✅ Server is running and accessible');
+                    log('✅ Server connection successful');
+                } else {
+                    setStepResult('step1', false, `❌ Server returned status: ${response.status}`);
+                    log(`❌ Server error: ${response.status}`);
+                }
+            } catch (error) {
+                setStepResult('step1', false, `❌ Connection failed: ${error.message}`);
+                log(`❌ Connection error: ${error.message}`);
+            }
+        }
+
+        async function testQuizGeneration() {
+            log('Testing quiz generation...');
+            try {
+                const response = await fetch('http://localhost:5000/api/quiz/cold-start/Artificial%20Intelligence?totalQuestions=2');
+                const data = await response.json();
+                
+                if (data.success && data.quiz) {
+                    debugQuiz = data.quiz;
+                    setStepResult('step2', true, `✅ Quiz generated successfully<br>Quiz ID: ${data.quiz._id}<br>Questions: ${data.quiz.questions.length}`);
+                    log(`✅ Quiz generated: ${data.quiz._id} with ${data.quiz.questions.length} questions`);
+                    
+                    // Check if questions have _id fields
+                    const hasIds = data.quiz.questions.every(q => q._id);
+                    log(`Question IDs present: ${hasIds ? 'Yes' : 'No'}`);
+                } else {
+                    setStepResult('step2', false, `❌ Quiz generation failed: ${data.error || 'Unknown error'}`);
+                    log(`❌ Quiz generation failed: ${JSON.stringify(data)}`);
+                }
+            } catch (error) {
+                setStepResult('step2', false, `❌ Request failed: ${error.message}`);
+                log(`❌ Quiz generation error: ${error.message}`);
+            }
+        }
+
+        async function testQuizSubmission() {
+            if (!debugQuiz) {
+                setStepResult('step3', false, '❌ No quiz available. Run Step 2 first.');
+                log('❌ No quiz available for submission');
+                return;
+            }
+
+            log('Testing quiz submission...');
+            try {
+                // Create test answers
+                debugAnswers = debugQuiz.questions.map((q, i) => ({
+                    questionId: q._id,
+                    userAnswer: q.options[0],
+                    isCorrect: q.options[0] === q.correctAnswer,
+                    timeSpent: 10
+                }));
+
+                log(`Submitting ${debugAnswers.length} answers...`);
+                
+                const response = await fetch('http://localhost:5000/api/quiz/submit-test', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        quizId: debugQuiz._id,
+                        answers: debugAnswers
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (data.attempt && data.attempt._id) {
+                    setStepResult('step3', true, `✅ Quiz submitted successfully<br>Attempt ID: ${data.attempt._id}<br>Score: ${data.attempt.score}%`);
+                    log(`✅ Quiz submitted: ${data.attempt._id} with score ${data.attempt.score}%`);
+                    
+                    // Store attempt ID for dashboard test
+                    window.lastAttemptId = data.attempt._id;
+                } else {
+                    setStepResult('step3', false, `❌ Submission failed: ${data.error || 'No attempt ID returned'}`);
+                    log(`❌ Submission failed: ${JSON.stringify(data)}`);
+                }
+            } catch (error) {
+                setStepResult('step3', false, `❌ Submission error: ${error.message}`);
+                log(`❌ Submission error: ${error.message}`);
+            }
+        }
+
+        async function testDashboard() {
+            log('Testing dashboard access...');
+            try {
+                const response = await fetch('http://localhost:5000/enhanced-dashboard');
+                if (response.ok) {
+                    setStepResult('step4', true, '✅ Dashboard is accessible');
+                    log('✅ Dashboard accessible');
+                    
+                    if (window.lastAttemptId) {
+                        const dashboardUrl = `http://localhost:5000/enhanced-dashboard?attempt=${window.lastAttemptId}`;
+                        setStepResult('step4', true, `✅ Dashboard is accessible<br><a href="${dashboardUrl}" target="_blank">Open Dashboard with Analysis</a>`);
+                        log(`✅ Dashboard with attempt analysis: ${dashboardUrl}`);
+                    }
+                } else {
+                    setStepResult('step4', false, `❌ Dashboard returned status: ${response.status}`);
+                    log(`❌ Dashboard error: ${response.status}`);
+                }
+            } catch (error) {
+                setStepResult('step4', false, `❌ Dashboard error: ${error.message}`);
+                log(`❌ Dashboard error: ${error.message}`);
+            }
+        }
+
+        // Auto-run basic tests on page load
+        window.addEventListener('load', () => {
+            log('Debug tool loaded. Click buttons to test each step.');
+            testServerConnection();
+        });
+    </script>
+</body>
+</html>

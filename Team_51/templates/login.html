@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+        :root {
+            --primary-color: #2D6A4F;
+            --secondary-color: #4A90E2;
+            --card-background: rgba(255, 255, 255, 0.2);
+            --text-color: #ffffff;
+            --input-background: rgba(255, 255, 255, 0.1);
+            --placeholder-color: rgba(255, 255, 255, 0.6);
+            --shadow-color: rgba(0, 0, 0, 0.2);
+            --border-radius: 20px;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #1A237E 0%, #0D47A1 100%);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        body::before, body::after {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.15);
+            animation: pulse-bg 10s infinite;
+        }
+
+        body::before {
+            width: 300px;
+            height: 300px;
+            top: -50px;
+            left: -50px;
+        }
+
+        body::after {
+            width: 400px;
+            height: 400px;
+            bottom: -80px;
+            right: -80px;
+            animation-delay: 2s;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 450px;
+            z-index: 1;
+        }
+
+        .form-container {
+            background-color: var(--card-background);
+            border-radius: var(--border-radius);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px var(--shadow-color);
+            padding: 50px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .form-container:hover {
+            transform: scale(1.02);
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            color: var(--text-color);
+            margin-bottom: 5px;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 40px;
+            font-weight: 400;
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.9);
+            text-align: left;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 15px 50px 15px 20px;
+            border: none;
+            border-radius: 12px;
+            background-color: var(--input-background);
+            font-size: 1rem;
+            color: var(--text-color);
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .input-group input::placeholder {
+            color: var(--placeholder-color);
+        }
+
+        .input-group input:focus {
+            outline: none;
+            background-color: rgba(255, 255, 255, 0.2);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2), 0 0 0 4px rgba(255, 255, 255, 0.1);
+        }
+
+        .input-group i {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(2px);
+            color: var(--placeholder-color);
+            pointer-events: none;
+            transition: color 0.3s ease;
+        }
+
+        .input-group input:focus + i {
+            color: var(--text-color);
+        }
+
+        .btn {
+            background: var(--primary-color);
+            color: white;
+            padding: 16px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.15rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn:hover {
+            background: #388E3C;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        p {
+            margin-top: 30px;
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: var(--secondary-color);
+            text-decoration: underline;
+        }
+
+        .alert-messages {
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            margin-bottom: 10px;
+            color: #1a237e;
+        }
+
+        .alert-success {
+            background-color: #c8e6c9;
+        }
+
+        .alert-danger {
+            background-color: #ffcdd2;
+        }
+
+        @keyframes pulse-bg {
+            0% { transform: scale(1); opacity: 0.15; }
+            50% { transform: scale(1.2); opacity: 0.25; }
+            100% { transform: scale(1); opacity: 0.15; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="form-container">
+            <h2>Welcome Back</h2>
+            <p class="subtitle">Please log in to your account to continue.</p>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+                <div class="alert-messages">
+                  {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                  {% endfor %}
+                </div>
+              {% endif %}
+            {% endwith %}
+
+            <form action="/login" method="post">
+                <div class="input-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" required>
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+                    <i class="fas fa-lock"></i>
+                </div>
+                <button type="submit" class="btn">Login</button>
+            </form>
+            <p>Don't have an account? <a href="/signup">Sign up</a></p>
+        </div>
+    </div>
+</body>
+</html>

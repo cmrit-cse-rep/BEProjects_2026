@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Advanced Quiz - EduBot</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background-color: #000;
+            color: #eee;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .neon-hover:hover {
+            box-shadow: 0 0 10px rgb(230, 230, 230), 0 0 20px rgb(245, 245, 245), 0 0 30px rgb(255, 255, 255);
+            background-color: rgb(245, 245, 245);
+            color: #000 !important;
+            transition: all 0.3s ease;
+        }
+        .quiz-card {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            border: 1px solid #333;
+            transition: all 0.3s ease;
+        }
+        .quiz-card:hover {
+            border-color: #666;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #333;
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .difficulty-easy { color: #10b981; }
+        .difficulty-medium { color: #f59e0b; }
+        .difficulty-hard { color: #ef4444; }
+        .skill-badge {
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        .skill-remember { background-color: #3b82f6; color: white; }
+        .skill-understand { background-color: #10b981; color: white; }
+        .skill-apply { background-color: #f59e0b; color: white; }
+        .skill-analyze { background-color: #8b5cf6; color: white; }
+        .skill-evaluate { background-color: #ef4444; color: white; }
+        .skill-create { background-color: #ec4899; color: white; }
+    </style>
+</head>
+<body class="min-h-screen font-sans bg-black text-gray-300">
+
+    <!-- Navbar -->
+    <nav class="bg-gray-900 shadow-md py-4 px-6 flex flex-wrap justify-between items-center rounded-b-md">
+        <div class="text-2xl font-bold text-gray-400">EduBot</div>
+        <div class="space-x-4 text-sm md:text-base">
+            <a href="/uhome" class="text-gray-300 font-medium neon-hover px-2 py-1 rounded transition">🏠 Home</a>
+            <a href="/progress" class="text-gray-300 font-medium neon-hover px-2 py-1 rounded transition">📊 Progress</a>
+            <a href="/users/logout" class="text-red-500 neon-hover px-2 py-1 rounded transition">Logout</a>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <section class="text-center mt-6 px-6">
+        <h1 class="text-3xl font-semibold text-white">Advanced Quiz Generator 🧠</h1>
+        <p class="text-lg text-gray-400 mt-2">AI-powered quizzes tailored to your learning needs</p>
+    </section>
+
+    <!-- Quiz Type Selection -->
+    <div class="max-w-4xl mx-auto px-6 mt-8">
+        <div class="grid md:grid-cols-3 gap-6">
+            
+            <!-- Cold-Start Quiz -->
+            <div class="quiz-card rounded-xl p-6 cursor-pointer" onclick="showColdStartOptions()">
+                <div class="text-center">
+                    <div class="text-4xl mb-4">🚀</div>
+                    <h3 class="text-xl font-semibold text-white mb-2">Cold-Start Quiz</h3>
+                    <p class="text-gray-400 text-sm mb-4">
+                        AI generates questions from web content for any topic
+                    </p>
+                    <div class="text-xs text-gray-500">
+                        • Web scraping & NLP<br>
+                        • Fresh content every time<br>
+                        • Perfect for new topics
+                    </div>
+                </div>
+            </div>
+
+            <!-- Adaptive Quiz -->
+            <div class="quiz-card rounded-xl p-6 cursor-pointer" onclick="showAdaptiveOptions()">
+                <div class="text-center">
+                    <div class="text-4xl mb-4">🧠</div>
+                    <h3 class="text-xl font-semibold text-white mb-2">Adaptive Quiz</h3>
+                    <p class="text-gray-400 text-sm mb-4">
+                        Personalized questions based on your performance
+                    </p>
+                    <div class="text-xs text-gray-500">
+                        • ML-powered selection<br>
+                        • Targets weak areas<br>
+                        • Optimal difficulty mix
+                    </div>
+                </div>
+            </div>
+
+            <!-- Study Plan -->
+            <div class="quiz-card rounded-xl p-6 cursor-pointer" onclick="showStudyPlanOptions()">
+                <div class="text-center">
+                    <div class="text-4xl mb-4">📅</div>
+                    <h3 class="text-xl font-semibold text-white mb-2">Study Plan</h3>
+                    <p class="text-gray-400 text-sm mb-4">
+                        AI-generated personalized study schedule
+                    </p>
+                    <div class="text-xs text-gray-500">
+                        • Spaced repetition<br>
+                        • Weakness-focused<br>
+                        • Flexible timing
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Cold-Start Options -->
+    <div id="coldStartOptions" class="max-w-2xl mx-auto px-6 mt-8 hidden">
+        <div class="quiz-card rounded-xl p-6">
+            <h3 class="text-xl font-semibold text-white mb-4">Generate Cold-Start Quiz</h3>
+            
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-300 mb-2">Select Topic</label>
+                <select id="coldStartTopic" class="w-full p-3 rounded-lg bg-gray-800 text-gray-200 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-white">
+                    <option value="">Choose a topic...</option>
+                </select>
+            </div>
+
+            <div class="mb-6">
+                <label class="block text-sm font-medium text-gray-300 mb-2">Number of Questions</label>
+                <input type="range" id="coldStartQuestions" min="5" max="20" value="10" class="w-full">
+                <div class="flex justify-between text-xs text-gray-400 mt-1">
+                    <span>5</span>
+                    <span id="coldStartQuestionsValue">10</span>
+                    <span>20</span>
+                </div>
+            </div>
+
+            <div class="flex gap-4">
+                <button onclick="generateColdStartQuiz()" class="flex-1 px-6 py-3 bg-blue-600 text-white rounded-lg neon-hover transition">
+                    <span id="coldStartBtnText">🚀 Generate Quiz</span>
+                    <span id="coldStartLoading" class="loading hidden ml-2"></span>
+                </button>
+                <button onclick="hideAllOptions()" class="px-6 py-3 bg-gray-600 text-white rounded-lg neon-hover transition">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Adaptive Options -->
+    <div id="adaptiveOptions" class="max-w-2xl mx-auto px-6 mt-8 hidden">
+        <div class="quiz-card rounded-xl p-6">
+            <h3 class="text-xl font-semibold text-white mb-4">Generate Adaptive Quiz</h3>
+            
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-300 mb-2">Select Subject</label>
+                <select id="adaptiveSubject" class="w-full p-3 rounded-lg bg-gray-800 text-gray-200 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-white">
+                    <option value="">Choose a subject...</option>
+                </select>
+            </div>
+
+            <div class="mb-6">
+                <label class="block text-sm font-medium text-gray-300 mb-2">Number of Questions</label>
+                <input type="range" id="adaptiveQuestions" min="8" max="20" value="12" class="w-full">
+                <div class="flex justify-between text-xs text-gray-400 mt-1">
+                    <span>8</span>
+                    <span id="adaptiveQuestionsValue">12</span>
+                    <span>20</span>
+                </div>
+            </div>
+
+            <div class="mb-4 p-4 bg-gray-800 rounded-lg">
+                <h4 class="text-sm font-medium text-gray-300 mb-2">Difficulty Distribution</h4>
+                <div class="text-xs text-gray-400">
+                    • 30% Easy questions<br>
+                    • 50% Medium questions<br>
+                    • 20% Hard questions
+                </div>
+            </div>
+
+            <div class="flex gap-4">
+                <button onclick="generateAdaptiveQuiz()" class="flex-1 px-6 py-3 bg-green-600 text-white rounded-lg neon-hover transition">
+                    <span id="adaptiveBtnText">🧠 Generate Adaptive Quiz</span>
+                    <span id="adaptiveLoading" class="loading hidden ml-2"></span>
+                </button>
+                <button onclick="hideAllOptions()" class="px-6 py-3 bg-gray-600 text-white rounded-lg neon-hover transition">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Study Plan Options -->
+    <div id="studyPlanOptions" class="max-w-2xl mx-auto px-6 mt-8 hidden">
+        <div class="quiz-card rounded-xl p-6">
+            <h3 class="text-xl font-semibold text-white mb-4">Generate Study Plan</h3>
+            
+            <div class="grid md:grid-cols-2 gap-4 mb-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Hours per Week</label>
+                    <input type="number" id="hoursPerWeek" min="1" max="40" value="8" class="w-full p-3 rounded-lg bg-gray-800 text-gray-200 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-white">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Study Block (minutes)</label>
+                    <input type="number" id="blockMinutes" min="15" max="120" value="40" class="w-full p-3 rounded-lg bg-gray-800 text-gray-200 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-white">
+                </div>
+            </div>
+
+            <div class="mb-6">
+                <label class="block text-sm font-medium text-gray-300 mb-2">Planning Horizon (weeks)</label>
+                <input type="range" id="horizonWeeks" min="1" max="8" value="2" class="w-full">
+                <div class="flex justify-between text-xs text-gray-400 mt-1">
+                    <span>1 week</span>
+                    <span id="horizonWeeksValue">2 weeks</span>
+                    <span>8 weeks</span>
+                </div>
+            </div>
+
+            <div class="flex gap-4">
+                <button onclick="generateStudyPlan()" class="flex-1 px-6 py-3 bg-purple-600 text-white rounded-lg neon-hover transition">
+                    <span id="studyPlanBtnText">📅 Generate Study Plan</span>
+                    <span id="studyPlanLoading" class="loading hidden ml-2"></span>
+                </button>
+                <button onclick="hideAllOptions()" class="px-6 py-3 bg-gray-600 text-white rounded-lg neon-hover transition">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quiz Results -->
+    <div id="quizResults" class="max-w-4xl mx-auto px-6 mt-8 hidden">
+        <div class="quiz-card rounded-xl p-6">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-semibold text-white">Generated Quiz</h3>
+                <button onclick="startQuiz()" class="px-6 py-2 bg-blue-600 text-white rounded-lg neon-hover transition">
+                    Start Quiz
+                </button>
+            </div>
+            
+            <div id="quizPreview" class="space-y-4">
+                <!-- Quiz preview will be populated here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Live Quiz (new ML/web-scraping flow) -->
+    <div id="takeQuiz" class="max-w-4xl mx-auto px-6 mt-8 hidden">
+        <div class="quiz-card rounded-xl p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-semibold text-white">Take Quiz</h3>
+                <div class="text-sm text-gray-400"><span id="quizProgress">0/0 answered</span></div>
+            </div>
+
+            <div id="questionContainer" class="space-y-3"></div>
+
+            <div class="flex justify-between mt-4">
+                <button id="prevBtn" class="px-4 py-2 bg-gray-700 text-white rounded-lg neon-hover" onclick="prevQuestion()">Previous</button>
+                <button id="nextBtn" class="px-4 py-2 bg-blue-600 text-white rounded-lg neon-hover" onclick="nextQuestion()">Next</button>
+            </div>
+
+            <button id="submitBtn" class="w-full mt-4 px-6 py-3 bg-green-600 text-white rounded-lg neon-hover hidden" onclick="submitCurrentQuiz()">Submit Quiz</button>
+        </div>
+    </div>
+
+    <!-- Study Plan Results -->
+    <div id="studyPlanResults" class="max-w-4xl mx-auto px-6 mt-8 hidden">
+        <div class="quiz-card rounded-xl p-6">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-semibold text-white">Your Study Plan</h3>
+                <button onclick="viewFullPlan()" class="px-6 py-2 bg-purple-600 text-white rounded-lg neon-hover transition">
+                    View Full Plan
+                </button>
+            </div>
+            
+            <div id="studyPlanPreview" class="space-y-4">
+                <!-- Study plan preview will be populated here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentQuiz = null;
+        let currentStudyPlan = null;
+
+        // Load available topics on page load
+        document.addEventListener('DOMContentLoaded', async () => {
+            await loadAvailableTopics();
+            setupEventListeners();
+        });
+
+        function setupEventListeners() {
+            // Range slider updates
+            document.getElementById('coldStartQuestions').addEventListener('input', (e) => {
+                document.getElementById('coldStartQuestionsValue').textContent = e.target.value;
+            });
+
+            document.getElementById('adaptiveQuestions').addEventListener('input', (e) => {
+                document.getElementById('adaptiveQuestionsValue').textContent = e.target.value;
+            });
+
+            document.getElementById('horizonWeeks').addEventListener('input', (e) => {
+                const weeks = e.target.value;
+                document.getElementById('horizonWeeksValue').textContent = weeks + (weeks == 1 ? ' week' : ' weeks');
+            });
+        }
+
+        async function loadAvailableTopics() {
+            try {
+                const response = await fetch('/api/quiz/topics');
+                const data = await response.json();
+                
+                if (data.success) {
+                    const coldStartSelect = document.getElementById('coldStartTopic');
+                    const adaptiveSelect = document.getElementById('adaptiveSubject');
+                    
+                    data.topics.forEach(topic => {
+                        const option1 = new Option(topic, topic);
+                        const option2 = new Option(topic, topic);
+                        coldStartSelect.add(option1);
+                        adaptiveSelect.add(option2);
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading topics:', error);
+            }
+        }
+
+        function showColdStartOptions() {
+            hideAllOptions();
+            document.getElementById('coldStartOptions').classList.remove('hidden');
+        }
+
+        function showAdaptiveOptions() {
+            hideAllOptions();
+            document.getElementById('adaptiveOptions').classList.remove('hidden');
+        }
+
+        function showStudyPlanOptions() {
+            hideAllOptions();
+            document.getElementById('studyPlanOptions').classList.remove('hidden');
+        }
+
+        function hideAllOptions() {
+            document.getElementById('coldStartOptions').classList.add('hidden');
+            document.getElementById('adaptiveOptions').classList.add('hidden');
+            document.getElementById('studyPlanOptions').classList.add('hidden');
+            document.getElementById('quizResults').classList.add('hidden');
+            document.getElementById('studyPlanResults').classList.add('hidden');
+        }
+
+        async function generateColdStartQuiz() {
+            const topic = document.getElementById('coldStartTopic').value;
+            const questions = document.getElementById('coldStartQuestions').value;
+            
+            if (!topic) {
+                alert('Please select a topic');
+                return;
+            }
+
+            const btnText = document.getElementById('coldStartBtnText');
+            const loading = document.getElementById('coldStartLoading');
+            
+            btnText.classList.add('hidden');
+            loading.classList.remove('hidden');
+
+            try {
+                // Use the existing cold-start endpoint with advanced flag
+                const response = await fetch(`/api/quiz/cold-start/${encodeURIComponent(topic)}?totalQuestions=${questions}&useAdvanced=true`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    currentQuiz = data.quiz;
+                    displayQuizPreview(data.quiz);
+                    hideAllOptions();
+                    document.getElementById('quizResults').classList.remove('hidden');
+                } else {
+                    alert('Error generating quiz: ' + data.error);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Failed to generate quiz');
+            } finally {
+                btnText.classList.remove('hidden');
+                loading.classList.add('hidden');
+            }
+        }
+
+        async function generateAdaptiveQuiz() {
+            const subject = document.getElementById('adaptiveSubject').value;
+            const questions = document.getElementById('adaptiveQuestions').value;
+            
+            if (!subject) {
+                alert('Please select a subject');
+                return;
+            }
+
+            const btnText = document.getElementById('adaptiveBtnText');
+            const loading = document.getElementById('adaptiveLoading');
+            
+            btnText.classList.add('hidden');
+            loading.classList.remove('hidden');
+
+            try {
+                // Use the new advanced quiz generation endpoint for adaptive quizzes
+                const response = await fetch(`/api/quiz/advanced/generate?subject=${encodeURIComponent(subject)}&totalQuestions=${questions}&quizType=adaptive`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    currentQuiz = data.quiz;
+                    displayQuizPreview(data.quiz);
+                    hideAllOptions();
+                    document.getElementById('quizResults').classList.remove('hidden');
+                } else {
+                    alert('Error generating quiz: ' + data.error);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Failed to generate adaptive quiz');
+            } finally {
+                btnText.classList.remove('hidden');
+                loading.classList.add('hidden');
+            }
+        }
+
+        async function generateStudyPlan() {
+            const hoursPerWeek = document.getElementById('hoursPerWeek').value;
+            const blockMinutes = document.getElementById('blockMinutes').value;
+            const horizonWeeks = document.getElementById('horizonWeeks').value;
+
+            const btnText = document.getElementById('studyPlanBtnText');
+            const loading = document.getElementById('studyPlanLoading');
+            
+            btnText.classList.add('hidden');
+            loading.classList.remove('hidden');
+
+            try {
+                const response = await fetch('/api/quiz/study-plan', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        hoursPerWeek: parseInt(hoursPerWeek),
+                        blockMinutes: parseInt(blockMinutes),
+                        horizonWeeks: parseInt(horizonWeeks)
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    currentStudyPlan = data.studyPlan;
+                    displayStudyPlanPreview(data.studyPlan);
+                    hideAllOptions();
+                    document.getElementById('studyPlanResults').classList.remove('hidden');
+                } else {
+                    alert('Error generating study plan: ' + data.error);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Failed to generate study plan');
+            } finally {
+                btnText.classList.remove('hidden');
+                loading.classList.add('hidden');
+            }
+        }
+
+        function displayQuizPreview(quiz) {
+            const preview = document.getElementById('quizPreview');
+            preview.innerHTML = `
+                <div class="mb-4 p-4 bg-gray-800 rounded-lg">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-sm font-medium text-gray-300">Quiz Type:</span>
+                        <span class="text-sm text-blue-400 capitalize">${quiz.quizType.replace('_', ' ')}</span>
+                    </div>
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-sm font-medium text-gray-300">Questions:</span>
+                        <span class="text-sm text-green-400">${quiz.questions.length}</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm font-medium text-gray-300">Estimated Time:</span>
+                        <span class="text-sm text-yellow-400">${quiz.metadata?.estimatedTimeMinutes || 'N/A'} minutes</span>
+                    </div>
+                </div>
+                
+                <div class="space-y-3">
+                    <h4 class="text-lg font-medium text-white">Sample Questions:</h4>
+                    ${quiz.questions.slice(0, 3).map((q, index) => `
+                        <div class="p-4 bg-gray-800 rounded-lg">
+                            <div class="flex justify-between items-start mb-2">
+                                <span class="text-sm text-gray-400">Question ${index + 1}</span>
+                                <div class="flex gap-2">
+                                    <span class="skill-badge skill-${q.skill}">${q.skill}</span>
+                                    <span class="text-xs px-2 py-1 rounded difficulty-${q.difficulty}">${q.difficulty}</span>
+                                </div>
+                            </div>
+                            <p class="text-gray-200 mb-2">${q.question}</p>
+                            <div class="text-xs text-gray-400">
+                                Options: ${q.options.length} • Topic: ${q.topic}
+                            </div>
+                        </div>
+                    `).join('')}
+                    ${quiz.questions.length > 3 ? `<div class="text-center text-gray-400 text-sm">... and ${quiz.questions.length - 3} more questions</div>` : ''}
+                </div>
+            `;
+        }
+
+        function displayStudyPlanPreview(studyPlan) {
+            const preview = document.getElementById('studyPlanPreview');
+            const weekGroups = {};
+            
+            studyPlan.slice(0, 14).forEach(item => {
+                const week = Math.ceil(item.day / 7);
+                if (!weekGroups[week]) weekGroups[week] = [];
+                weekGroups[week].push(item);
+            });
+
+            preview.innerHTML = `
+                <div class="mb-4 p-4 bg-gray-800 rounded-lg">
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm font-medium text-gray-300">Total Study Days:</span>
+                        <span class="text-sm text-green-400">${studyPlan.length}</span>
+                    </div>
+                </div>
+                
+                <div class="space-y-4">
+                    ${Object.entries(weekGroups).map(([week, items]) => `
+                        <div class="p-4 bg-gray-800 rounded-lg">
+                            <h4 class="text-lg font-medium text-white mb-3">Week ${week}</h4>
+                            <div class="space-y-2">
+                                ${items.map(item => `
+                                    <div class="flex justify-between items-center p-2 bg-gray-700 rounded">
+                                        <div>
+                                            <span class="text-sm text-gray-300">Day ${item.day}:</span>
+                                            <span class="text-sm text-gray-200 ml-2">${item.task}</span>
+                                        </div>
+                                        <span class="text-xs px-2 py-1 rounded ${
+                                            item.priority === 'high' ? 'bg-red-600 text-white' :
+                                            item.priority === 'medium' ? 'bg-yellow-600 text-white' :
+                                            'bg-green-600 text-white'
+                                        }">${item.priority}</span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        // New in-page quiz runner (avoids old quiz page)
+        let answerIndex = 0;
+        let answers = [];
+        function startQuiz() {
+            if (!currentQuiz) return;
+            answers = new Array(currentQuiz.questions.length).fill(null);
+            answerIndex = 0;
+            hideAllOptions();
+            document.getElementById('takeQuiz').classList.remove('hidden');
+            renderQuestion();
+            updateControls();
+        }
+
+        function renderQuestion() {
+            const q = currentQuiz.questions[answerIndex];
+            const container = document.getElementById('questionContainer');
+            container.innerHTML = `
+                <div class="p-4 bg-gray-800 rounded-lg">
+                    <div class="flex justify-between items-start mb-2">
+                        <span class="text-sm text-gray-400">Question ${answerIndex + 1} of ${currentQuiz.questions.length}</span>
+                        <div class="flex gap-2">
+                            <span class="skill-badge skill-${q.skill}">${q.skill}</span>
+                            <span class="text-xs px-2 py-1 rounded difficulty-${q.difficulty}">${q.difficulty}</span>
+                        </div>
+                    </div>
+                    <p class="text-gray-200 mb-3">${q.question}</p>
+                    <div class="space-y-2">
+                        ${q.options.map((opt, i) => `
+                            <button class="w-full text-left px-4 py-2 rounded-lg border border-gray-600 ${answers[answerIndex]===opt ? 'bg-gray-700' : 'bg-gray-900'} hover:bg-gray-700" onclick="selectAnswer('${opt.replace(/"/g,'&quot;')}')">${opt}</button>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+            updateProgress();
+        }
+
+        function selectAnswer(opt) {
+            answers[answerIndex] = opt;
+            renderQuestion();
+            updateControls();
+        }
+
+        function updateControls() {
+            document.getElementById('prevBtn').disabled = (answerIndex === 0);
+            document.getElementById('nextBtn').disabled = (answerIndex === currentQuiz.questions.length - 1);
+            const allAnswered = answers.every(a => a !== null);
+            document.getElementById('submitBtn').classList.toggle('hidden', !allAnswered);
+        }
+
+        function updateProgress() {
+            const count = answers.filter(a => a !== null).length;
+            document.getElementById('quizProgress').textContent = `${count}/${answers.length} answered`;
+        }
+
+        function prevQuestion() {
+            if (answerIndex > 0) {
+                answerIndex--;
+                renderQuestion();
+                updateControls();
+            }
+        }
+
+        function nextQuestion() {
+            if (answerIndex < currentQuiz.questions.length - 1) {
+                answerIndex++;
+                renderQuestion();
+                updateControls();
+            }
+        }
+
+        async function submitCurrentQuiz() {
+            try {
+                const payload = currentQuiz.questions.map((q, i) => ({
+                    questionId: q._id,
+                    userAnswer: answers[i],
+                    isCorrect: answers[i] === q.correctAnswer,
+                    timeSpent: 0
+                }));
+                
+                // Use the test submit endpoint
+                const res = await fetch('/api/quiz/submit-test', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ quizId: currentQuiz._id, answers: payload })
+                });
+                const result = await res.json();
+                if (result.error) throw new Error(result.error);
+                
+                // Show success message and redirect to dashboard
+                alert(`Quiz submitted successfully! Score: ${result.attempt.score}%\nRedirecting to analytics dashboard...`);
+                
+                // Redirect to dashboard with attempt ID
+                if (result.attempt && result.attempt._id) {
+                    setTimeout(() => {
+                        window.location.href = `/enhanced-dashboard?attempt=${result.attempt._id}`;
+                    }, 2000);
+                } else {
+                    // Fallback to progress page
+                    window.location.href = '/progress';
+                }
+            } catch (e) {
+                alert('Failed to submit quiz: ' + e.message);
+                console.error(e);
+            }
+        }
+
+        function viewFullPlan() {
+            if (currentStudyPlan) {
+                // Store study plan in sessionStorage and redirect to progress page
+                sessionStorage.setItem('currentStudyPlan', JSON.stringify(currentStudyPlan));
+                window.location.href = '/progress';
+            }
+        }
+    </script>
+
+</body>
+</html>
+

@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notification Settings - Mindful AI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(180deg, #f4fbff 0%, #ffffff 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(24, 154, 180, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #189ab4 0%, #0d4b58 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .settings-section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #073b4c;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #189ab4;
+        }
+
+        .notification-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: #f4fbff;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(24, 154, 180, 0.1);
+        }
+
+        .notification-item:hover {
+            background: #e6f7fb;
+            border-color: #189ab4;
+        }
+
+        .notification-item-content h3 {
+            font-size: 14px;
+            color: #073b4c;
+            margin-bottom: 5px;
+        }
+
+        .notification-item-content p {
+            font-size: 12px;
+            color: #6b7280;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 26px;
+            background: #d1d5db;
+            border-radius: 13px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .toggle-switch.active {
+            background: #189ab4;
+        }
+
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            width: 22px;
+            height: 22px;
+            background: white;
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: transform 0.3s ease;
+        }
+
+        .toggle-switch.active::after {
+            transform: translateX(24px);
+        }
+
+        .frequency-selector {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f4fbff;
+            border-radius: 8px;
+            border: 1px solid rgba(24, 154, 180, 0.1);
+        }
+
+        .frequency-selector h3 {
+            font-size: 14px;
+            color: #073b4c;
+            margin-bottom: 15px;
+        }
+
+        .frequency-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+        }
+
+        .frequency-option {
+            padding: 10px 15px;
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 6px;
+            cursor: pointer;
+            text-align: center;
+            font-size: 13px;
+            transition: all 0.3s ease;
+            color: #073b4c;
+        }
+
+        .frequency-option:hover {
+            border-color: #189ab4;
+        }
+
+        .frequency-option.selected {
+            background: #189ab4;
+            color: white;
+            border-color: #189ab4;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .btn-save {
+            background: #189ab4;
+            color: white;
+            flex: 1;
+        }
+
+        .btn-save:hover {
+            background: #0d4b58;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(24, 154, 180, 0.4);
+        }
+
+        .btn-back {
+            background: #e5e7eb;
+            color: #073b4c;
+            padding: 12px 20px;
+        }
+
+        .btn-back:hover {
+            background: #d1d5db;
+        }
+
+        .message {
+            padding: 12px 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            display: none;
+        }
+
+        .message.success {
+            background: #d1f3f7;
+            color: #0d4b58;
+            border: 1px solid #b3e5fc;
+            display: block;
+        }
+
+        .message.error {
+            background: #fee2e2;
+            color: #7c2d12;
+            border: 1px solid #fecaca;
+            display: block;
+        }
+
+        .info-box {
+            background: #f4fbff;
+            border-left: 4px solid #189ab4;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            font-size: 13px;
+            color: #073b4c;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 16px;
+            }
+
+            .header h1 {
+                font-size: 26px;
+            }
+
+            .content {
+                padding: 16px;
+            }
+
+            .settings-section {
+                margin-bottom: 24px;
+            }
+
+            .frequency-options {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .frequency-option {
+                padding: 12px;
+            }
+
+            .notification-item {
+                padding: 12px;
+            }
+
+            .section-title {
+                font-size: 16px;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .container {
+                padding: 0;
+            }
+
+            .header {
+                padding: 12px;
+                border-radius: 0;
+            }
+
+            .header h1 {
+                font-size: 22px;
+                margin-bottom: 6px;
+            }
+
+            .header p {
+                font-size: 13px;
+            }
+
+            .content {
+                padding: 12px;
+                border-radius: 0;
+            }
+
+            .settings-section {
+                margin-bottom: 20px;
+                padding: 12px;
+            }
+
+            .section-title {
+                font-size: 15px;
+                margin-bottom: 12px;
+            }
+
+            .notification-item {
+                padding: 10px;
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .notification-item-content h3 {
+                font-size: 14px;
+            }
+
+            .notification-item-content p {
+                font-size: 12px;
+            }
+
+            .toggle-switch {
+                width: 48px;
+                height: 26px;
+            }
+
+            .frequency-options {
+                gap: 8px;
+            }
+
+            .frequency-option {
+                padding: 10px 8px;
+                font-size: 12px;
+            }
+
+            .info-box {
+                padding: 12px;
+                font-size: 12px;
+                margin-bottom: 16px;
+            }
+
+            button {
+                padding: 10px 16px;
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                padding: 8px;
+            }
+
+            .header h1 {
+                font-size: 18px;
+                margin-bottom: 4px;
+            }
+
+            .header p {
+                font-size: 12px;
+            }
+
+            .content {
+                padding: 8px;
+            }
+
+            .settings-section {
+                margin-bottom: 16px;
+                padding: 8px;
+            }
+
+            .section-title {
+                font-size: 13px;
+                margin-bottom: 10px;
+            }
+
+            .notification-item {
+                padding: 8px;
+                flex-direction: column;
+            }
+
+            .notification-item-content h3 {
+                font-size: 13px;
+                margin-bottom: 4px;
+            }
+
+            .notification-item-content p {
+                font-size: 11px;
+            }
+
+            .toggle-switch {
+                width: 44px;
+                height: 24px;
+            }
+
+            .frequency-options {
+                gap: 6px;
+            }
+
+            .frequency-option {
+                padding: 8px 6px;
+                font-size: 11px;
+            }
+
+            .info-box {
+                padding: 8px;
+                font-size: 11px;
+                margin-bottom: 12px;
+            }
+
+            button {
+                padding: 8px 12px;
+                font-size: 13px;
+                width: 100%;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔔 Notification Settings</h1>
+            <p>Manage how and when you receive notifications</p>
+        </div>
+
+        <div class="content">
+            <div id="message" class="message"></div>
+
+            <div class="info-box">
+                💡 Control your notification preferences below. You can enable or disable specific notification types and choose how often you'd like to receive them.
+            </div>
+
+            <!-- Email Notifications -->
+            <div class="settings-section">
+                <div class="section-title">Email Notifications</div>
+
+                <div class="notification-item">
+                    <div class="notification-item-content">
+                        <h3>Account Activity</h3>
+                        <p>Login alerts, password changes, and security updates</p>
+                    </div>
+                    <div class="toggle-switch" id="accountActivity" data-key="accountActivity"></div>
+                </div>
+
+                <div class="notification-item">
+                    <div class="notification-item-content">
+                        <h3>Mood Reminders</h3>
+                        <p>Reminders to log your daily mood and emotional check-ins</p>
+                    </div>
+                    <div class="toggle-switch" id="moodReminders" data-key="moodReminders"></div>
+                </div>
+
+                <div class="notification-item">
+                    <div class="notification-item-content">
+                        <h3>Content Updates</h3>
+                        <p>New articles, resources, and wellness tips</p>
+                    </div>
+                    <div class="toggle-switch" id="contentUpdates" data-key="contentUpdates"></div>
+                </div>
+
+                <div class="notification-item">
+                    <div class="notification-item-content">
+                        <h3>Community Messages</h3>
+                        <p>Replies and interactions in community discussions</p>
+                    </div>
+                    <div class="toggle-switch" id="communityMessages" data-key="communityMessages"></div>
+                </div>
+            </div>
+
+            <!-- Frequency Settings -->
+            <div class="settings-section">
+                <div class="section-title">Email Frequency</div>
+
+                <div class="frequency-selector">
+                    <h3>How often would you like to receive notifications?</h3>
+                    <div class="frequency-options">
+                        <div class="frequency-option" data-frequency="instant">Instantly</div>
+                        <div class="frequency-option" data-frequency="daily">Daily Digest</div>
+                        <div class="frequency-option" data-frequency="weekly">Weekly Digest</div>
+                        <div class="frequency-option" data-frequency="never">Never</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Push Notifications -->
+            <div class="settings-section">
+                <div class="section-title">Browser Notifications</div>
+
+                <div class="notification-item">
+                    <div class="notification-item-content">
+                        <h3>Browser Push Notifications</h3>
+                        <p>Real-time notifications while using Mindful AI</p>
+                    </div>
+                    <div class="toggle-switch" id="browserNotifications" data-key="browserNotifications"></div>
+                </div>
+
+                <div class="notification-item">
+                    <div class="notification-item-content">
+                        <h3>Sound Effects</h3>
+                        <p>Play sound when receiving notifications</p>
+                    </div>
+                    <div class="toggle-switch" id="soundEffects" data-key="soundEffects"></div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="button-group">
+                <button class="btn btn-back" onclick="goBack()">← Back to Settings</button>
+                <button class="btn btn-save" onclick="saveNotificationSettings()">✓ Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', loadNotificationSettings);
+
+        // Check if user is logged in
+        function checkAuth() {
+            const currentUser = localStorage.getItem('currentUser');
+            if (!currentUser) {
+                window.location.href = 'landingpage.html';
+                return;
+            }
+        }
+
+        // Load notification settings
+        function loadNotificationSettings() {
+            checkAuth();
+            
+            const userPreferences = JSON.parse(localStorage.getItem('userPreferences') || '{}');
+            const notifications = userPreferences.notifications || {};
+
+            // Load toggle switches
+            const toggles = ['accountActivity', 'moodReminders', 'contentUpdates', 'communityMessages', 'browserNotifications', 'soundEffects'];
+            toggles.forEach(toggle => {
+                const element = document.getElementById(toggle);
+                const isEnabled = notifications[toggle] !== false;
+                if (isEnabled) {
+                    element.classList.add('active');
+                }
+                element.addEventListener('click', toggleNotification);
+            });
+
+            // Load frequency
+            const frequency = userPreferences.notificationFrequency || 'daily';
+            document.querySelectorAll('.frequency-option').forEach(option => {
+                if (option.dataset.frequency === frequency) {
+                    option.classList.add('selected');
+                }
+                option.addEventListener('click', selectFrequency);
+            });
+        }
+
+        // Toggle notification
+        function toggleNotification(e) {
+            e.target.classList.toggle('active');
+        }
+
+        // Select frequency
+        function selectFrequency(e) {
+            document.querySelectorAll('.frequency-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            e.target.classList.add('selected');
+        }
+
+        // Save notification settings
+        function saveNotificationSettings() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+            const notifications = {};
+
+            // Get toggle states
+            const toggles = ['accountActivity', 'moodReminders', 'contentUpdates', 'communityMessages', 'browserNotifications', 'soundEffects'];
+            toggles.forEach(toggle => {
+                notifications[toggle] = document.getElementById(toggle).classList.contains('active');
+            });
+
+            // Get frequency
+            const frequency = document.querySelector('.frequency-option.selected')?.dataset.frequency || 'daily';
+
+            // Save to localStorage
+            const userPreferences = JSON.parse(localStorage.getItem('userPreferences') || '{}');
+            userPreferences.notifications = notifications;
+            userPreferences.notificationFrequency = frequency;
+            localStorage.setItem('userPreferences', JSON.stringify(userPreferences));
+
+            // Try to sync with backend
+            const email = currentUser.email;
+            if (email) {
+                fetch('/api/preferences/notifications', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email,
+                        notifications,
+                        notificationFrequency: frequency
+                    })
+                })
+                .catch(err => console.log('Backend sync skipped (offline mode)'));
+            }
+
+            showMessage('✓ Notification settings saved successfully!', 'success');
+            setTimeout(() => {
+                window.location.href = 'settings.html';
+            }, 2000);
+        }
+
+        // Show message
+        function showMessage(msg, type) {
+            const msgEl = document.getElementById('message');
+            msgEl.textContent = msg;
+            msgEl.className = `message ${type}`;
+            setTimeout(() => {
+                msgEl.className = 'message';
+            }, 3000);
+        }
+
+        // Go back
+        function goBack() {
+            window.location.href = 'settings.html';
+        }
+    </script>
+</body>
+</html>

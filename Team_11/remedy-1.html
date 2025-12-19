@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Acidity</title>
+<link rel="stylesheet" href="/css/remedies.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f2f5;
+      background: url("/images/index2.png") no-repeat center center fixed;
+      margin: 0;
+      padding: 30px;
+    }
+
+    /* Main container */
+    .remedy-container {
+      display: flex;
+      max-width: 1100px;
+      margin: 0 auto;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      overflow: hidden;
+    }
+
+    /* Left Side - Smaller Centered Image */
+    .remedy-image {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #fafafa;
+      padding: 10px;
+    }
+
+    .remedy-image img {
+      max-width: 90%;
+      max-height: 400px;
+      border-radius: 12px;
+      object-fit: contain;
+    }
+
+    /* Right Side - Content */
+    .remedy-content {
+      flex: 1.5;
+      padding: 30px;
+      text-align: left;
+    }
+
+    .remedy-content h2 {
+      font-size: 28px;
+      margin-bottom: 15px;
+      color: #2d6a4f;
+    }
+
+    .remedy-content p {
+      font-size: 16px;
+      color: #444;
+      line-height: 1.6;
+      margin-bottom: 25px;
+    }
+
+    /* Section boxes */
+    .remedy-section {
+      margin: 25px 0;
+      padding: 20px;
+      background: #f9f9f9;
+      border-radius: 12px;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+    }
+
+    .remedy-section h3 {
+      margin-bottom: 15px;
+      color: #1b4332;
+      font-size: 20px;
+      border-bottom: 2px solid #ddd;
+      padding-bottom: 6px;
+    }
+
+    .remedy-section h4 {
+      margin-top: 15px;
+      font-size: 17px;
+      color: #2d6a4f;
+    }
+
+    .remedy-section ul {
+      margin: 10px 0 0 25px;
+      padding: 0;
+      list-style: disc;
+    }
+
+    .remedy-section ul li {
+      margin-bottom: 8px;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    /* Buttons */
+    .modal-bookmark-btn {
+      display: inline-block;
+      margin: 20px 0;
+      padding: 12px 25px;
+      background: #1a3719;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .modal-bookmark-btn:hover {
+      background: #edffcc;
+      color:#1a3719;
+    }
+
+    .back-btn {
+      display: inline-block;
+      font-size: 15px;
+      color: #edffcc;
+      background:#1a3719;
+      cursor: pointer;
+      margin-left: 15px;
+    }
+    .back-btn:hover {
+      background: #edffcc;
+      color:#1a3719;
+    }
+
+    /* Responsive for mobile */
+    @media (max-width: 768px) {
+      .remedy-container {
+        flex-direction: column;
+      }
+
+      .remedy-image {
+        height: 250px;
+      }
+
+      .remedy-image img {
+        max-width: 70%;
+        max-height: 200px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="logo">
+        <img src="/images/logo.png" alt="Logo">
+      </div>
+  <div class="remedy-container">
+    <!-- Left Side Image -->
+    <div class="remedy-image">
+      <img src="/disease-image/Acidity.jpeg" alt="Acidity">
+    </div>
+
+    <!-- Right Side Content -->
+    <div class="remedy-content">
+      <h2 id="remedyTitle">Acidity</h2>
+      <p id="remedyDescription">
+        To neutralize excess stomach acid, relieve burning sensation, bloating, and indigestion.
+      </p>
+
+      <!-- Options -->
+      <div class="remedy-section">
+        <h3>Options</h3>
+        <h4>Option 1 – Jeera Saunf Water</h4>
+        <ul>
+          <li>Take 1 tsp cumin seeds + 1 tsp fennel seeds.</li>
+          <li>Boil in 1 glass of water for 5 minutes.</li>
+          <li>Strain and drink lukewarm after meals.</li>
+        </ul>
+
+        <h4>Option 2 – Tulsi Honey Drink</h4>
+        <ul>
+          <li>Crush 4–5 fresh basil (tulsi) leaves.</li>
+          <li>Mix in 1 tsp honey and a little lukewarm water.</li>
+          <li>Drink slowly on an empty stomach.</li>
+        </ul>
+      </div>
+
+      <!-- How to Use -->
+      <div class="remedy-section">
+        <h3>How to Use</h3>
+        <ul>
+          <li>Drink once or twice daily when acidity occurs.</li>
+          <li>Jeera-Saunf water is safe after meals.</li>
+          <li>Tulsi-honey is best in the morning.</li>
+        </ul>
+      </div>
+
+      <!-- Precautions -->
+      <div class="remedy-section">
+        <h3>Precautions</h3>
+        <ul>
+          <li>Avoid overuse of honey if you’re diabetic.</li>
+          <li>Do not drink very cold water immediately after the remedy.</li>
+          <li>Avoid triggers: oily/spicy food, late-night eating, excessive coffee/tea.</li>
+        </ul>
+      </div>
+
+      <!-- Buttons -->
+      <button id="bookmarkBtn" class="modal-bookmark-btn">Add to Fav</button>
+      <div class="back-btn" onclick="window.location.href='/remedies'">⬅ Back to Remedies</div>
+    </div>
+  </div>
+
+  <!-- JS path corrected for remedies folder -->
+<script src="/js/remedies.js"></script>
+<script>
+  const remedyId = 1; // This page is for Acidity
+
+  const bookmarkBtn = document.getElementById("bookmarkBtn");
+
+  function updateBtn() {
+    if (savedBookmarks.includes(String(remedyId))) {
+      bookmarkBtn.innerText = "Remove from Bookmarks";
+    } else {
+      bookmarkBtn.innerText = "Add to Bookmarks";
+    }
+  }
+
+  bookmarkBtn.addEventListener("click", () => {
+    toggleBookmark(remedyId);
+    updateBtn();
+  });
+
+  updateBtn();
+</script>
+
+</body>
+</html>

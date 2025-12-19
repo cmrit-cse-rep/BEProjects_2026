@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Landslide Risk Demo</title>
+  <style>
+    :root { color-scheme: light; }
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Helvetica Neue', Arial, 'Noto Sans', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; margin: 0; padding: 24px; line-height: 1.5; background: radial-gradient(1200px 600px at 10% 10%, #e0f2fe40, transparent), radial-gradient(900px 600px at 90% 10%, #e9d5ff40, transparent); }
+    h1 { margin: 0 0 16px; letter-spacing: 0.3px; }
+    .container { max-width: 1080px; margin: 0 auto; }
+    .card { border: 1px solid rgba(0,0,0,0.08); border-radius: 16px; padding: 18px; margin: 14px 0; backdrop-filter: saturate(140%) blur(2px); background: linear-gradient(180deg, rgba(255,255,255,0.75), rgba(255,255,255,0.6)); box-shadow: 0 6px 24px rgba(0,0,0,0.06); transition: transform .2s ease, box-shadow .2s ease; }
+    .card:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(0,0,0,0.08); }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    label { display: block; font-weight: 600; margin-bottom: 6px; }
+    input[type="text"], input[type="file"] { width: 100%; padding: 10px 12px; border-radius: 10px; border: 1px solid #333; background: #000; color: #fff; -webkit-text-fill-color: #fff; caret-color: #fff; transition: border-color .2s ease, box-shadow .2s ease; }
+    input[type="text"]:focus, input[type="file"]:focus { outline: none; border-color: #2563eb; box-shadow: 0 0 0 3px #2563eb20; }
+    /* Placeholders across browsers */
+    ::placeholder { color: #bbb; opacity: 1; }
+    :-ms-input-placeholder { color: #bbb; opacity: 1; }
+    ::-ms-input-placeholder { color: #bbb; opacity: 1; }
+    ::-webkit-input-placeholder { color: #bbb; opacity: 1; }
+    /* Improve file input button visibility */
+    input[type="file"]::file-selector-button { background: #fff; color: #000; border: 0; border-radius: 8px; padding: 8px 12px; margin-right: 10px; cursor: pointer; }
+    button { padding: 11px 16px; border: none; border-radius: 999px; background: linear-gradient(90deg, #2563eb, #7c3aed); color: white; font-weight: 700; cursor: pointer; box-shadow: 0 6px 20px #2563eb40; transition: transform .08s ease, filter .2s ease; }
+    button:hover { filter: brightness(1.05); }
+    button:active { transform: translateY(1px); }
+    button:disabled { opacity: 0.6; cursor: not-allowed; }
+    .row { display:flex; gap:10px; align-items: center; }
+    .muted { opacity: 0.8; }
+    .badges { display:flex; gap:8px; flex-wrap: wrap; align-items:center; }
+    .badge { display:inline-block; padding:4px 10px; border-radius:999px; font-size: 12px; font-weight:700; letter-spacing:0.2px; animation: fadeIn .3s ease both; }
+    .badge-low { background:#16a34a20; color:#16a34a; border:1px solid #16a34a55; }
+    .badge-medium { background:#f59e0b20; color:#b45309; border:1px solid #f59e0b55; }
+    .badge-high { background:#dc262620; color:#b91c1c; border:1px solid #dc262655; }
+    .pill { padding:6px 12px; border-radius:999px; font-weight:700; display:inline-flex; align-items:center; gap:6px; }
+    .pill-ok { background:#16a34a20; color:#16a34a; border:1px solid #16a34a55; }
+    .pill-warn { background:#b91c1c20; color:#b91c1c; border:1px solid #b91c1c55; }
+    .progress { height:10px; border-radius:999px; background:rgba(0,0,0,0.08); overflow:hidden; }
+    .progress > .bar { height:100%; background: linear-gradient(90deg, #22c55e, #f59e0b, #ef4444); transition: width .7s cubic-bezier(.22,1,.36,1); }
+    .timeline { position:relative; padding-left:20px; }
+    .timeline:before { content:""; position:absolute; left:8px; top:0; bottom:0; width:2px; background:rgba(0,0,0,0.15); }
+    .t-item { position:relative; margin:12px 0; animation: fadeInUp .35s ease both; }
+    .t-item:before { content:""; position:absolute; left:-14px; top:6px; width:10px; height:10px; border-radius:999px; background:#2563eb; box-shadow:0 0 0 2px #ffffff; }
+    .kvs { display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap:12px; }
+    .kv { border:1px dashed rgba(0,0,0,0.18); border-radius:10px; padding:10px; }
+    .kv .k { font-size:12px; opacity:0.8; }
+    .kv .v { font-size:18px; font-weight:700; }
+
+    .skeleton { display:grid; gap:10px; }
+    .shimmer { height:12px; border-radius:8px; background: linear-gradient(90deg, #e5e7eb, #f3f4f6, #e5e7eb); background-size: 200% 100%; animation: shimmer 1.2s infinite linear; }
+    .shimmer.small { height:10px; width:60%; }
+    .shimmer.wide { height:12px; width:90%; }
+
+    @keyframes shimmer { 0%{background-position: 200% 0} 100%{background-position: -200% 0} }
+    @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+    @keyframes fadeInUp { from{opacity:0; transform: translateY(6px)} to{opacity:1; transform: translateY(0)} }
+    .fade-in { animation: fadeIn .3s ease both; }
+    /* Ensure autofill text isn't white-on-white */
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover,
+    input:-webkit-autofill:focus {
+      -webkit-text-fill-color: #fff !important;
+      -webkit-box-shadow: 0 0 0px 1000px #000 inset;
+      box-shadow: 0 0 0px 1000px #000 inset;
+      transition: background-color 5000s ease-in-out 0s;
+    }
+  </style>
+  <script>
+    function riskBadge(level) {
+      const l = (level||'').toLowerCase();
+      if (l === 'high') return '<span class="badge badge-high">High risk</span>';
+      if (l === 'medium') return '<span class="badge badge-medium">Medium risk</span>';
+      return '<span class="badge badge-low">Low risk</span>';
+    }
+
+    async function fetchLocationRisk(e) {
+      e.preventDefault();
+      const out = document.getElementById('location-out');
+      const loc = document.getElementById('location').value.trim();
+      if (!loc) { out.innerHTML = '<div class="muted">Please enter a location.</div>'; return; }
+      out.innerHTML = skeleton();
+      try {
+        const res = await fetch(`/predict?location=${encodeURIComponent(loc)}`);
+        const data = await res.json();
+        renderLocation(data);
+      } catch (err) {
+        out.innerHTML = `<div class="muted">${String(err)}</div>`;
+      }
+    }
+
+    async function fetchImageRisk(e) {
+      e.preventDefault();
+      const out = document.getElementById('image-out');
+      const fileInput = document.getElementById('image-file');
+      const sensHigh = document.getElementById('image-sensitivity').checked;
+      const satMode = document.getElementById('image-mode-sat') ? document.getElementById('image-mode-sat').checked : false;
+      if (!fileInput.files || !fileInput.files[0]) { out.innerHTML = '<div class="muted">Choose an image.</div>'; return; }
+      out.innerHTML = skeleton();
+      try {
+        const form = new FormData();
+        form.append('file', fileInput.files[0]);
+        if (sensHigh) form.append('sensitivity', 'high');
+        if (satMode) form.append('mode', 'satellite');
+        const res = await fetch('/image/predict', { method: 'POST', body: form });
+        const data = await res.json();
+        renderImage(data);
+      } catch (err) {
+        out.innerHTML = `<div class="muted">${String(err)}</div>`;
+      }
+    }
+
+    function renderLocation(data) {
+      const out = document.getElementById('location-out');
+      const riskPct = Math.round(100 * (Number(data.risk_score || 0)));
+      const history = Array.isArray(data.history) && data.history.length ? data.history.map(h => {
+        const d = h.date || '';
+        const desc = h.description || '';
+        const cas = (h.casualties !== undefined) ? `, casualties: ${h.casualties}` : '';
+        return `<div class=\"t-item\"><div><strong>${d}</strong> — ${desc}${cas}</div></div>`;
+      }).join('') : '<div class="muted">No recorded incidents.</div>';
+
+      out.innerHTML = `
+        <div class="badges" style="margin-bottom:10px;">${riskBadge(data.risk_level)}</div>
+        <div class="kvs">
+          <div class="kv"><div class="k">Rainfall</div><div class="v">${data.rainfall_mm} mm</div></div>
+          <div class="kv"><div class="k">Slope</div><div class="v">${data.slope_deg}&deg;</div></div>
+          <div class="kv"><div class="k">Vegetation Index</div><div class="v">${data.vegetation_index}</div></div>
+          <div class="kv"><div class="k">Soil Type</div><div class="v">${data.soil_type}</div></div>
+          <div class="kv"><div class="k">Latitude</div><div class="v">${data.latitude}</div></div>
+          <div class="kv"><div class="k">Longitude</div><div class="v">${data.longitude}</div></div>
+        </div>
+        <div style="margin:14px 0 6px; font-weight:700;">Risk score: ${riskPct}%</div>
+        <div class="progress"><div class="bar" style="width:${riskPct}%;"></div></div>
+        <div style="margin-top:16px;">
+          <h4 style="margin:0 0 8px;">Past history</h4>
+          <div class="timeline">${history}</div>
+        </div>
+      `;
+      out.classList.add('fade-in');
+    }
+
+    function renderImage(data) {
+      const out = document.getElementById('image-out');
+      const prob = Math.round(100 * (Number(data.probability || 0)));
+      const detected = (data.label || '').toLowerCase() === 'landslide';
+      const pill = detected ? '<span class="pill pill-warn">Landslide detected</span>' : '<span class="pill pill-ok">No landslide</span>';
+      const risk = riskBadge(data.risk_level);
+      out.innerHTML = `
+        <div class="badges" style="margin-bottom:10px;">${risk} ${pill}</div>
+        <div style="margin:10px 0 6px; font-weight:700;">Confidence: ${prob}%</div>
+        <div class="progress"><div class="bar" style="width:${prob}%;"></div></div>
+      `;
+      out.classList.add('fade-in');
+    }
+
+    function renderCombined(data) {
+      const out = document.getElementById('combined-out');
+      const prob = Math.round(100 * (Number(data.image_probability || 0)));
+      const detected = !!data.landslide_detected;
+      const pill = detected ? '<span class="pill pill-warn">Landslide detected</span>' : '<span class="pill pill-ok">No landslide</span>';
+      const history = Array.isArray(data.history) && data.history.length ? data.history.map(h => {
+        const d = h.date || '';
+        const desc = h.description || '';
+        const cas = (h.casualties !== undefined) ? `, casualties: ${h.casualties}` : '';
+        return `<div class=\"t-item\"><div><strong>${d}</strong> — ${desc}${cas}</div></div>`;
+      }).join('') : '<div class="muted">No recorded incidents.</div>';
+
+      out.innerHTML = `
+        <div class="badges" style="margin-bottom:10px;">${riskBadge(data.risk_level)} ${pill}</div>
+        <div style="margin:10px 0 6px; font-weight:700;">Image confidence: ${prob}%</div>
+        <div class="progress"><div class="bar" style="width:${prob}%;"></div></div>
+        <div style="margin-top:16px;">
+          <h4 style="margin:0 0 8px;">Past history</h4>
+          <div class="timeline">${history}</div>
+        </div>
+      `;
+      out.classList.add('fade-in');
+    }
+
+    async function fetchCombined(e) {
+      e.preventDefault();
+      const out = document.getElementById('combined-out');
+      const loc = document.getElementById('combined-location').value.trim();
+      const file = document.getElementById('combined-image').files[0];
+      const sensHigh = document.getElementById('combined-sensitivity').checked;
+      const satMode = document.getElementById('combined-mode-sat') ? document.getElementById('combined-mode-sat').checked : false;
+      if (!loc || !file) { out.innerHTML = '<div class="muted">Provide location and image.</div>'; return; }
+      out.innerHTML = skeleton();
+      try {
+        const form = new FormData();
+        form.append('location', loc);
+        form.append('file', file);
+        if (sensHigh) form.append('sensitivity', 'high');
+        if (satMode) form.append('mode', 'satellite');
+        const res = await fetch('/predict/combined', { method: 'POST', body: form });
+        const data = await res.json();
+        renderCombined(data);
+      } catch (err) {
+        out.innerHTML = `<div class="muted">${String(err)}</div>`;
+      }
+    }
+    function skeleton() {
+      return `
+        <div class="skeleton">
+          <div class="shimmer wide"></div>
+          <div class="shimmer"></div>
+          <div class="shimmer small"></div>
+        </div>
+      `;
+    }
+  </script>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Landslide Risk</h1>
+      <p class="muted">Test risk prediction by location or by uploading a photo of a slope.</p>
+
+      <div class="grid">
+        <div class="card">
+          <h3>By Location</h3>
+          <form onsubmit="fetchLocationRisk(event)">
+            <label for="location">Location name</label>
+            <div class="row">
+              <input id="location" type="text" placeholder="e.g., Darjeeling" />
+              <button type="submit">Predict</button>
+            </div>
+          </form>
+          <div id="location-out"></div>
+        </div>
+
+        <div class="card">
+          <h3>By Image</h3>
+          <form onsubmit="fetchImageRisk(event)">
+            <label for="image-file">Upload image</label>
+            <div class="row">
+              <input id="image-file" type="file" accept="image/*" />
+              <button type="submit">Predict</button>
+            </div>
+            <div class="row" style="margin-top:8px;">
+              <input id="image-sensitivity" type="checkbox" />
+              <label for="image-sensitivity" class="muted">High sensitivity (fewer misses, more false alarms)</label>
+            </div>
+            <div class="row" style="margin-top:4px;">
+              <input id="image-mode-sat" type="checkbox" />
+              <label for="image-mode-sat" class="muted">Satellite image (blur/low-texture)</label>
+            </div>
+          </form>
+          <div id="image-out"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Combined: Location + Image</h3>
+        <form id="combined-form" onsubmit="fetchCombined(event)">
+          <div class="row">
+            <input id="combined-location" type="text" placeholder="Location" />
+            <input id="combined-image" type="file" accept="image/*" />
+            <button type="submit">Predict</button>
+          </div>
+          <div class="row" style="margin-top:8px;">
+            <input id="combined-sensitivity" type="checkbox" />
+            <label for="combined-sensitivity" class="muted">High sensitivity (fewer misses, more false alarms)</label>
+          </div>
+          <div class="row" style="margin-top:4px;">
+            <input id="combined-mode-sat" type="checkbox" />
+            <label for="combined-mode-sat" class="muted">Satellite image (blur/low-texture)</label>
+          </div>
+        </form>
+        <div id="combined-out"></div>
+      </div>
+
+      <div class="card">
+        <h3>Notes</h3>
+        <ul>
+          <li>Location-based risk uses geocoding + simulated environment and optional ML.</li>
+          <li>Image-based risk uses a lightweight heuristic unless an image model is provided.</li>
+        </ul>
+      </div>
+    </div>
+  </body>
+  </html>
+
+

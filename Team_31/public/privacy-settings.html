@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Settings - Mindful AI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(180deg, #f4fbff 0%, #ffffff 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(24, 154, 180, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #189ab4 0%, #0d4b58 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .settings-section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #073b4c;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #189ab4;
+        }
+
+        .privacy-item {
+            padding: 20px;
+            background: #f4fbff;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(24, 154, 180, 0.1);
+        }
+
+        .privacy-item:hover {
+            background: #e6f7fb;
+            border-color: #189ab4;
+        }
+
+        .privacy-item h3 {
+            font-size: 14px;
+            color: #073b4c;
+            margin-bottom: 8px;
+        }
+
+        .privacy-item p {
+            font-size: 12px;
+            color: #6b7280;
+            margin-bottom: 10px;
+        }
+
+        .select-group {
+            margin-top: 10px;
+        }
+
+        .select-group label {
+            display: block;
+            font-size: 12px;
+            color: #073b4c;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .select-group select {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            font-size: 13px;
+            background: white;
+            cursor: pointer;
+            transition: border-color 0.3s ease;
+            color: #073b4c;
+        }
+
+        .select-group select:focus {
+            outline: none;
+            border-color: #189ab4;
+            box-shadow: 0 0 0 3px rgba(24, 154, 180, 0.1);
+        }
+
+        .toggle-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .toggle-item-text {
+            flex: 1;
+        }
+
+        .toggle-item-text h4 {
+            font-size: 13px;
+            color: #073b4c;
+            margin-bottom: 3px;
+        }
+
+        .toggle-item-text p {
+            font-size: 11px;
+            color: #9ca3af;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 26px;
+            background: #d1d5db;
+            border-radius: 13px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .toggle-switch.active {
+            background: #189ab4;
+        }
+
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            width: 22px;
+            height: 22px;
+            background: white;
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: transform 0.3s ease;
+        }
+
+        .toggle-switch.active::after {
+            transform: translateX(24px);
+        }
+
+        .warning-box {
+            background: #fef3c7;
+            border-left: 4px solid #189ab4;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            font-size: 13px;
+            color: #0d4b58;
+        }
+
+        .danger-section {
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 2px rgba(24, 154, 180, 0.2);
+        }
+
+        .danger-section .section-title {
+            color: #dc3545;
+            border-bottom-color: #dc3545;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .btn-save {
+            background: #189ab4;
+            color: white;
+            flex: 1;
+        }
+
+        .btn-save:hover {
+            background: #0d4b58;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(24, 154, 180, 0.4);
+        }
+
+        .btn-back {
+            background: #e5e7eb;
+            color: #073b4c;
+            padding: 12px 20px;
+        }
+
+        .btn-back:hover {
+            background: #d1d5db;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+            width: 100%;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(220, 53, 69, 0.4);
+        }
+
+        .message {
+            padding: 12px 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            display: none;
+        }
+
+        .message.success {
+            background: #d1f3f7;
+            color: #0d4b58;
+            border: 1px solid #b3e5fc;
+            display: block;
+        }
+
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 16px;
+            }
+
+            .header h1 {
+                font-size: 26px;
+            }
+
+            .content {
+                padding: 16px;
+            }
+
+            .settings-section {
+                margin-bottom: 24px;
+            }
+
+            .privacy-item {
+                padding: 12px;
+            }
+
+            .section-title {
+                font-size: 16px;
+            }
+
+            select {
+                padding: 10px;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .container {
+                padding: 0;
+            }
+
+            .header {
+                padding: 12px;
+                border-radius: 0;
+            }
+
+            .header h1 {
+                font-size: 22px;
+                margin-bottom: 6px;
+            }
+
+            .header p {
+                font-size: 13px;
+            }
+
+            .content {
+                padding: 12px;
+                border-radius: 0;
+            }
+
+            .settings-section {
+                margin-bottom: 20px;
+                padding: 12px;
+            }
+
+            .section-title {
+                font-size: 15px;
+                margin-bottom: 12px;
+            }
+
+            .privacy-item {
+                padding: 10px;
+                margin-bottom: 12px;
+            }
+
+            .privacy-item h3 {
+                font-size: 14px;
+                margin-bottom: 6px;
+            }
+
+            .privacy-item p {
+                font-size: 12px;
+                margin-bottom: 10px;
+            }
+
+            .select-group {
+                margin-bottom: 12px;
+            }
+
+            .select-group label {
+                display: block;
+                font-size: 12px;
+                margin-bottom: 6px;
+            }
+
+            select {
+                padding: 8px;
+                font-size: 12px;
+                width: 100%;
+            }
+
+            .checkbox-group label {
+                font-size: 12px;
+            }
+
+            .warning-box {
+                padding: 12px;
+                font-size: 12px;
+                margin-bottom: 16px;
+            }
+
+            button {
+                padding: 10px 16px;
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                padding: 8px;
+            }
+
+            .header h1 {
+                font-size: 18px;
+                margin-bottom: 4px;
+            }
+
+            .header p {
+                font-size: 12px;
+            }
+
+            .content {
+                padding: 8px;
+            }
+
+            .settings-section {
+                margin-bottom: 16px;
+                padding: 8px;
+            }
+
+            .section-title {
+                font-size: 13px;
+                margin-bottom: 10px;
+            }
+
+            .privacy-item {
+                padding: 8px;
+                margin-bottom: 10px;
+            }
+
+            .privacy-item h3 {
+                font-size: 13px;
+                margin-bottom: 4px;
+            }
+
+            .privacy-item p {
+                font-size: 11px;
+                margin-bottom: 8px;
+            }
+
+            .select-group {
+                margin-bottom: 10px;
+            }
+
+            .select-group label {
+                font-size: 11px;
+                margin-bottom: 4px;
+            }
+
+            select {
+                padding: 6px;
+                font-size: 11px;
+            }
+
+            .checkbox-group label {
+                font-size: 11px;
+            }
+
+            .warning-box {
+                padding: 8px;
+                font-size: 11px;
+                margin-bottom: 12px;
+            }
+
+            button {
+                padding: 8px 12px;
+                font-size: 13px;
+                width: 100%;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔒 Privacy Settings</h1>
+            <p>Control your privacy and data sharing preferences</p>
+        </div>
+
+        <div class="content">
+            <div id="message" class="message"></div>
+
+            <div class="warning-box">
+                🔐 Your privacy is important to us. Adjust these settings to control how your data is used and who can see your information.
+            </div>
+
+            <!-- Profile Visibility -->
+            <div class="settings-section">
+                <div class="section-title">Profile Visibility</div>
+
+                <div class="privacy-item">
+                    <h3>Who can see your profile?</h3>
+                    <p>Control who in the community can view your profile information</p>
+                    <div class="select-group">
+                        <label>Profile Visibility:</label>
+                        <select id="profileVisibility">
+                            <option value="private">Private (Only You)</option>
+                            <option value="friends-only">Friends Only</option>
+                            <option value="community">Community Members</option>
+                            <option value="public">Public</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Activity Status -->
+            <div class="settings-section">
+                <div class="section-title">Activity & Status</div>
+
+                <div class="privacy-item">
+                    <h3>Show Online Status</h3>
+                    <p>Let others see when you're active on Mindful AI</p>
+                    <div class="toggle-item">
+                        <div class="toggle-item-text">
+                            <h4>Online Status Visible</h4>
+                        </div>
+                        <div class="toggle-switch active" id="onlineStatus" data-key="onlineStatus"></div>
+                    </div>
+                </div>
+
+                <div class="privacy-item">
+                    <h3>Show Last Seen Time</h3>
+                    <p>Display when you were last active on the platform</p>
+                    <div class="toggle-item">
+                        <div class="toggle-item-text">
+                            <h4>Last Seen Visible</h4>
+                        </div>
+                        <div class="toggle-switch active" id="lastSeen" data-key="lastSeen"></div>
+                    </div>
+                </div>
+
+                <div class="privacy-item">
+                    <h3>Activity Feed Visibility</h3>
+                    <p>Let others see your mood entries and community activities</p>
+                    <div class="toggle-item">
+                        <div class="toggle-item-text">
+                            <h4>Activity Feed Public</h4>
+                        </div>
+                        <div class="toggle-switch" id="activityFeed" data-key="activityFeed"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Data & Privacy -->
+            <div class="settings-section">
+                <div class="section-title">Data & Analytics</div>
+
+                <div class="privacy-item">
+                    <h3>Usage Analytics</h3>
+                    <p>Allow us to collect data about how you use Mindful AI to improve the platform</p>
+                    <div class="toggle-item">
+                        <div class="toggle-item-text">
+                            <h4>Help Us Improve</h4>
+                        </div>
+                        <div class="toggle-switch active" id="analytics" data-key="analytics"></div>
+                    </div>
+                </div>
+
+                <div class="privacy-item">
+                    <h3>Personalization</h3>
+                    <p>Use your data to personalize recommendations and features</p>
+                    <div class="toggle-item">
+                        <div class="toggle-item-text">
+                            <h4>Personalized Experience</h4>
+                        </div>
+                        <div class="toggle-switch active" id="personalization" data-key="personalization"></div>
+                    </div>
+                </div>
+
+                <div class="privacy-item">
+                    <h3>Cookies & Tracking</h3>
+                    <p>Allow cookies for better functionality and performance</p>
+                    <div class="toggle-item">
+                        <div class="toggle-item-text">
+                            <h4>Accept Cookies</h4>
+                        </div>
+                        <div class="toggle-switch active" id="cookies" data-key="cookies"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Blocking & Restrictions -->
+            <div class="settings-section">
+                <div class="section-title">Blocking & Restrictions</div>
+
+                <div class="privacy-item">
+                    <h3>Blocked Users</h3>
+                    <p>Manage users you've blocked from contacting you</p>
+                    <button class="btn btn-back" style="width: 100%; margin-top: 10px;">👤 View Blocked Users</button>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="button-group">
+                <button class="btn btn-back" onclick="goBack()">← Back to Settings</button>
+                <button class="btn btn-save" onclick="savePrivacySettings()">✓ Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', loadPrivacySettings);
+
+        // Check if user is logged in
+        function checkAuth() {
+            const currentUser = localStorage.getItem('currentUser');
+            if (!currentUser) {
+                window.location.href = 'landingpage.html';
+                return;
+            }
+        }
+
+        // Load privacy settings
+        function loadPrivacySettings() {
+            checkAuth();
+            
+            const userPreferences = JSON.parse(localStorage.getItem('userPreferences') || '{}');
+            const privacy = userPreferences.privacy || {};
+
+            // Load dropdown
+            const profileVisibility = document.getElementById('profileVisibility');
+            if (privacy.profileVisibility) {
+                profileVisibility.value = privacy.profileVisibility;
+            }
+
+            // Load toggle switches
+            const toggles = ['onlineStatus', 'lastSeen', 'activityFeed', 'analytics', 'personalization', 'cookies'];
+            toggles.forEach(toggle => {
+                const element = document.getElementById(toggle);
+                const isEnabled = privacy[toggle] !== false;
+                if (isEnabled) {
+                    element.classList.add('active');
+                }
+                element.addEventListener('click', function() {
+                    this.classList.toggle('active');
+                });
+            });
+        }
+
+        // Save privacy settings
+        function savePrivacySettings() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+            const privacy = {};
+
+            // Get dropdown value
+            privacy.profileVisibility = document.getElementById('profileVisibility').value;
+
+            // Get toggle states
+            const toggles = ['onlineStatus', 'lastSeen', 'activityFeed', 'analytics', 'personalization', 'cookies'];
+            toggles.forEach(toggle => {
+                privacy[toggle] = document.getElementById(toggle).classList.contains('active');
+            });
+
+            // Save to localStorage
+            const userPreferences = JSON.parse(localStorage.getItem('userPreferences') || '{}');
+            userPreferences.privacy = privacy;
+            localStorage.setItem('userPreferences', JSON.stringify(userPreferences));
+
+            // Try to sync with backend
+            const email = currentUser.email;
+            if (email) {
+                fetch('/api/preferences/privacy', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email,
+                        privacy
+                    })
+                })
+                .catch(err => console.log('Backend sync skipped (offline mode)'));
+            }
+
+            showMessage('✓ Privacy settings saved successfully!', 'success');
+            setTimeout(() => {
+                window.location.href = 'settings.html';
+            }, 2000);
+        }
+
+        // Show message
+        function showMessage(msg, type) {
+            const msgEl = document.getElementById('message');
+            msgEl.textContent = msg;
+            msgEl.className = `message ${type}`;
+            setTimeout(() => {
+                msgEl.className = 'message';
+            }, 3000);
+        }
+
+        // Go back
+        function goBack() {
+            window.location.href = 'settings.html';
+        }
+    </script>
+</body>
+</html>

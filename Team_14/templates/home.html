@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Veritas AI | Deepfake Detector</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+*{box-sizing:border-box}
+body{
+    margin:0;
+    font-family:Inter,sans-serif;
+    color:#e5e7eb;
+
+    /* HACKER / CYBER BACKGROUND */
+    background:
+        linear-gradient(rgba(2,6,23,0.82), rgba(2,6,23,0.9)),
+        url("https://images.unsplash.com/photo-1504639725590-34d0984388bd");
+    background-size:cover;
+    background-attachment:fixed;
+    background-position:center;
+}
+
+/* HEADER */
+.header{
+    padding:18px 40px;
+    font-weight:800;
+    font-size:20px;
+    border-bottom:1px solid rgba(255,255,255,0.08);
+    backdrop-filter:blur(8px);
+}
+
+/* LAYOUT */
+.main{
+    display:grid;
+    grid-template-columns: 38% 62%;
+    gap:30px;
+    padding:30px 40px;
+}
+
+/* UPLOAD PANEL */
+.upload-card{
+    background:rgba(15,23,42,0.92);
+    border-radius:18px;
+    padding:26px;
+    border:1px solid rgba(255,255,255,0.1);
+}
+
+/* DROP ZONE */
+.drop-zone{
+    border:2px dashed rgba(255,255,255,0.3);
+    border-radius:16px;
+    height:200px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-direction:column;
+    cursor:pointer;
+    transition:.3s;
+    text-align:center;
+    font-size:15px;
+}
+.drop-zone:hover{
+    border-color:#38bdf8;
+    background:rgba(56,189,248,0.12);
+}
+
+/* PREVIEW */
+.preview-box{
+    margin-top:18px;
+    display:flex;
+    justify-content:center;
+}
+.preview-box img,
+.preview-box video{
+    max-width:360px;
+    max-height:220px;
+    border-radius:14px;
+    object-fit:contain;
+    box-shadow:0 12px 30px rgba(0,0,0,0.7);
+}
+
+/* BUTTONS */
+button{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:12px;
+    font-weight:700;
+    margin-top:14px;
+    cursor:pointer;
+}
+.analyze{
+    background:#2563eb;
+    color:white;
+}
+.reset{
+    background:transparent;
+    color:#9ca3af;
+    border:1px solid rgba(255,255,255,0.18);
+}
+
+/* ANALYSIS PANEL */
+.result-panel{
+    background:linear-gradient(
+        180deg,
+        rgba(31,41,55,0.96),
+        rgba(2,6,23,0.96)
+    );
+    border-radius:22px;
+    padding:36px;
+    border:1px solid rgba(255,255,255,0.12);
+}
+
+/* STATUS */
+.status{
+    background:rgba(34,197,94,0.18);
+    color:#22c55e;
+    padding:10px 16px;
+    border-radius:12px;
+    font-weight:600;
+    margin-bottom:26px;
+    display:inline-block;
+}
+
+/* GAUGE */
+.gauge{
+    position:relative;
+    width:280px;
+    margin:10px auto 34px;
+}
+.gauge svg{
+    transform:rotate(-90deg);
+}
+.gauge-value{
+    position:absolute;
+    inset:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:42px;
+    font-weight:800;
+}
+
+/* BARS */
+.bar{
+    margin:18px 0;
+}
+.bar small{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:8px;
+    opacity:.9;
+}
+.progress{
+    height:12px;
+    background:#020617;
+    border-radius:12px;
+    overflow:hidden;
+}
+.real{background:#38bdf8;height:100%}
+.fake{background:#fb7185;height:100%}
+
+/* RAW SCORE */
+.raw-box{
+    margin-top:28px;
+    background:rgba(255,255,255,0.07);
+    padding:20px;
+    border-radius:16px;
+    text-align:center;
+}
+.raw-box h2{
+    margin:6px 0;
+    font-size:32px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">Veritas AI · Deepfake Detection System</div>
+
+<div class="main">
+
+<!-- LEFT : UPLOAD + PREVIEW -->
+<div class="upload-card">
+<form action="/predict" method="post" enctype="multipart/form-data" id="uploadForm">
+
+<label class="drop-zone">
+    ☁️ <strong>Select Image or Video</strong>
+    <small>Supported: JPG, PNG, MP4</small>
+    <input id="fileInput" type="file" name="image" hidden required>
+</label>
+
+<div class="preview-box" id="previewBox"></div>
+
+<button class="analyze">Analyze</button>
+<button type="button" class="reset" id="resetBtn">Reset</button>
+
+</form>
+</div>
+
+<!-- RIGHT : ANALYSIS -->
+<div class="result-panel">
+
+{% if result %}
+<div class="status">✔ Analysis Complete</div>
+
+<div class="gauge">
+<svg width="280" height="280">
+<circle cx="140" cy="140" r="120" stroke="#1e293b" stroke-width="20" fill="none"/>
+<circle cx="140" cy="140" r="120"
+ stroke="#38bdf8"
+ stroke-width="20"
+ fill="none"
+ stroke-dasharray="754"
+ stroke-dashoffset="{{ 754 - (result.real_percent/100)*754 }}"
+ stroke-linecap="round"/>
+</svg>
+<div class="gauge-value">{{ result.real_percent }}%</div>
+</div>
+
+<div class="bar">
+<small><span>Real Confidence</span><span>{{ result.real_percent }}%</span></small>
+<div class="progress"><div class="real" style="width:{{ result.real_percent }}%"></div></div>
+</div>
+
+<div class="bar">
+<small><span>Fake Probability</span><span>{{ result.fake_percent }}%</span></small>
+<div class="progress"><div class="fake" style="width:{{ result.fake_percent }}%"></div></div>
+</div>
+
+<div class="raw-box">
+<small>Raw Probability Score</small>
+<h2>{{ result.raw_prob }}</h2>
+<small>Model Confidence (0–1)</small>
+</div>
+
+{% else %}
+<p style="opacity:.65;font-size:16px">
+Upload an image or video to start deepfake analysis.
+</p>
+{% endif %}
+
+</div>
+</div>
+
+<!-- JS : PREVIEW + RESET -->
+<script>
+const input = document.getElementById("fileInput");
+const previewBox = document.getElementById("previewBox");
+const resetBtn = document.getElementById("resetBtn");
+
+input.addEventListener("change", () => {
+    previewBox.innerHTML = "";
+
+    if (!input.files || !input.files[0]) return;
+
+    const file = input.files[0];
+    const url = URL.createObjectURL(file);
+
+    if (file.type.startsWith("image")) {
+        const img = document.createElement("img");
+        img.src = url;
+        previewBox.appendChild(img);
+    } else if (file.type.startsWith("video")) {
+        const video = document.createElement("video");
+        video.src = url;
+        video.controls = true;
+        previewBox.appendChild(video);
+    }
+});
+
+resetBtn.addEventListener("click", () => {
+    input.value = "";
+    previewBox.innerHTML = "";
+    window.location.href = "/";
+});
+</script>
+
+</body>
+</html>

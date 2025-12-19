@@ -1,0 +1,497 @@
+/* =========================================================
+   Global Theme Variables
+   ========================================================= */
+
+:root {
+  /* Dark theme (default) */
+  --font-body: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-heading: "Space Grotesk", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+  --bg-gradient: radial-gradient(circle at top left, #1f2933 0, #020617 40%, #020617 100%);
+  --bg-color: #020617;
+  --nav-bg: rgba(15, 23, 42, 0.95);
+
+  --card-bg: rgba(15, 23, 42, 0.96);
+  --card-border: rgba(148, 163, 184, 0.22);
+  --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.65);
+
+  --text-primary: #e5e7eb;
+  --text-secondary: #9ca3af;
+  --text-muted: #a1a1aa;
+
+  --accent-primary: #3b82f6; /* blue */
+  --accent-secondary: #22c55e; /* green */
+  --accent-danger: #ef4444;
+  --accent-neutral: #6b7280;
+
+  --input-bg: #020617;
+  --input-border: rgba(148, 163, 184, 0.4);
+  --input-focus-border: #3b82f6;
+  --input-focus-ring: rgba(59, 130, 246, 0.3);
+
+  --scrollbar-track: transparent;
+  --scrollbar-thumb: rgba(148, 163, 184, 0.4);
+  --scrollbar-thumb-hover: rgba(148, 163, 184, 0.7);
+
+  /* Chat colors (dark theme) */
+  --chat-bg: rgba(15, 23, 42, 0.92);
+  --chat-border: rgba(148, 163, 184, 0.5);
+  --chat-text: #e5e7eb;
+  --chat-user-bg: rgba(34, 197, 94, 0.1);
+  --chat-user-border: rgba(34, 197, 94, 0.6);
+  --chat-bot-bg: rgba(15, 23, 42, 0.95);
+  --chat-bot-border: rgba(148, 163, 184, 0.5);
+ 
+
+}
+
+/* Light theme (via data-theme="light" on <html> or <body>) */
+:root[data-theme="light"] {
+  --bg-gradient: radial-gradient(circle at top left, #e5e7eb 0, #f4f4f5 40%, #f9fafb 100%);
+  --bg-color: #f4f4f5;
+  --nav-bg: #ffffff;
+
+  --card-bg: #ffffff;
+  --card-border: rgba(148, 163, 184, 0.35);
+  --card-shadow: 0 12px 34px rgba(15, 23, 42, 0.12);
+
+  --text-primary: #111827;
+  --text-secondary: #4b5563;
+  --text-muted: #6b7280;
+
+  --input-bg: #f9fafb;
+  --input-border: rgba(148, 163, 184, 0.8);
+  --input-focus-border: #3b82f6;
+  --input-focus-ring: rgba(59, 130, 246, 0.35);
+
+  --accent-primary: #2563eb;
+
+  --scrollbar-track: transparent;
+  --scrollbar-thumb: rgba(148, 163, 184, 0.6);
+  --scrollbar-thumb-hover: rgba(75, 85, 99, 0.9);
+
+  /* Chat colors (light theme – chat also light) */
+  --chat-bg: #f9fafb;
+  --chat-border: rgba(148, 163, 184, 0.6);
+  --chat-text: #111827;
+  --chat-user-bg: rgba(34, 197, 94, 0.12);
+  --chat-user-border: rgba(21, 128, 61, 0.7);
+  --chat-bot-bg: #ffffff;
+  --chat-bot-border: rgba(148, 163, 184, 0.7);
+}
+
+/* =========================================================
+   Global Layout & Typography
+   ========================================================= */
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg-gradient);
+  color: var(--text-primary);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+main.container-fluid {
+  max-width: 100%;
+}
+
+/* Navbar */
+
+.navbar {
+  background: var(--nav-bg) !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
+}
+
+.navbar-brand {
+  font-weight: 600;
+  letter-spacing: 0.4px;
+}
+
+.navbar-text {
+  color: var(--text-secondary);
+}
+
+/* Navbar brand logo */
+.navbar-brand-logo {
+  height: 28px;
+  width: auto;
+  object-fit: contain;
+  border-radius: 0.35rem;
+}
+
+/* Slightly bigger on larger screens, optional */
+@media (min-width: 992px) {
+  .navbar-brand-logo {
+    height: 32px;
+  }
+}
+
+/* Spinner color matches theme accent */
+.spinner-border {
+  color: var(--accent-primary);
+}
+
+/* Override Bootstrap dark navbar colors in light theme */
+:root[data-theme="light"] .navbar-dark .navbar-brand,
+:root[data-theme="light"] .navbar-dark .navbar-text,
+:root[data-theme="light"] .navbar-dark .nav-link {
+  color: var(--text-primary) !important;
+}
+
+/* Typography */
+
+h1, h2, h3, h4, h5, h6,
+.navbar-brand,
+.section-title {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.card-title {
+  color: var(--text-primary);
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+
+.card-subtitle,
+.card-body > p.text-muted,
+.card-body > p.small {
+  font-size: 0.9rem;
+  color: var(--text-muted) !important;
+  margin-bottom: 0.75rem;
+}
+
+/* =========================================================
+   Cards & Chart
+   ========================================================= */
+
+.card {
+  background: var(--card-bg);
+  color: var(--text-primary);
+  border-radius: 1rem;
+  border: 1px solid var(--card-border);
+  box-shadow: var(--card-shadow);
+}
+
+.chart-container {
+  position: relative;
+  width: 100%;
+  min-height: 260px;
+}
+
+/* Chart legend text override if needed */
+.chart-legend,
+.chart-legend li,
+.chart-legend span {
+  color: var(--text-secondary);
+}
+
+/* ============================================
+   Link Styling for Posts and General Use
+   ============================================ */
+a {
+  color: var(--accent-primary);
+  text-decoration: none;
+  transition: color 0.2s ease, opacity 0.2s ease;
+}
+
+a:hover {
+  opacity: 0.85;
+  text-decoration: none;
+}
+
+/* Links inside chat messages specifically */
+.chat-message.bot a {
+  color: var(--accent-primary);
+  font-weight: 500;
+}
+
+.chat-message.bot a:hover {
+  color: var(--accent-secondary);
+  text-decoration: none;
+}
+
+/* =========================================================
+   Chat Window & Messages
+   ========================================================= */
+
+.chat-window {
+  background: var(--chat-bg);
+  border-radius: 0.9rem;
+  padding: 1rem;
+  min-height: 260px;
+  height: 70vh;
+  overflow-y: auto;
+  border: 1px solid var(--chat-border);
+  color: var(--chat-text);
+}
+
+/* Scrollbar styling (WebKit) */
+.chat-window::-webkit-scrollbar {
+  width: 8px;
+}
+.chat-window::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+}
+.chat-window::-webkit-scrollbar-thumb {
+  background-color: var(--scrollbar-thumb);
+  border-radius: 4px;
+}
+.chat-window::-webkit-scrollbar-thumb:hover {
+  background-color: var(--scrollbar-thumb-hover);
+}
+
+.chat-message {
+  display: flex;
+  margin-bottom: 0.5rem;
+}
+
+/* Improve readability of bullet points and lists in LLM answers */
+.chat-message.bot .bubble ul,
+.chat-message.bot .bubble ol {
+  margin: 0.5rem 0 0.5rem 1.25rem; /* left indent */
+  padding-left: 1.25rem;
+}
+
+.chat-message.bot .bubble li {
+  margin-bottom: 0.35rem; /* space between bullets */
+  line-height: 1.5;
+}
+
+.chat-message.bot .bubble li::marker {
+  color: var(--accent-primary); /* match your theme blue */
+  font-weight: 600;
+}
+
+.chat-message.bot .bubble p {
+  margin-bottom: 0.75rem; /* nice paragraph spacing */
+}
+
+/* Optional subtle background for lists */
+.chat-message.bot .bubble ul {
+  background: rgba(148, 163, 184, 0.05);
+  border-left: 3px solid var(--accent-primary);
+  padding: 0.75rem 1rem;
+  border-radius: 0.4rem;
+}
+
+/* System line */
+.chat-message.system .bubble {
+  background: transparent;
+  border-left: 3px solid var(--accent-primary);
+  padding-left: 0.75rem;
+  font-size: 0.86rem;
+  color: var(--text-secondary);
+}
+
+/* Alignment */
+.chat-message.user {
+  justify-content: flex-end;
+}
+.chat-message.bot {
+  justify-content: flex-start;
+}
+
+/* Bubble appearance */
+
+.bubble {
+  padding: 0.6rem 0.8rem;
+  border-radius: 0.6rem;
+  font-size: 0.93rem;
+  line-height: 1.4;
+}
+
+/* User message style */
+.chat-message.user .bubble {
+  background: var(--chat-user-bg);
+  border: 1px solid var(--chat-user-border);
+  color: var(--chat-text);
+}
+
+/* Bot message style */
+.chat-message.bot .bubble {
+  background: var(--chat-bot-bg);
+  border: 1px solid var(--chat-bot-border);
+  color: var(--chat-text);
+}
+
+/* Results list inside a bot message */
+
+.results-list {
+  margin-top: 0.6rem;
+}
+
+.results-list ul {
+  padding-left: 0;
+}
+
+.results-list li {
+  border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+  padding-bottom: 0.4rem;
+}
+
+.results-list li:last-child {
+  border-bottom: none;
+}
+
+/* Make post snippet text readable in both themes */
+.results-list .text-muted {
+  color: var(--text-secondary) !important;
+  opacity: 0.9;
+  font-size: 0.88rem;
+}
+
+/* =========================================================
+   Inputs & Buttons
+   ========================================================= */
+
+.form-control {
+  background-color: var(--input-bg);
+  border-color: var(--input-border);
+  color: var(--text-primary);
+  font-size: 0.95rem;
+}
+
+.form-control::placeholder {
+  color: var(--text-secondary);
+  opacity: 0.75;
+}
+
+.form-control:focus {
+  background-color: var(--input-bg);
+  color: var(--text-primary);
+  border-color: var(--input-focus-border);
+  box-shadow: 0 0 0 0.15rem var(--input-focus-ring);
+}
+
+/* Chat textarea specific */
+#user_query {
+  resize: vertical;
+  max-height: 6rem;
+}
+
+/* Primary button gradient */
+.btn-primary {
+  background: linear-gradient(to right, var(--accent-primary), var(--accent-secondary));
+  border: none;
+  font-weight: 500;
+}
+
+.btn-primary:hover {
+  filter: brightness(1.05);
+}
+
+/* Outline button (logout / login) */
+.btn-outline-light {
+  border-radius: 999px;
+  color: #f9fafb;
+  border-color: rgba(249, 250, 251, 0.9);
+}
+
+/* In light theme, make outline-light dark instead */
+:root[data-theme="light"] .btn-outline-light {
+  color: #111827;
+  border-color: #111827;
+}
+
+:root[data-theme="light"] .btn-outline-light:hover {
+  background-color: rgba(15, 23, 42, 0.06);
+}
+
+/* Flash messages */
+.flash-container .alert {
+  border-radius: 0.75rem;
+}
+
+/* Theme toggle button */
+.theme-toggle-btn {
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.7);
+  background: transparent;
+  color: var(--text-primary);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.1rem;
+  height: 2.1rem;
+  padding: 0;
+  font-size: 1.15rem;
+}
+
+.theme-toggle-btn:hover {
+  background-color: rgba(148, 163, 184, 0.12);
+}
+
+/* Light theme variant */
+:root[data-theme="light"] .theme-toggle-btn {
+  border-color: rgba(148, 163, 184, 0.9);
+  background-color: #f9fafb;
+  color: #111827;
+}
+
+:root[data-theme="light"] .theme-toggle-btn:hover {
+  background-color: #e5e7eb;
+}
+
+/* Softer navbar shadow in light mode */
+:root[data-theme="light"] .navbar {
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.08);
+}
+
+/* Improve muted text visibility in dark theme */
+:root:not([data-theme="light"]) .text-muted,
+:root:not([data-theme="light"]) small,
+:root:not([data-theme="light"]) .form-text,
+:root:not([data-theme="light"]) .form-label {
+  color: #d1d5db !important; /* brighter grey */
+  opacity: 0.9;
+}
+
+/* =========================================================
+   Responsive Layout
+   ========================================================= */
+
+@media (min-width: 1400px) {
+  .row.g-4 {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: stretch;
+  }
+
+  .col-lg-4,
+  .col-lg-8 {
+    flex: 0 0 auto;
+  }
+
+  .col-lg-4 {
+    width: 40%;
+  }
+
+  .col-lg-8 {
+    width: 60%;
+  }
+}
+
+@media (max-width: 992px) {
+  .row.g-4 {
+    flex-direction: column;
+  }
+
+  .col-lg-4,
+  .col-lg-8 {
+    width: 100%;
+  }
+
+  .chat-window {
+    height: 55vh;
+  }
+}
+
+@media (max-width: 576px) {
+  .chat-window {
+    height: 45vh;
+  }
+}

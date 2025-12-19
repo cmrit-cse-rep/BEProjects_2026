@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Results</title>
+    <style>
+        body {
+            background: #eef2f7;
+            font-family: 'Poppins', sans-serif;
+            padding: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-radius: 14px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            margin-bottom: 12px;
+            color: #2c3e50;
+        }
+
+        .value {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+
+        .not-attended {
+            color: #d63031;
+            font-weight: bold;
+        }
+
+        .good {
+            color: #2ecc71;
+            font-weight: bold;
+        }
+
+        .weak {
+            color: #e67e22;
+            font-weight: bold;
+        }
+
+        hr {
+            border: 0;
+            border-bottom: 1px dashed #ddd;
+            margin: 15px 0;
+        }
+
+        .btn {
+            padding: 14px;
+            background: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Welcome, {{ results.name }} 👋</h1>
+    <h3>Your Test Summary</h3>
+
+    <!-- Aptitude Result -->
+    <div class="card">
+        <h2>Aptitude Test</h2>
+
+        {% if results.aptitude_score %}
+            <div class="value">Score: {{ (results.aptitude_score * 100) | round(2) }}%</div>
+            <div class="value">
+                Weak Topic Prediction:  
+                {% if results.aptitude_weak_topic == "1" %}
+                    <span class="weak">Weak</span>
+                {% else %}
+                    <span class="good">Strong</span>
+                {% endif %}
+            </div>
+        {% else %}
+            <div class="not-attended">Not Attempted ❌</div>
+        {% endif %}
+    </div>
+
+    <!-- Technical Result -->
+    <div class="card">
+        <h2>Technical Interview</h2>
+
+        {% if results.technical_score %}
+            <div class="value">Score: {{ results.technical_score }}/10</div>
+            <div class="value">Feedback: {{ results.technical_feedback }}</div>
+        {% else %}
+            <div class="not-attended">Not Attempted ❌</div>
+        {% endif %}
+    </div>
+
+    <!-- Voice Interview Results (ALL 5 QUESTIONS) -->
+    <div class="card">
+        <h2>Voice Interview</h2>
+
+        {% if results.voice_data and results.voice_data|length > 0 %}
+            
+            {% for item in results.voice_data %}
+                <div class="value"><b>Question {{ loop.index }}:</b> {{ item.question }}</div>
+                <div class="value"><b>Transcript:</b> {{ item.transcript }}</div>
+                <div class="value"><b>Improved Answer:</b> {{ item.improved }}</div>
+                <div class="value"><b>Emotion Detected:</b> {{ item.emotion }}</div>
+
+                {% if not loop.last %}
+                <hr>
+                {% endif %}
+            {% endfor %}
+        
+        {% else %}
+            <div class="not-attended">Not Attempted ❌</div>
+        {% endif %}
+    </div>
+
+    <a class="btn" href="/">🏠 Back to Home</a>
+
+</body>
+</html>

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "769961882072",
+    "project_id": "stress-sense-13976",
+    "storage_bucket": "stress-sense-13976.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:769961882072:android:c99e0012554bdf4b3fc2ad",
+        "android_client_info": {
+          "package_name": "com.example.stresssense"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCDQv4unsG6b-9XkjGNhp4UYi7paUDREeQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

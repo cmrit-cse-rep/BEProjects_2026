@@ -1,0 +1,41 @@
+<!-- AI Chatbot -->
+<button class="chatbot-toggle" id="chatbotToggle">
+    <i class="fas fa-comments"></i>
+</button>
+
+<div class="chatbot-container">
+    <div class="chatbot-window" id="chatbotWindow">
+        <div class="chatbot-header">
+            <h6><i class="fas fa-robot me-2"></i>Medical AI Assistant</h6>
+            <button class="chatbot-close" id="chatbotClose">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="chatbot-messages" id="chatbotMessages">
+            <div class="message bot">
+                <div class="message-content">
+                    <i class="fas fa-robot me-2"></i>
+                    Hello! I'm your medical AI assistant. I can help you understand your brain tumor detection results, explain medical terms, and provide guidance. How can I help you today?
+                    <div class="quick-replies">
+                        <button class="quick-reply" onclick="sendQuickMessage('What is a brain tumor?')">What is a brain tumor?</button>
+                        <button class="quick-reply" onclick="sendQuickMessage('Explain my results')">Explain my results</button>
+                        <button class="quick-reply" onclick="sendQuickMessage('What should I do next?')">What should I do next?</button>
+                        {% if result %}
+                        <button class="quick-reply" onclick="sendQuickMessage('Tell me about my image analysis')">Tell me about my image analysis</button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="typing-indicator" id="typingIndicator">
+            <i class="fas fa-robot me-2"></i>AI is typing...
+        </div>
+        <div class="chatbot-input">
+            <input type="text" id="chatbotInput" placeholder="Ask me anything about brain tumors..." maxlength="200">
+            <button id="chatbotSend">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+</div>
+

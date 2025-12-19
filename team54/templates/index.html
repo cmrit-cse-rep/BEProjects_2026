@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interview Prep Hub</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+      color: #1e293b;
+      line-height: 1.6;
+    }
+
+    /* Navigation Bar */
+    nav {
+      background: white;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      padding: 0 2rem;
+    }
+
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.2rem 0;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #4f46e5;
+      text-decoration: none;
+    }
+
+    .logo i {
+      font-size: 2rem;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+    }
+
+    .nav-links a {
+      color: #475569;
+      text-decoration: none;
+      font-weight: 600;
+      padding: 0.6rem 1.2rem;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .nav-links a:hover {
+      background: #f1f5f9;
+      color: #4f46e5;
+    }
+
+    .nav-buttons {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .nav-btn {
+      padding: 0.6rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .signup-btn {
+      background: linear-gradient(to right, #4f46e5, #6366f1);
+      color: white;
+      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
+    }
+
+    .signup-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(79, 70, 229, 0.3);
+    }
+
+    .login-btn {
+      background: white;
+      color: #4f46e5;
+      border: 2px solid #e2e8f0;
+    }
+
+    .login-btn:hover {
+      background: #f8fafc;
+      border-color: #c7d2fe;
+    }
+
+    .hamburger {
+      display: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #475569;
+    }
+
+    /* Hero Section */
+    .hero {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 4rem 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .hero h1 {
+      font-size: 3.2rem;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(to right, #4f46e5, #7c73ff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      line-height: 1.2;
+    }
+
+    .hero p {
+      font-size: 1.2rem;
+      color: #64748b;
+      max-width: 700px;
+      margin-bottom: 2.5rem;
+    }
+
+    /* Main Content */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    .feature-card {
+      background: white;
+      border-radius: 16px;
+      padding: 2.5rem 2rem;
+      text-align: center;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
+      transition: all 0.3s ease;
+      border: 1px solid #f1f5f9;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08);
+      border-color: #e0e7ff;
+    }
+
+    .feature-icon {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+      font-size: 1.8rem;
+      color: #4f46e5;
+    }
+
+    .feature-card h3 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      color: #1e293b;
+    }
+
+    .feature-card p {
+      color: #64748b;
+      font-size: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .feature-btn {
+      display: inline-block;
+      background: linear-gradient(to right, #4f46e5, #6366f1);
+      color: white;
+      padding: 0.8rem 1.8rem;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 600;
+      margin-top: auto;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
+    }
+
+    .feature-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 18px rgba(79, 70, 229, 0.3);
+    }
+
+    .stats {
+      display: flex;
+      justify-content: center;
+      gap: 3rem;
+      margin-top: 4rem;
+      padding: 2rem;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
+    }
+
+    .stat-item {
+      text-align: center;
+    }
+
+    .stat-number {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #4f46e5;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+      color: #64748b;
+      font-weight: 500;
+    }
+
+    /* Footer */
+    footer {
+      margin-top: 5rem;
+      padding: 3rem 2rem;
+      background: #1e293b;
+      color: white;
+      text-align: center;
+    }
+
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .footer-text {
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+      color: #cbd5e1;
+    }
+
+    .copyright {
+      color: #94a3b8;
+      font-size: 0.9rem;
+      margin-top: 2rem;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .hamburger {
+        display: block;
+      }
+
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background: white;
+        flex-direction: column;
+        padding: 1.5rem;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+        border-top: 1px solid #f1f5f9;
+      }
+
+      .nav-links.active {
+        display: flex;
+      }
+
+      .nav-buttons {
+        display: none;
+      }
+
+      .hero h1 {
+        font-size: 2.5rem;
+      }
+
+      .hero p {
+        font-size: 1.1rem;
+      }
+
+      .stats {
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+
+      .features-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero h1 {
+        font-size: 2rem;
+      }
+      
+      .container {
+        padding: 1rem;
+      }
+      
+      .feature-card {
+        padding: 2rem 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation Bar -->
+  <nav>
+    <div class="nav-container">
+      <a href="#" class="logo">
+        <i class="fas fa-rocket"></i>
+        <span>PrepHub</span>
+      </a>
+      
+      <div class="hamburger" id="hamburger">
+        <i class="fas fa-bars"></i>
+      </div>
+      
+      <div class="nav-buttons">
+        <a href="/login" class="nav-btn login-btn">Login</a>
+        <a href="/signup" class="nav-btn signup-btn">Sign Up</a>
+      </div>
+    </div>
+  </nav>
+
+
+  <!-- Main Content -->
+  <div class="container">
+    <div class="features-grid">
+      <a href="{{ url_for('aptitude') }}" class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-brain"></i>
+        </div>
+        <h3>Aptitude Questions</h3>
+        <p>Practice quantitative aptitude, logical reasoning, and verbal ability questions tailored for top companies.</p>
+        <span class="feature-btn">Start Practice</span>
+      </a>
+
+      <a href="/technical" class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-code"></i>
+        </div>
+        <h3>Technical Interview</h3>
+        <p>Prepare for coding interviews, system design, and domain-specific technical questions.</p>
+        <span class="feature-btn">Explore Topics</span>
+      </a>
+
+      <a href="/voice_interview_page" class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-microphone-alt"></i>
+        </div>
+        <h3>Voice Interview</h3>
+        <p>Practice with AI-powered mock interviews that analyze your responses and provide feedback.</p>
+        <span class="feature-btn">Try Now</span>
+      </a>
+
+      <a href="/results" class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-chart-line"></i>
+        </div>
+        <h3>Results & Analytics</h3>
+        <p>Track your progress, identify weak areas, and get personalized recommendations.</p>
+        <span class="feature-btn">View Analytics</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <p class="footer-text">Prepare smart. Succeed confidently. ✨</p>
+      <p class="footer-text">All the tools you need to ace your next interview in one platform.</p>
+      <p class="copyright">© 2025 Interview Prep Hub. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Toggle mobile menu
+    const hamburger = document.getElementById('hamburger');
+    const navLinks = document.getElementById('navLinks');
+    
+    hamburger.addEventListener('click', () => {
+      navLinks.classList.toggle('active');
+      
+      // Change hamburger icon
+      const icon = hamburger.querySelector('i');
+      if (navLinks.classList.contains('active')) {
+        icon.classList.remove('fa-bars');
+        icon.classList.add('fa-times');
+      } else {
+        icon.classList.remove('fa-times');
+        icon.classList.add('fa-bars');
+      }
+    });
+    
+    // Close mobile menu when clicking a link
+    const navItems = document.querySelectorAll('.nav-links a');
+    navItems.forEach(item => {
+      item.addEventListener('click', () => {
+        navLinks.classList.remove('active');
+        hamburger.querySelector('i').classList.remove('fa-times');
+        hamburger.querySelector('i').classList.add('fa-bars');
+      });
+    });
+    
+    // Add smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        const targetId = this.getAttribute('href');
+        if(targetId === '#') return;
+        
+        const targetElement = document.querySelector(targetId);
+        if(targetElement) {
+          window.scrollTo({
+            top: targetElement.offsetTop - 80,
+            behavior: 'smooth'
+          });
+        }
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,537 @@
+{% extends "base.html" %}
+
+{% block title %}AI Insights - NeuroPlay{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Header Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0 bg-gradient-primary text-white" 
+                 style="background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));">
+                <div class="card-body py-4">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h1 class="card-title mb-2">
+                                <i class="fas fa-lightbulb"></i> AI-Powered Insights
+                            </h1>
+                            <p class="card-text lead mb-0">
+                                Personalized analysis and recommendations for 
+                                {% if user.child_name %}{{ user.child_name }}'s{% else %}your{% endif %} 
+                                development
+                            </p>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <div class="p-3">
+                                <i class="fas fa-robot fa-4x opacity-75"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Analysis Status -->
+    <div class="row mb-4">
+        <div class="col-lg-8">
+            <!-- Latest AI Analysis -->
+            {% if insights %}
+                {% set latest_insight = insights[0] %}
+                <div class="card mb-4">
+                    <div class="card-header bg-transparent">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">
+                                <i class="fas fa-brain text-primary"></i> Latest AI Analysis
+                            </h5>
+                            <span class="badge bg-success">{{ latest_insight.generated_date.strftime('%B %d, %Y') if latest_insight.generated_date else 'N/A' }}</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <!-- Development Trajectory -->
+                        <div class="alert alert-info mb-4">
+                            <div class="row align-items-center">
+                                <div class="col-auto">
+                                    <i class="fas fa-chart-line fa-2x"></i>
+                                </div>
+                                <div class="col">
+                                    <h6 class="alert-heading mb-1">Development Trajectory</h6>
+                                    <p class="mb-0">
+                                        Current progress shows a <strong>{{ latest_insight.progress_trajectory.title() if latest_insight.progress_trajectory else 'Unknown' }}</strong> trajectory.
+                                        {% if latest_insight.progress_trajectory == 'improving' %}
+                                            Excellent work! Keep up the consistent practice.
+                                        {% elif latest_insight.progress_trajectory == 'stable' %}
+                                            Progress is steady. Consider trying more challenging levels.
+                                        {% else %}
+                                            Focus on regular practice sessions to improve trajectory.
+                                        {% endif %}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Analysis Grid -->
+                        <div class="row">
+                            <!-- Motor Skills Analysis -->
+                            <div class="col-md-6 mb-4">
+                                <div class="card h-100">
+                                    <div class="card-header bg-primary text-white">
+                                        <h6 class="mb-0">
+                                            <i class="fas fa-hand-paper"></i> Motor Skills Analysis
+                                        </h6>
+                                    </div>
+                                    <div class="card-body">
+                                        {% set motor_data = latest_insight.motor_analysis | from_json if latest_insight.motor_analysis else {} %}
+                                        <div class="text-center mb-3">
+                                            <div class="display-4 text-primary">{{ "%.0f"|format(motor_data.overall_score|default(0)|float) }}%</div>
+                                            <small class="text-muted">Overall Score</small>
+                                        </div>
+                                        <div class="progress mb-2" style="height: 8px;">
+                                            <div class="progress-bar bg-primary" style="width: {{ motor_data.overall_score|default(0)|float }}%"></div>
+                                        </div>
+                                        <p class="text-center mb-0">
+                                            <span class="badge bg-light text-dark">{{ motor_data.level|default('Developing') }}</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Cognitive Analysis -->
+                            <div class="col-md-6 mb-4">
+                                <div class="card h-100">
+                                    <div class="card-header bg-success text-white">
+                                        <h6 class="mb-0">
+                                            <i class="fas fa-brain"></i> Cognitive Analysis
+                                        </h6>
+                                    </div>
+                                    <div class="card-body">
+                                        {% set cognitive_data = latest_insight.cognitive_analysis | from_json if latest_insight.cognitive_analysis else {} %}
+                                        <div class="text-center mb-3">
+                                            <div class="display-4 text-success">{{ "%.0f"|format(cognitive_data.overall_score|default(0)|float) }}%</div>
+                                            <small class="text-muted">Overall Score</small>
+                                        </div>
+                                        <div class="progress mb-2" style="height: 8px;">
+                                            <div class="progress-bar bg-success" style="width: {{ cognitive_data.overall_score|default(0)|float }}%"></div>
+                                        </div>
+                                        <p class="text-center mb-0">
+                                            <span class="badge bg-light text-dark">{{ cognitive_data.level|default('Developing') }}</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Recommendations -->
+                <div class="card mb-4">
+                    <div class="card-header bg-transparent">
+                        <h5 class="mb-0">
+                            <i class="fas fa-lightbulb text-warning"></i> Personalized Recommendations
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        {% set recommendations = latest_insight.recommendations | from_json if latest_insight.recommendations else [] %}
+                        {% if recommendations and recommendations is iterable and recommendations is not string %}
+                            <div class="row">
+                                {% for rec in recommendations %}
+                                <div class="col-lg-6 mb-3">
+                                    <div class="card h-100 border-start border-4 border-primary">
+                                        <div class="card-body">
+                                            <div class="d-flex align-items-start">
+                                                <div class="me-3">
+                                                    <i class="fas fa-{{ rec.icon|default('star') }} fa-2x text-primary"></i>
+                                                </div>
+                                                <div class="flex-grow-1">
+                                                    <h6 class="card-title">{{ rec.title|default('Recommendation') }}</h6>
+                                                    <p class="card-text">{{ rec.description|default('No description available') }}</p>
+                                                    <small class="text-muted">
+                                                        <i class="fas fa-tag me-1"></i>{{ rec.category|default('General') }}
+                                                    </small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <div class="text-center py-4">
+                                <i class="fas fa-lightbulb fa-3x text-muted mb-3"></i>
+                                <p class="text-muted">Recommendations will appear after more game sessions.</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <!-- Strengths and Areas for Improvement -->
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card mb-4">
+                            <div class="card-header bg-success text-white">
+                                <h6 class="mb-0">
+                                    <i class="fas fa-thumbs-up"></i> Strengths
+                                </h6>
+                            </div>
+                            <div class="card-body">
+                                {% set strengths = latest_insight.strengths | from_json if latest_insight.strengths else [] %}
+                                {% if strengths and strengths is iterable and strengths is not string %}
+                                    <ul class="list-unstyled mb-0">
+                                        {% for strength in strengths %}
+                                        <li class="mb-2">
+                                            <i class="fas fa-check-circle text-success me-2"></i>{{ strength }}
+                                        </li>
+                                        {% endfor %}
+                                    </ul>
+                                {% else %}
+                                    <p class="text-muted mb-0">Strengths will be identified as you play more games.</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="card mb-4">
+                            <div class="card-header bg-warning text-dark">
+                                <h6 class="mb-0">
+                                    <i class="fas fa-target"></i> Areas for Improvement
+                                </h6>
+                            </div>
+                            <div class="card-body">
+                                {% set improvements = latest_insight.improvement_areas | from_json if latest_insight.improvement_areas else [] %}
+                                {% if improvements and improvements is iterable and improvements is not string %}
+                                    <ul class="list-unstyled mb-0">
+                                        {% for area in improvements %}
+                                        <li class="mb-2">
+                                            <i class="fas fa-arrow-up text-warning me-2"></i>{{ area }}
+                                        </li>
+                                        {% endfor %}
+                                    </ul>
+                                {% else %}
+                                    <p class="text-muted mb-0">Improvement areas will be identified with more gameplay data.</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <!-- No Insights Yet -->
+                <div class="card mb-4">
+                    <div class="card-body text-center py-5">
+                        <i class="fas fa-robot fa-4x text-muted mb-4"></i>
+                        <h4 class="text-muted">No AI Insights Available Yet</h4>
+                        <p class="text-muted">Play games to generate personalized insights and recommendations.</p>
+                        <a href="{{ url_for('games') }}" class="btn btn-primary btn-lg">
+                            <i class="fas fa-gamepad me-2"></i>Start Playing Games
+                        </a>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+        
+        <!-- Right Sidebar -->
+        <div class="col-lg-4">
+            <!-- AI Analysis Status -->
+            <div class="card mb-4">
+                <div class="card-header bg-transparent">
+                    <h5 class="mb-0">
+                        <i class="fas fa-cogs text-primary"></i> AI Analysis Status
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span><i class="fas fa-database text-info me-2"></i>Data Collection</span>
+                            <span class="text-muted">{{ sessions|length|default(0) }}/10 sessions for full analysis</span>
+                        </div>
+                        <div class="progress" style="height: 6px;">
+                            {% set progress_percent = ((sessions|length|default(0) / 10) * 100)|int %}
+                            <div class="progress-bar bg-info" style="width: {{ [progress_percent, 100]|min }}%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span><i class="fas fa-brain text-primary me-2"></i>AI Processing</span>
+                            <span class="badge bg-{{ 'success' if insights else 'secondary' }}">
+                                {{ 'Active' if insights else 'Pending' }}
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span><i class="fas fa-chart-line text-success me-2"></i>Last Analysis</span>
+                            <span class="text-muted">
+                                {% if insights %}
+                                    {{ insights[0].generated_date.strftime('%m/%d/%Y at %I:%M %p') if insights[0].generated_date else 'N/A' }}
+                                {% else %}
+                                    Never
+                                {% endif %}
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center mt-4">
+                        <button class="btn btn-outline-primary btn-sm" onclick="refreshAnalysis()">
+                            <i class="fas fa-sync me-1"></i>Refresh Analysis
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+             <!-- Narrative Progress Report -->
+            <div class="card mb-4">
+                <div class="card-header bg-transparent">
+                    <h5 class="mb-0">
+                        <i class="fas fa-file-alt text-primary"></i> Narrative Progress Report
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <p class="small text-muted">
+                        Create a gentle, easy-to-read summary of recent NeuroPlay activity.
+                        This report is for information only and does not replace professional evaluation.
+                    </p>
+
+                    <div class="mb-2">
+                        <small class="text-muted d-block mb-1">Report style</small>
+                        <div class="btn-group btn-group-sm w-100" role="group">
+                            <button type="button" class="btn btn-outline-primary active" id="report-parent">
+                                Parent-friendly
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary" id="report-therapist">
+                                Therapist-focused
+                            </button>
+                        </div>
+                    </div>
+
+                    <button id="generate-report-btn" class="btn btn-primary w-100 mb-2">
+                        <i class="fas fa-magic me-1"></i> Generate Report
+                    </button>
+
+                    <div id="report-output" style="
+                        margin-top: 8px;
+                        white-space: pre-wrap;
+                        background: #f9fafb;
+                        border-radius: 10px;
+                        padding: 10px;
+                        font-size: 14px;
+                        max-height: 260px;
+                        overflow-y: auto;
+                    "></div>
+
+                    <small class="text-muted d-block mt-2" style="font-size: 11px;">
+                        You can copy this text into notes or share it with your care team.
+                    </small>
+                </div>
+            </div>
+
+            
+            <!-- Risk Assessment -->
+            {% if insights %}
+            <div class="card mb-4">
+                <div class="card-header bg-transparent">
+                    <h5 class="mb-0">
+                        <i class="fas fa-shield-alt text-primary"></i> Risk Assessment
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% set latest = insights[0] %}
+                    <div class="mb-3">
+                        <small class="text-muted">Motor Development Risk</small>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="progress flex-grow-1 me-2" style="height: 6px;">
+                                {% set motor_risk = latest.motor_risk_score|default(0)|float %}
+                                <div class="progress-bar bg-{{ 'danger' if motor_risk > 50 else 'warning' if motor_risk > 25 else 'success' }}" 
+                                     style="width: {{ motor_risk }}%"></div>
+                            </div>
+                            <small class="text-muted">{{ "%.0f"|format(motor_risk) }}%</small>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <small class="text-muted">Attention Risk</small>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="progress flex-grow-1 me-2" style="height: 6px;">
+                                {% set attention_risk = latest.attention_risk_score|default(0)|float %}
+                                <div class="progress-bar bg-{{ 'danger' if attention_risk > 50 else 'warning' if attention_risk > 25 else 'success' }}" 
+                                     style="width: {{ attention_risk }}%"></div>
+                            </div>
+                            <small class="text-muted">{{ "%.0f"|format(attention_risk) }}%</small>
+                        </div>
+                    </div>
+                    
+                    <div class="alert alert-{{ 'danger' if latest.overall_development_risk|default(0)|float > 50 else 'warning' if latest.overall_development_risk|default(0)|float > 25 else 'success' }} py-2">
+                        <small>
+                            <strong>Overall Risk:</strong> 
+                            {% set overall_risk = latest.overall_development_risk|default(0)|float %}
+                            {{ "High" if overall_risk > 50 else "Moderate" if overall_risk > 25 else "Low" }}
+                            ({{ "%.0f"|format(overall_risk) }}%)
+                        </small>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            
+            <!-- Quick Actions -->
+            <div class="card">
+                <div class="card-header bg-transparent">
+                    <h5 class="mb-0">
+                        <i class="fas fa-bolt text-primary"></i> Quick Actions
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a href="{{ url_for('games') }}" class="btn btn-primary">
+                            <i class="fas fa-gamepad me-2"></i>Play Games
+                        </a>
+                        <a href="{{ url_for('progress') }}" class="btn btn-outline-secondary">
+                            <i class="fas fa-chart-line me-2"></i>View Progress
+                        </a>
+                        {% if insights %}
+                        <button class="btn btn-outline-info" onclick="exportInsights()">
+                            <i class="fas fa-download me-2"></i>Export Report
+                        </button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function refreshAnalysis() {
+    // Show loading state
+    const btn = event.target;
+    const originalContent = btn.innerHTML;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Refreshing...';
+    btn.disabled = true;
+
+    // Simulate API call (in real implementation, call backend)
+    setTimeout(() => {
+        btn.innerHTML = originalContent;
+        btn.disabled = false;
+
+        // Show success message
+        const alert = document.createElement('div');
+        alert.className = 'alert alert-success alert-dismissible fade show mt-3';
+        alert.innerHTML = `
+            <i class="fas fa-check-circle me-2"></i>Analysis refreshed successfully!
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        `;
+        btn.parentNode.appendChild(alert);
+
+        // Auto dismiss after 3 seconds
+        setTimeout(() => {
+            if (alert.parentNode) { alert.remove(); }
+        }, 3000);
+    }, 2000);
+}
+
+function exportInsights() {
+    // Create a simple report
+    const reportContent = `NeuroPlay AI Insights Report
+Generated: ${new Date().toLocaleDateString()}
+
+Development Trajectory: {{ insights[0].progress_trajectory.title() if insights else 'N/A' }}
+{% if insights %}
+Motor Skills Score: {{ insights[0].motor_analysis | from_json | attr('overall_score') or 'N/A' }}%
+Cognitive Score: {{ insights[0].cognitive_analysis | from_json | attr('overall_score') or 'N/A' }}%
+Overall Risk Level: {{ "%.0f"|format(insights[0].overall_development_risk|default(0)) }}%
+{% endif %}
+
+Recommendations:
+{% if insights and insights[0].recommendations | from_json %}
+{% for rec in insights[0].recommendations | from_json %}
+- {{ rec.title|default('Recommendation') }}: {{ rec.description|default('No description') }}
+{% endfor %}
+{% else %}
+- No recommendations available yet
+{% endif %}
+`.trim();
+
+    const blob = new Blob([reportContent], { type: 'text/plain' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'neuroplay_insights_report.txt';
+    a.click();
+    window.URL.revokeObjectURL(url);
+}
+
+// Animate progress bars on load
+document.addEventListener('DOMContentLoaded', function() {
+    const progressBars = document.querySelectorAll('.progress-bar');
+    progressBars.forEach(bar => {
+        const width = bar.style.width;
+        bar.style.width = '0%';
+        setTimeout(() => {
+            bar.style.transition = 'width 1s ease-in-out';
+            bar.style.width = width;
+        }, 500);
+    });
+});
+</script>
+
+<script>
+// Narrative Report generator script 
+document.addEventListener("DOMContentLoaded", function () {
+    const btnParent = document.getElementById("report-parent");
+    const btnTherapist = document.getElementById("report-therapist");
+    const generateBtn = document.getElementById("generate-report-btn");
+    const output = document.getElementById("report-output");
+
+    // If the button elements are not present (e.g. no insights), bail out gracefully
+    if (!generateBtn || !output || !btnParent || !btnTherapist) return;
+
+    let audience = "parent";
+
+    function setReportAudience(aud) {
+        audience = aud;
+        if (aud === "parent") {
+            btnParent.classList.add("btn-primary", "active");
+            btnParent.classList.remove("btn-outline-primary");
+            btnTherapist.classList.remove("btn-primary", "active");
+            btnTherapist.classList.add("btn-outline-secondary");
+        } else {
+            btnTherapist.classList.add("btn-primary", "active");
+            btnTherapist.classList.remove("btn-outline-secondary");
+            btnParent.classList.remove("btn-primary", "active");
+            btnParent.classList.add("btn-outline-primary");
+        }
+    }
+
+    btnParent.addEventListener("click", () => setReportAudience("parent"));
+    btnTherapist.addEventListener("click", () => setReportAudience("therapist"));
+
+    generateBtn.addEventListener("click", async function () {
+        generateBtn.disabled = true;
+        output.textContent = "Generating report…";
+
+        try {
+            const res = await fetch("{{ url_for('generate_report') }}", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ audience }),
+            });
+            const data = await res.json();
+            if (data.report) {
+                output.textContent = data.report;
+            } else if (data.error) {
+                output.textContent = "Sorry, I couldn't create the report right now.";
+            } else {
+                output.textContent = "No report received from server.";
+            }
+        } catch (err) {
+            console.error(err);
+            output.textContent = "Connection problem – please try again later.";
+        } finally {
+            generateBtn.disabled = false;
+        }
+    });
+});
+</script>
+{% endblock %}

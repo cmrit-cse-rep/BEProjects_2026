@@ -1,0 +1,30 @@
+services:
+  # Backend Flask API
+  - type: web
+    name: landslide-backend
+    env: python
+    plan: free
+    buildCommand: cd landslide-backend && pip install -r requirements.txt
+    startCommand: cd landslide-backend && gunicorn app:app --bind 0.0.0.0:$PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.2
+      - key: PORT
+        value: 5000
+    healthCheckPath: /
+
+  # Frontend React App
+  - type: web
+    name: landslide-frontend
+    env: node
+    plan: free
+    buildCommand: cd landslide-frontend && npm install && npm run build
+    startCommand: cd landslide-frontend && npm install -g serve && serve -s build -l $PORT
+    envVars:
+      - key: NODE_VERSION
+        value: 18.x
+      - key: REACT_APP_API_BASE
+        sync: false  # Set this to your backend URL after deployment
+      - key: PORT
+        value: 3000
+

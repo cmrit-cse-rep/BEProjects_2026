@@ -1,0 +1,14 @@
+matplotlib
+requests
+Flask
+opencv-python
+numpy
+pillow==11.1.0
+seaborn==0.13.2
+torch
+torchvision
+ultralytics
+deepface
+gunicorn
+ipython
+

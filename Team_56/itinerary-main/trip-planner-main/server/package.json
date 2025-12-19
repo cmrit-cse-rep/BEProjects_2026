@@ -1,0 +1,14 @@
+{
+  "dependencies": {
+    "@google-ai/generativelanguage": "^2.8.0",
+    "axios": "^1.7.9",
+    "bcryptjs": "^2.4.3",
+    "child_process": "^1.0.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.1",
+    "googleapis": "^144.0.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.8.3"
+  }
+}

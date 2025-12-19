@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BrainScan AI - Advanced Brain Tumor Detection</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* --- General Body and Layout Styles --- */
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #e2e8f0;
+            /* Updated background for a more attractive, darker gradient */
+            background: linear-gradient(135deg, #0d1117, #001a33, #0a2e52, #161b22);
+            background-size: 400% 400%;
+            animation: gradient-animation 15s ease infinite;
+        }
+
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        /* --- Animations --- */
+        @keyframes gradient-animation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* --- Card Styles --- */
+        .info-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 1.5rem;
+            padding: 2rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .info-card:hover {
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+            transform: translateY(-2px);
+        }
+
+        /* --- Button Styles --- */
+        .gradient-btn {
+            background: linear-gradient(to right, #3b82f6, #06b6d4);
+            transition: all 0.3s ease;
+        }
+
+        .gradient-btn:hover {
+            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .feature-icon {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .feature-icon:nth-child(2) {
+            animation-delay: 0.5s;
+        }
+
+        .feature-icon:nth-child(3) {
+            animation-delay: 1s;
+        }
+
+        .feature-icon:nth-child(4) {
+            animation-delay: 1.5s;
+        }
+
+        /* --- Navigation Styles --- */
+        .navbar {
+            background: rgba(17, 24, 39, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-link {
+            transition: all 0.3s ease;
+            color: #9ca3af;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 8px;
+        }
+
+        .nav-link:hover {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .nav-link.active {
+            color: #ffffff;
+            background: rgba(59, 130, 246, 0.2);
+        }
+
+        .brand-logo {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+        .brand-logo:hover {
+            color: #60a5fa;
+        }
+
+        /* --- User Dropdown Styles --- */
+        .user-dropdown {
+            position: relative;
+        }
+
+        .user-icon {
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #ffffff;
+            border-radius: 9999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .user-icon:hover {
+            transform: scale(1.05);
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 50px;
+            right: 0;
+            width: 150px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 0.75rem;
+            padding: 0.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+            display: none;
+            animation: slideIn 0.2s ease-out forwards;
+            z-index: 100;
+        }
+
+        .dropdown-menu.show {
+            display: block;
+        }
+
+        .dropdown-menu a {
+            display: block;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            color: #e2e8f0;
+            transition: background-color 0.2s;
+        }
+
+        .dropdown-menu a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* --- Hero Section --- */
+        .hero-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        /* --- Stats Section --- */
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-5px);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation Bar -->
+    <nav class="absolute top-0 left-0 right-0 z-40 navbar">
+        <div class="main-container flex justify-between items-center py-4">
+            <!-- Brand Logo -->
+            <div class="flex items-center">
+                <a href="/home" class="brand-logo flex items-center">
+                    <i class="fas fa-brain text-sky-400 mr-3 text-2xl"></i>
+                    BrainScan AI
+                </a>
+            </div>
+            
+            <!-- Navigation Links and User Profile -->
+            <div class="flex items-center space-x-4">
+                <!-- Navigation Links -->
+                <div class="flex items-center space-x-2">
+                    <a href="/home" class="nav-link active">Home</a>
+                    <a href="/detect" class="nav-link">Detection</a>
+                    <a href="/about" class="nav-link">About</a>
+                    
+                </div>
+                
+                <!-- User Profile -->
+                <div class="user-dropdown">
+                    <button class="user-icon" id="userIcon">
+                        <i class="fas fa-user-circle text-xl text-white"></i>
+                    </button>
+                <div class="dropdown-menu" id="dropdownMenu">
+                    <a href="/logout">
+                            <i class="fas fa-sign-out-alt mr-2"></i> Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="main-container">
+            <div class="info-card">
+                <div class="flex flex-col items-center text-center space-y-6">
+                    <div class="bg-white bg-opacity-20 text-white px-6 py-3 rounded-full font-semibold text-sm shadow-md backdrop-blur-sm">
+                        <i class="fas fa-microchip me-2"></i>AI-Powered Medical Technology
+                    </div>
+                    <h1 class="text-6xl font-extrabold tracking-tight text-white md:text-7xl">
+                        Advanced Brain Tumor Detection
+                    </h1>
+                    <p class="text-gray-200 text-xl max-w-3xl leading-relaxed">
+                        Leverage cutting-edge artificial intelligence to analyze MRI scans with unprecedented accuracy. 
+                        Our advanced neural network technology provides rapid, reliable brain tumor detection to support 
+                        medical professionals and patients worldwide.
+                    </p>
+                    <div class="flex flex-wrap justify-center space-x-8 pt-4">
+                        <div class="flex items-center space-x-2 text-gray-200">
+                            <i class="fas fa-shield-alt text-green-400 text-xl"></i>
+                            <span class="text-lg">99.2% Accuracy</span>
+                        </div>
+                        <div class="flex items-center space-x-2 text-gray-200">
+                            <i class="fas fa-bolt text-yellow-400 text-xl"></i>
+                            <span class="text-lg">Under 30 Seconds</span>
+                        </div>
+                        <div class="flex items-center space-x-2 text-gray-200">
+                            <i class="fas fa-user-shield text-blue-400 text-xl"></i>
+                            <span class="text-lg">HIPAA Compliant</span>
+                        </div>
+                    </div>
+                    <div class="pt-8">
+                    <a href="/detect" class="gradient-btn text-white font-bold py-4 px-8 rounded-full inline-flex items-center text-lg transition-all duration-300 hover:scale-105">
+                        <i class="fas fa-rocket mr-3"></i>
+                        Get Started Now
+                    </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Brain Tumors Section -->
+    <section class="py-20">
+        <div class="main-container">
+            <div class="info-card">
+                <div class="text-center mb-12">
+                    <h2 class="text-4xl font-bold text-white mb-6">
+                        <i class="fas fa-info-circle text-sky-400 mr-3"></i>
+                        Understanding Brain Tumors
+                    </h2>
+                    <p class="text-gray-200 text-lg max-w-3xl mx-auto">
+                        Brain tumors are abnormal growths of cells in the brain that can be either benign (non-cancerous) 
+                        or malignant (cancerous). Early detection is crucial for effective treatment and better patient outcomes.
+                    </p>
+                </div>
+
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div class="stat-card">
+                        <div class="feature-icon text-4xl text-blue-400 mb-4">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-white mb-2">Glioma</h3>
+                        <p class="text-gray-300 text-sm">
+                            The most common type of brain tumor, arising from glial cells that support nerve cells.
+                        </p>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="feature-icon text-4xl text-green-400 mb-4">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-white mb-2">Meningioma</h3>
+                        <p class="text-gray-300 text-sm">
+                            Usually benign tumors that develop from the meninges, the protective membranes around the brain.
+                        </p>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="feature-icon text-4xl text-purple-400 mb-4">
+                            <i class="fas fa-gland"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-white mb-2">Pituitary</h3>
+                        <p class="text-gray-300 text-sm">
+                            Tumors that develop in the pituitary gland, often affecting hormone production.
+                        </p>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="feature-icon text-4xl text-green-500 mb-4">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-white mb-2">No Tumor</h3>
+                        <p class="text-gray-300 text-sm">
+                            Normal brain tissue with no abnormal growths detected in the MRI scan.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="py-20">
+        <div class="main-container">
+            <div class="info-card">
+                <div class="text-center mb-12">
+                    <h2 class="text-4xl font-bold text-white mb-6">
+                        <i class="fas fa-cogs text-sky-400 mr-3"></i>
+                        How BrainScan AI Works
+                    </h2>
+                    <p class="text-gray-200 text-lg max-w-3xl mx-auto">
+                        Our advanced AI system uses deep learning algorithms trained on thousands of MRI scans 
+                        to provide accurate brain tumor detection in seconds.
+                    </p>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="text-center">
+                        <div class="bg-sky-500 bg-opacity-20 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-6">
+                            <i class="fas fa-upload text-3xl text-sky-400"></i>
+                        </div>
+                        <h3 class="text-2xl font-semibold text-white mb-4">1. Upload MRI Scan</h3>
+                        <p class="text-gray-300">
+                            Simply upload your MRI image in common formats (JPG, PNG, DICOM). 
+                            Our system accepts various image types and automatically processes them.
+                        </p>
+                    </div>
+
+                    <div class="text-center">
+                        <div class="bg-green-500 bg-opacity-20 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-6">
+                            <i class="fas fa-robot text-3xl text-green-400"></i>
+                        </div>
+                        <h3 class="text-2xl font-semibold text-white mb-4">2. AI Analysis</h3>
+                        <p class="text-gray-300">
+                            Our advanced neural network analyzes the image using state-of-the-art 
+                            deep learning models trained on extensive medical datasets.
+                        </p>
+                    </div>
+
+                    <div class="text-center">
+                        <div class="bg-purple-500 bg-opacity-20 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-6">
+                            <i class="fas fa-chart-line text-3xl text-purple-400"></i>
+                        </div>
+                        <h3 class="text-2xl font-semibold text-white mb-4">3. Get Results</h3>
+                        <p class="text-gray-300">
+                            Receive detailed analysis results with confidence scores and 
+                            recommendations for next steps in your medical journey.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="py-20">
+        <div class="main-container">
+            <div class="info-card">
+                <div class="text-center mb-12">
+                    <h2 class="text-4xl font-bold text-white mb-6">
+                        <i class="fas fa-star text-sky-400 mr-3"></i>
+                        Why Choose BrainScan AI?
+                    </h2>
+                </div>
+
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="text-center">
+                        <div class="feature-icon text-5xl text-blue-400 mb-4">
+                            <i class="fas fa-bullseye"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-white mb-3">High Accuracy</h3>
+                        <p class="text-gray-300">
+                            Our AI model achieves 99.2% accuracy in brain tumor detection, 
+                            providing reliable results you can trust.
+                        </p>
+                    </div>
+
+                    <div class="text-center">
+                        <div class="feature-icon text-5xl text-green-400 mb-4">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-white mb-3">Rapid Results</h3>
+                        <p class="text-gray-300">
+                            Get analysis results in under 30 seconds, 
+                            significantly faster than traditional methods.
+                        </p>
+                    </div>
+
+                    <div class="text-center">
+                        <div class="feature-icon text-5xl text-purple-400 mb-4">
+                            <i class="fas fa-lock"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-white mb-3">Secure & Private</h3>
+                        <p class="text-gray-300">
+                            Your medical data is protected with enterprise-grade security 
+                            and HIPAA compliance standards.
+                        </p>
+                    </div>
+
+                    <div class="text-center">
+                        <div class="feature-icon text-5xl text-yellow-400 mb-4">
+                            <i class="fas fa-user-md"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-white mb-3">Medical Grade</h3>
+                        <p class="text-gray-300">
+                            Developed in collaboration with medical professionals 
+                            and trained on extensive clinical datasets.
+                        </p>
+                    </div>
+
+                    <div class="text-center">
+                        <div class="feature-icon text-5xl text-red-400 mb-4">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-white mb-3">Easy to Use</h3>
+                        <p class="text-gray-300">
+                            Intuitive interface designed for both medical professionals 
+                            and patients with no technical expertise required.
+                        </p>
+                    </div>
+
+                    <div class="text-center">
+                        <div class="feature-icon text-5xl text-indigo-400 mb-4">
+                            <i class="fas fa-headset"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-white mb-3">24/7 Support</h3>
+                        <p class="text-gray-300">
+                            Round-the-clock technical support and medical guidance 
+                            to assist you whenever you need help.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action Section -->
+    <section class="py-20">
+        <div class="main-container">
+            <div class="info-card text-center">
+                <h2 class="text-4xl font-bold text-white mb-6">
+                    Ready to Get Started?
+                </h2>
+                <p class="text-gray-200 text-xl mb-8 max-w-2xl mx-auto">
+                    Join thousands of medical professionals and patients who trust BrainScan AI 
+                    for accurate, fast, and reliable brain tumor detection.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="/detect" class="gradient-btn text-white font-bold py-4 px-8 rounded-full inline-flex items-center text-lg transition-all duration-300 hover:scale-105">
+                        <i class="fas fa-sign-in-alt mr-3"></i>
+                        Login to Continue
+                    </a>
+                    <a href="/signup" class="bg-gray-700 hover:bg-gray-600 text-white font-bold py-4 px-8 rounded-full inline-flex items-center text-lg transition-all duration-300 hover:scale-105">
+                        <i class="fas fa-user-plus mr-3"></i>
+                        Create Account
+                    </a>
+                </div>
+                <p class="text-gray-400 text-sm mt-6">
+                    <i class="fas fa-shield-alt mr-2"></i>
+                    Your data is secure and encrypted. We never share your medical information.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 bg-black bg-opacity-50">
+        <div class="main-container">
+            <div class="text-center">
+                <div class="flex items-center justify-center mb-6">
+                    <i class="fas fa-brain text-sky-400 text-3xl mr-3"></i>
+                    <span class="text-2xl font-bold text-white">BrainScan AI</span>
+                </div>
+                <p class="text-gray-400 mb-4">
+                    Advanced AI-powered brain tumor detection for medical professionals and patients worldwide.
+                </p>
+                <div class="flex justify-center space-x-6 text-gray-400">
+                    <a href="#" class="hover:text-white transition-colors">
+                        <i class="fab fa-twitter text-xl"></i>
+                    </a>
+                    <a href="#" class="hover:text-white transition-colors">
+                        <i class="fab fa-linkedin text-xl"></i>
+                    </a>
+                    <a href="#" class="hover:text-white transition-colors">
+                        <i class="fab fa-github text-xl"></i>
+                    </a>
+                </div>
+                <p class="text-gray-500 text-sm mt-6">
+                    © 2024 BrainScan AI. All rights reserved. | 
+                    <a href="#" class="hover:text-gray-400">Privacy Policy</a> | 
+                    <a href="#" class="hover:text-gray-400">Terms of Service</a>
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // User dropdown functionality
+            const userIcon = document.getElementById('userIcon');
+            const dropdownMenu = document.getElementById('dropdownMenu');
+
+            if (userIcon) {
+                userIcon.addEventListener('click', () => {
+                    dropdownMenu.classList.toggle('show');
+                });
+
+                // Close the dropdown if the user clicks outside of it
+                window.addEventListener('click', (e) => {
+                    if (!userIcon.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                        dropdownMenu.classList.remove('show');
+                    }
+                });
+            }
+
+            // Add smooth scrolling for better user experience
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+
+            // Add animation on scroll
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+
+            // Observe all info cards
+            document.querySelectorAll('.info-card').forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(card);
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,501 @@
+{% extends "base.html" %}
+
+{% block title %}{{ game_title }} - NeuroPlay{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Game Embed Specific Styles */
+    .game-frame {
+        width: 100%;
+        height: 600px;
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        background: #f8f9fa;
+    }
+    
+    .game-info-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 15px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+    }
+    
+    .game-controls {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        padding: 1.5rem;
+        backdrop-filter: blur(10px);
+        margin-bottom: 2rem;
+    }
+    
+    .status-indicator {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 25px;
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+    }
+    
+    .loading-spinner {
+        border: 3px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        border-top: 3px solid #fff;
+        width: 20px;
+        height: 20px;
+        animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    
+    .session-data {
+        display: none;
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .game-frame {
+            height: 500px;
+        }
+        
+        .game-info-card {
+            padding: 1.5rem;
+        }
+    }
+    
+    /* Accessibility */
+    .game-frame:focus {
+        outline: 3px solid #ffcc00;
+        outline-offset: 2px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Game Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="game-info-card">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <div class="d-flex align-items-center mb-3">
+                            <a href="{{ url_for('games') }}" class="btn btn-light btn-sm me-3">
+                                <i class="fas fa-arrow-left"></i> Back to Games
+                            </a>
+                            <div class="status-indicator" id="gameStatus">
+                                <div class="loading-spinner"></div>
+                                Loading Game...
+                            </div>
+                        </div>
+                        <h1 class="display-5 mb-2">
+                            <i class="fas fa-gamepad me-2"></i>{{ game_title }}
+                        </h1>
+                        <p class="lead mb-0">{{ game_description }}</p>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <div class="p-3">
+                            <i class="fas fa-{{ game_icon or 'gamepad' }} fa-4x opacity-75"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Game Embed Section -->
+    <div class="row">
+        <div class="col-lg-9">
+            <!-- Game Frame -->
+            <div class="card border-0 shadow-lg mb-4">
+                <div class="card-body p-0">
+                    <iframe 
+                        id="gameFrame"
+                        src="{{ game_url }}" 
+                        class="game-frame"
+                        title="{{ game_title }} Game"
+                        allow="camera; microphone; autoplay"
+                        allowfullscreen>
+                        <p>Your browser does not support iframes. Please <a href="{{ game_url }}" target="_blank">click here to play the game directly</a>.</p>
+                    </iframe>
+                </div>
+            </div>
+            
+            <!-- Game Instructions -->
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-info-circle me-2"></i>How to Play
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if game_instructions %}
+                        {{ game_instructions | safe }}
+                    {% else %}
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6><i class="fas fa-camera text-primary me-2"></i>Camera Setup</h6>
+                                <ul class="list-unstyled">
+                                    <li><i class="fas fa-check text-success me-2"></i>Allow camera access when prompted</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>Ensure good lighting</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>Position yourself in camera view</li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <h6><i class="fas fa-hand-paper text-primary me-2"></i>Hand Tracking</h6>
+                                <ul class="list-unstyled">
+                                    <li><i class="fas fa-check text-success me-2"></i>Keep hands visible to camera</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>Use pointing gestures</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>Move naturally and smoothly</li>
+                                </ul>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Game Sidebar -->
+        <div class="col-lg-3">
+            <!-- Session Info -->
+            <div class="card mb-4">
+                <div class="card-header bg-transparent">
+                    <h5 class="mb-0">
+                        <i class="fas fa-clock text-primary me-2"></i>Session Info
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <small class="text-muted">Session Duration</small>
+                        <div class="h5 mb-0" id="sessionTimer">00:00</div>
+                    </div>
+                    <div class="mb-3">
+                        <small class="text-muted">Status</small>
+                        <div class="h6 mb-0">
+                            <span class="badge bg-success" id="sessionStatus">Active</span>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <small class="text-muted">Data Collection</small>
+                        <div class="progress mt-1" style="height: 6px;">
+                            <div class="progress-bar bg-primary" id="dataProgress" style="width: 0%"></div>
+                        </div>
+                        <small class="text-muted mt-1 d-block">Tracking hand movements...</small>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Quick Actions -->
+            <div class="card mb-4">
+                <div class="card-header bg-transparent">
+                    <h5 class="mb-0">
+                        <i class="fas fa-bolt text-primary me-2"></i>Quick Actions
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-outline-primary" onclick="restartGame()">
+                            <i class="fas fa-redo me-2"></i>Restart Game
+                        </button>
+                        <button class="btn btn-outline-secondary" onclick="pauseSession()">
+                            <i class="fas fa-pause me-2"></i>Pause Session
+                        </button>
+                        <button class="btn btn-outline-info" onclick="toggleFullscreen()">
+                            <i class="fas fa-expand me-2"></i>Full Screen
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tips -->
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h6 class="mb-0">
+                        <i class="fas fa-lightbulb me-2"></i>Pro Tips
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-2">
+                            <i class="fas fa-star text-warning me-2"></i>
+                            <small>Maintain steady hand movements for better accuracy</small>
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-star text-warning me-2"></i>
+                            <small>Take breaks between sessions to prevent fatigue</small>
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-star text-warning me-2"></i>
+                            <small>Practice regularly for best results</small>
+                        </li>
+                        <li class="mb-0">
+                            <i class="fas fa-star text-warning me-2"></i>
+                            <small>Ensure good lighting for camera tracking</small>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Hidden Session Data for JavaScript -->
+<div class="session-data">
+    <input type="hidden" id="gameId" value="{{ game_id }}">
+    <input type="hidden" id="gameName" value="{{ game_title }}">
+    <input type="hidden" id="userId" value="{{ current_user.id }}">
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Game Session Management
+let sessionStartTime = null;
+let sessionTimer = null;
+let gameActive = false;
+let sessionData = {
+    game_id: document.getElementById('gameId').value,
+    game_name: document.getElementById('gameName').value,
+    user_id: document.getElementById('userId').value,
+    start_time: null,
+    end_time: null,
+    duration: 0,
+    interactions: [],
+    performance_data: {}
+};
+
+// Initialize when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    initializeGameSession();
+    setupMessageListener();
+    
+    // Update game status when iframe loads
+    document.getElementById('gameFrame').addEventListener('load', function() {
+        updateGameStatus('ready', 'Game Ready');
+        startSession();
+    });
+});
+
+function initializeGameSession() {
+    sessionStartTime = Date.now();
+    sessionData.start_time = sessionStartTime;
+    
+    // Start session timer
+    sessionTimer = setInterval(updateSessionTimer, 1000);
+    
+    console.log('🎮 Game session initialized');
+}
+
+function updateSessionTimer() {
+    if (sessionStartTime) {
+        const elapsed = Math.floor((Date.now() - sessionStartTime) / 1000);
+        const minutes = Math.floor(elapsed / 60);
+        const seconds = elapsed % 60;
+        
+        document.getElementById('sessionTimer').textContent = 
+            `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        
+        // Update data progress (simulate progress based on time)
+        const progress = Math.min((elapsed / 300) * 100, 100); // 5 minutes = 100%
+        document.getElementById('dataProgress').style.width = progress + '%';
+    }
+}
+
+function updateGameStatus(status, message) {
+    const statusElement = document.getElementById('gameStatus');
+    const sessionStatusElement = document.getElementById('sessionStatus');
+    
+    let icon = 'fas fa-circle';
+    let color = 'secondary';
+    
+    switch(status) {
+        case 'loading':
+            icon = 'loading-spinner';
+            color = 'primary';
+            break;
+        case 'ready':
+            icon = 'fas fa-play-circle';
+            color = 'success';
+            break;
+        case 'active':
+            icon = 'fas fa-gamepad';
+            color = 'success';
+            break;
+        case 'paused':
+            icon = 'fas fa-pause-circle';
+            color = 'warning';
+            break;
+        case 'error':
+            icon = 'fas fa-exclamation-triangle';
+            color = 'danger';
+            break;
+    }
+    
+    statusElement.innerHTML = `
+        ${icon === 'loading-spinner' ? '<div class="loading-spinner"></div>' : `<i class="${icon}"></i>`}
+        ${message}
+    `;
+    
+    sessionStatusElement.className = `badge bg-${color}`;
+    sessionStatusElement.textContent = status.charAt(0).toUpperCase() + status.slice(1);
+}
+
+function setupMessageListener() {
+    window.addEventListener('message', function(event) {
+        // Listen for messages from the game iframe
+        if (event.data && event.data.type === 'game_session_complete') {
+            handleGameSessionComplete(event.data.data);
+        } else if (event.data && event.data.type === 'game_interaction') {
+            recordInteraction(event.data.data);
+        }
+    });
+}
+
+function recordInteraction(interactionData) {
+    sessionData.interactions.push({
+        timestamp: Date.now(),
+        ...interactionData
+    });
+    
+    // Update game status to show activity
+    updateGameStatus('active', 'Playing...');
+}
+
+function handleGameSessionComplete(gameData) {
+    sessionData.end_time = Date.now();
+    sessionData.duration = (sessionData.end_time - sessionData.start_time) / 1000;
+    sessionData.performance_data = gameData;
+    
+    // Send session data to Flask backend
+    saveSessionData(sessionData);
+    
+    updateGameStatus('completed', 'Session Completed!');
+    
+    // Show completion message
+    setTimeout(() => {
+        showCompletionDialog(gameData);
+    }, 1000);
+}
+
+function saveSessionData(data) {
+    fetch('/api/record_session', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(result => {
+        if (result.status === 'success') {
+            console.log('✅ Session data saved successfully');
+        } else {
+            console.error('❌ Failed to save session data:', result.message);
+        }
+    })
+    .catch(error => {
+        console.error('❌ Error saving session data:', error);
+    });
+}
+
+function showCompletionDialog(gameData) {
+    const modal = document.createElement('div');
+    modal.className = 'modal fade show d-block';
+    modal.style.backgroundColor = 'rgba(0,0,0,0.5)';
+    modal.innerHTML = `
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title">🎉 Session Complete!</h5>
+                </div>
+                <div class="modal-body text-center">
+                    <h4 class="text-success">Great job!</h4>
+                    <p>Your session has been recorded and will help improve your personalized insights.</p>
+                    <div class="row mt-4">
+                        <div class="col-6">
+                            <div class="h5 text-primary">${Math.floor(sessionData.duration)}s</div>
+                            <small class="text-muted">Session Duration</small>
+                        </div>
+                        <div class="col-6">
+                            <div class="h5 text-success">${sessionData.interactions.length}</div>
+                            <small class="text-muted">Interactions</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" onclick="location.reload()">Play Again</button>
+                    <button class="btn btn-secondary" onclick="location.href='{{ url_for('games') }}'">Back to Games</button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    // Auto-close after 10 seconds
+    setTimeout(() => {
+        if (modal.parentNode) {
+            modal.remove();
+        }
+    }, 10000);
+}
+
+// Game Control Functions
+function restartGame() {
+    if (confirm('Are you sure you want to restart the game? Current progress will be lost.')) {
+        location.reload();
+    }
+}
+
+function pauseSession() {
+    gameActive = !gameActive;
+    const btn = event.target;
+    
+    if (gameActive) {
+        btn.innerHTML = '<i class="fas fa-pause me-2"></i>Pause Session';
+        updateGameStatus('active', 'Playing...');
+    } else {
+        btn.innerHTML = '<i class="fas fa-play me-2"></i>Resume Session';
+        updateGameStatus('paused', 'Paused');
+    }
+}
+
+function toggleFullscreen() {
+    const gameFrame = document.getElementById('gameFrame');
+    
+    if (!document.fullscreenElement) {
+        gameFrame.requestFullscreen().catch(err => {
+            console.log('Fullscreen error:', err);
+        });
+    } else {
+        document.exitFullscreen();
+    }
+}
+
+function startSession() {
+    gameActive = true;
+    updateGameStatus('active', 'Session Active');
+}
+
+// Cleanup when page unloads
+window.addEventListener('beforeunload', function() {
+    if (sessionTimer) {
+        clearInterval(sessionTimer);
+    }
+    
+    // Save any remaining session data
+    if (gameActive && sessionData.interactions.length > 0) {
+        navigator.sendBeacon('/api/record_session', JSON.stringify(sessionData));
+    }
+});
+</script>
+{% endblock %}

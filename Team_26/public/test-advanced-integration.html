@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Quiz Integration Test</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            margin: 20px; 
+            background: #f5f5f5; 
+        }
+        .container { 
+            max-width: 800px; 
+            margin: 0 auto; 
+            background: white; 
+            padding: 20px; 
+            border-radius: 10px; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-section { 
+            margin: 20px 0; 
+            padding: 15px; 
+            border: 1px solid #ddd; 
+            border-radius: 8px; 
+        }
+        .success { background: #d4edda; border-color: #28a745; }
+        .error { background: #f8d7da; border-color: #dc3545; }
+        .info { background: #d1ecf1; border-color: #17a2b8; }
+        button { 
+            padding: 10px 20px; 
+            margin: 5px; 
+            background: #007bff; 
+            color: white; 
+            border: none; 
+            border-radius: 5px; 
+            cursor: pointer; 
+        }
+        button:hover { background: #0056b3; }
+        .log { 
+            background: #f8f9fa; 
+            padding: 10px; 
+            margin: 10px 0; 
+            white-space: pre-wrap; 
+            font-family: monospace; 
+            border-radius: 5px; 
+            border: 1px solid #dee2e6;
+        }
+        .question { 
+            margin: 10px 0; 
+            padding: 15px; 
+            background: #f8f9fa; 
+            border-radius: 8px; 
+            border-left: 4px solid #007bff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Advanced Quiz Integration Test</h1>
+        <p>Testing the integrated high-quality question generation in your existing project.</p>
+        
+        <div class="test-section">
+            <h3>Test 1: Generate Advanced Quiz</h3>
+            <button onclick="testAdvancedQuiz()">Generate Advanced Quiz</button>
+            <div id="quizResult" class="log">Click the button to test...</div>
+        </div>
+        
+        <div class="test-section">
+            <h3>Test 2: Generate Regular Quiz (for comparison)</h3>
+            <button onclick="testRegularQuiz()">Generate Regular Quiz</button>
+            <div id="regularResult" class="log">Click the button to test...</div>
+        </div>
+        
+        <div class="test-section">
+            <h3>Test 3: Complete Flow (Generate + Submit + Dashboard)</h3>
+            <button onclick="testCompleteFlow()">Test Complete Flow</button>
+            <div id="flowResult" class="log">Click the button to test...</div>
+        </div>
+    </div>
+
+    <script>
+        async function testAdvancedQuiz() {
+            const resultDiv = document.getElementById('quizResult');
+            resultDiv.textContent = '🔄 Generating advanced quiz...';
+            resultDiv.className = 'log info';
+            
+            try {
+                const response = await fetch('/api/quiz/cold-start/Artificial%20Intelligence?totalQuestions=2&useAdvanced=true');
+                const data = await response.json();
+                
+                if (data.success) {
+                    const quiz = data.quiz;
+                    resultDiv.innerHTML = `
+✅ ADVANCED QUIZ GENERATED SUCCESSFULLY!
+
+Quiz ID: ${quiz._id}
+Subject: ${quiz.subject || 'N/A'}
+Quiz Type: ${quiz.quizType || 'N/A'}
+Generation Method: ${quiz.generationMethod || 'N/A'}
+Questions: ${quiz.questions.length}
+
+QUESTIONS:
+${quiz.questions.map((q, i) => `
+Question ${i + 1}: ${q.question}
+Source: ${q.source || 'N/A'}
+Difficulty: ${q.difficulty || 'N/A'}
+Options: ${q.options.join(' | ')}
+Correct Answer: ${q.correctAnswer}
+---`).join('')}
+                    `;
+                    resultDiv.className = 'log success';
+                } else {
+                    resultDiv.textContent = `❌ Error: ${data.error}`;
+                    resultDiv.className = 'log error';
+                }
+            } catch (error) {
+                resultDiv.textContent = `❌ Error: ${error.message}`;
+                resultDiv.className = 'log error';
+            }
+        }
+        
+        async function testRegularQuiz() {
+            const resultDiv = document.getElementById('regularResult');
+            resultDiv.textContent = '🔄 Generating regular quiz...';
+            resultDiv.className = 'log info';
+            
+            try {
+                const response = await fetch('/api/quiz/cold-start/Artificial%20Intelligence?totalQuestions=2');
+                const data = await response.json();
+                
+                if (data.success) {
+                    const quiz = data.quiz;
+                    resultDiv.innerHTML = `
+✅ REGULAR QUIZ GENERATED SUCCESSFULLY!
+
+Quiz ID: ${quiz._id}
+Subject: ${quiz.subject || 'N/A'}
+Quiz Type: ${quiz.quizType || 'N/A'}
+Generation Method: ${quiz.generationMethod || 'N/A'}
+Questions: ${quiz.questions.length}
+
+QUESTIONS:
+${quiz.questions.map((q, i) => `
+Question ${i + 1}: ${q.question}
+Source: ${q.source || 'N/A'}
+Difficulty: ${q.difficulty || 'N/A'}
+Options: ${q.options.join(' | ')}
+Correct Answer: ${q.correctAnswer}
+---`).join('')}
+                    `;
+                    resultDiv.className = 'log success';
+                } else {
+                    resultDiv.textContent = `❌ Error: ${data.error}`;
+                    resultDiv.className = 'log error';
+                }
+            } catch (error) {
+                resultDiv.textContent = `❌ Error: ${error.message}`;
+                resultDiv.className = 'log error';
+            }
+        }
+        
+        async function testCompleteFlow() {
+            const resultDiv = document.getElementById('flowResult');
+            resultDiv.textContent = '🔄 Testing complete flow...';
+            resultDiv.className = 'log info';
+            
+            try {
+                // Step 1: Generate quiz
+                resultDiv.textContent = '🔄 Step 1: Generating advanced quiz...';
+                const quizResponse = await fetch('/api/quiz/cold-start/Artificial%20Intelligence?totalQuestions=2&useAdvanced=true');
+                const quizData = await quizResponse.json();
+                
+                if (!quizData.success) {
+                    throw new Error('Failed to generate quiz: ' + quizData.error);
+                }
+                
+                const quiz = quizData.quiz;
+                resultDiv.textContent = `✅ Step 1: Quiz generated (ID: ${quiz._id})\n🔄 Step 2: Submitting quiz...`;
+                
+                // Step 2: Submit quiz
+                const answers = quiz.questions.map(q => ({
+                    questionId: q._id,
+                    userAnswer: q.options[0],
+                    isCorrect: true,
+                    timeSpent: 10
+                }));
+                
+                const submitResponse = await fetch('/api/quiz/submit-test', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ quizId: quiz._id, answers: answers })
+                });
+                
+                const submitData = await submitResponse.json();
+                
+                if (!submitData.success) {
+                    throw new Error('Failed to submit quiz: ' + submitData.error);
+                }
+                
+                resultDiv.innerHTML = `
+✅ COMPLETE FLOW TEST SUCCESSFUL!
+
+Step 1: ✅ Quiz Generated
+- Quiz ID: ${quiz._id}
+- Questions: ${quiz.questions.length}
+- Generation Method: ${quiz.generationMethod || 'N/A'}
+
+Step 2: ✅ Quiz Submitted
+- Attempt ID: ${submitData.attempt._id}
+- Score: ${submitData.attempt.score}%
+
+Step 3: ✅ Dashboard Ready
+- Dashboard URL: /enhanced-dashboard?attempt=${submitData.attempt._id}
+
+🎉 INTEGRATION IS WORKING PERFECTLY!
+                `;
+                resultDiv.className = 'log success';
+                
+            } catch (error) {
+                resultDiv.textContent = `❌ Error: ${error.message}`;
+                resultDiv.className = 'log error';
+            }
+        }
+    </script>
+</body>
+</html>

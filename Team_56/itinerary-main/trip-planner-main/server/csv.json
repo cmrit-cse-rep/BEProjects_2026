@@ -1,0 +1,1292 @@
+[
+  {
+    "id": 1,
+    "query": "Tell me the travel package for Paris",
+    "response": "Travel Package for Paris:\n1. Day 1: Explore shopping.\n2. Day 2: Enjoy historical sites.\n3. Day 3: Continue exploring the city.\n4. Day 4: Visit nearby attractions.\n5. Day 5: Departure.\nTotal Price: $2000-$3000",
+    "cleaned_query": "tell me the travel package for paris"
+  },
+  {
+    "id": 2,
+    "query": "Suggest a hotel in Singapore",
+    "response": "Suggested Hotel in Singapore: Peninsula.\nIt offers great amenities and is located close to major attractions.",
+    "cleaned_query": "suggest a hotel in singapore"
+  },
+  {
+    "id": 3,
+    "query": "Tell me the travel package for Rome",
+    "response": "Travel Package for Rome:\n1. Day 1: Explore sightseeing.\n2. Day 2: Enjoy nightlife.\n3. Day 3: Continue exploring the city.\n4. Day 4: Visit nearby attractions.\n5. Day 5: Departure.\nTotal Price: $3000-$4000",
+    "cleaned_query": "tell me the travel package for rome"
+  },
+  {
+    "id": 4,
+    "query": "Tell me the travel package for San Francisco",
+    "response": "Travel Package for San Francisco:\n1. Day 1: Explore shopping.\n2. Day 2: Enjoy beaches.\n3. Day 3: Continue exploring the city.\n4. Day 4: Visit nearby attractions.\n5. Day 5: Departure.\nTotal Price: $2000-$3000",
+    "cleaned_query": "tell me the travel package for san francisco"
+  },
+  {
+    "id": 5,
+    "query": "Tell me the travel package for Bangkok",
+    "response": "Travel Package for Bangkok:\n1. Day 1: Explore sightseeing.\n2. Day 2: Enjoy cultural festivals.\n3. Day 3: Continue exploring the city.\n4. Day 4: Visit nearby attractions.\n5. Day 5: Departure.\nTotal Price: $3000-$4000",
+    "cleaned_query": "tell me the travel package for bangkok"
+  },
+  {
+    "id": 6,
+    "query": "Suggest a hotel in Barcelona",
+    "response": "Suggested Hotel in Barcelona: Marriott.\nIt offers great amenities and is located close to major attractions.",
+    "cleaned_query": "suggest a hotel in barcelona"
+  },
+  {
+    "id": 7,
+    "query": "Suggest a hotel in San Francisco",
+    "response": "Suggested Hotel in San Francisco: Marriott.\nIt offers great amenities and is located close to major attractions.",
+    "cleaned_query": "suggest a hotel in san francisco"
+  },
+  {
+    "id": 8,
+    "query": "Can you plan a budget trip to Singapore for $3000-$4000?",
+    "response": "Budget Trip to Singapore:\n1. Day 1: Explore beaches.\n2. Day 2: Enjoy sightseeing.\n3. Day 3: Continue exploring the city.\n4. Day 4: Visit nearby attractions.\n5. Day 5: Departure.\nTotal Budget: $3000-$4000",
+    "cleaned_query": "can you plan a budget trip to singapore for"
+  },
+  {
+    "id": 9,
+    "query": "Suggest a hotel in Istanbul",
+    "response": "Suggested Hotel in Istanbul: Park Hyatt.\nIt offers great amenities and is located close to major attractions.",
+    "cleaned_query": "suggest a hotel in istanbul"
+  },
+  {
+    "id": 10,
+    "query": "Can you plan a budget trip to Los Angeles for $1000-$2000?",
+    "response": "Budget Trip to Los Angeles:\n1. Day 1: Explore cultural festivals.\n2. Day 2: Enjoy adventure sports.\n3. Day 3: Continue exploring the city.\n4. Day 4: Visit nearby attractions.\n5. Day 5: Departure.\nTotal Budget: $1000-$2000",
+    "cleaned_query": "can you plan a budget trip to los angeles for"
+  },
+  {
+    "id": 11,
+    "query": "Tell me the travel package for Singapore",
+    "response": "Travel Package for Singapore:\n1. Day 1: Explore nightlife.\n2. Day 2: Enjoy nature parks.\n3. Day 3: Continue exploring the city.\n4. Day 4: Visit nearby attractions.\n5. Day 5: Departure.\nTotal Price: $4000-$5000",
+    "cleaned_query": "tell me the travel package for singapore"
+  },
+  {
+    "id": 12,
+    "query": "Can you plan a budget trip to Hong Kong for $1000-$2000?",
+    "response": "Budget Trip to Hong Kong:\n1. Day 1: Explore nightlife.\n2. Day 2: Enjoy shopping.\n3. Day 3: Continue exploring the city.\n4. Day 4: Visit nearby attractions.\n5. Day 5: Departure.\nTotal Budget: $1000-$2000",
+    "cleaned_query": "can you plan a budget trip to hong kong for"
+  },
+  {
+    "id": 13,
+    "query": "Tell me the travel package for San Francisco",
+    "response": "Travel Package for San Francisco:\n1. Day 1: Explore beaches.\n2. Day 2: Enjoy shopping.\n3. Day 3: Continue exploring the city.\n4. Day 4: Visit nearby attractions.\n5. Day 5: Departure.\nTotal Price: $2000-$3000",
+    "cleaned_query": "tell me the travel package for san francisco"
+  },
+  {
+    "id": 14,
+    "query": "Tell me the travel package for Istanbul",
+    "response": "Travel Package for Istanbul:\n1. Day 1: Explore cultural festivals.\n2. Day 2: Enjoy adventure sports.\n3. Day 3: Continue exploring the city.\n4. Day 4: Visit nearby attractions.\n5. Day 5: Departure.\nTotal Price: $3000-$4000",
+    "cleaned_query": "tell me the travel package for istanbul"
+  },
+  {
+    "id": 15,
+    "query": "Tell me the travel package for Barcelona",
+    "response": "Travel Package for Barcelona:\n1. Day 1: Explore adventure sports.\n2. Day 2: Enjoy shopping.\n3. Day 3: Continue exploring the city.\n4. Day 4: Visit nearby attractions.\n5. Day 5: Departure.\nTotal Price: $1000-$2000",
+    "cleaned_query": "tell me the travel package for barcelona"
+  },
+  {
+    "id": 16,
+    "query": "Tell me the travel package for Bangkok",
+    "response": "Travel Package for Bangkok:\n1. Day 1: Explore cultural festivals.\n2. Day 2: Enjoy beaches.\n3. Day 3: Continue exploring the city.\n4. Day 4: Visit nearby attractions.\n5. Day 5: Departure.\nTotal Price: $3000-$4000",
+    "cleaned_query": "tell me the travel package for bangkok"
+  },
+  {
+    "id": 17,
+    "query": "Tell me the travel package for Amsterdam",
+    "response": "Travel Package for Amsterdam:\n1. Day 1: Explore historical sites.\n2. Day 2: Enjoy adventure sports.\n3. Day 3: Continue exploring the city.\n4. Day 4: Visit nearby attractions.\n5. Day 5: Departure.\nTotal Price: $4000-$5000",
+    "cleaned_query": "tell me the travel package for amsterdam"
+  },
+  {
+    "id": 18,
+    "query": "Suggest a hotel in Sydney",
+    "response": "Suggested Hotel in Sydney: Four Seasons.\nIt offers great amenities and is located close to major attractions.",
+    "cleaned_query": "suggest a hotel in sydney"
+  },
+  {
+    "id": 19,
+    "query": "Can you plan a budget trip to Istanbul for $1000-$2000?",
+    "response": "Budget Trip to Istanbul:\n1. Day 1: Explore shopping.\n2. Day 2: Enjoy sightseeing.\n3. Day 3: Continue exploring the city.\n4. Day 4: Visit nearby attractions.\n5. Day 5: Departure.\nTotal Budget: $1000-$2000",
+    "cleaned_query": "can you plan a budget trip to istanbul for"
+  },
+  {
+    "id": 20,
+    "query": "Suggest a hotel in Sydney",
+    "response": "Suggested Hotel in Sydney: Hilton.\nIt offers great amenities and is located close to major attractions.",
+    "cleaned_query": "suggest a hotel in sydney"
+  },
+  {
+    "id": 21,
+    "query": "Tell me the travel package for Istanbul",
+    "response": "Travel Package for Istanbul:\n1. Day 1: Explore culinary tours.\n2. Day 2: Enjoy nature parks.\n3. Day 3: Continue exploring the city.\n4. Day 4: Visit nearby attractions.\n5. Day 5: Departure.\nTotal Price: $3000-$4000",
+    "cleaned_query": "tell me the travel package for istanbul"
+  },
+  {
+    "id": 22,
+    "query": "Tell me the travel package for Hong Kong",
+    "response": "Travel Package for Hong Kong:\n1. Day 1: Explore culinary tours.\n2. Day 2: Enjoy sightseeing.\n3. Day 3: Continue exploring the city.\n4. Day 4: Visit nearby attractions.\n5. Day 5: Departure.\nTotal Price: $2000-$3000",
+    "cleaned_query": "tell me the travel package for hong kong"
+  },
+  {
+    "id": 23,
+    "query": "Tell me the travel package for New York",
+    "response": "Travel Package for New York:\n1. Day 1: Explore art museums.\n2. Day 2: Enjoy culinary tours.\n3. Day 3: Continue exploring the city.\n4. Day 4: Visit nearby attractions.\n5. Day 5: Departure.\nTotal Price: $2000-$3000",
+    "cleaned_query": "tell me the travel package for new york"
+  },
+  {
+    "id": 24,
+    "query": "Suggest a hotel in Dubai",
+    "response": "Suggested Hotel in Dubai: Sheraton.\nIt offers great amenities and is located close to major attractions.",
+    "cleaned_query": "suggest a hotel in dubai"
+  },
+  {
+    "id": 25,
+    "query": "Tell me the travel package for Bangkok",
+    "response": "Travel Package for Bangkok:\n1. Day 1: Explore nature parks.\n2. Day 2: Enjoy historical sites.\n3. Day 3: Continue exploring the city.\n4. Day 4: Visit nearby attractions.\n5. Day 5: Departure.\nTotal Price: $2000-$3000",
+    "cleaned_query": "tell me the travel package for bangkok"
+  },
+  {
+    "id": 26,
+    "query": "Can you plan a budget trip to Sydney for $3000-$4000?",
+    "response": "Budget Trip to Sydney:\n1. Day 1: Explore beaches.\n2. Day 2: Enjoy cultural festivals.\n3. Day 3: Continue exploring the city.\n4. Day 4: Visit nearby attractions.\n5. Day 5: Departure.\nTotal Budget: $3000-$4000",
+    "cleaned_query": "can you plan a budget trip to sydney for"
+  },
+  {
+    "id": 27,
+    "query": "Suggest a hotel in Dubai",
+    "response": "Suggested Hotel in Dubai: Ritz-Carlton.\nIt offers great amenities and is located close to major attractions.",
+    "cleaned_query": "suggest a hotel in dubai"
+  },
+  {
+    "id": 28,
+    "query": "Suggest a hotel in Amsterdam",
+    "response": "Suggested Hotel in Amsterdam: Marriott.\nIt offers great amenities and is located close to major attractions.",
+    "cleaned_query": "suggest a hotel in amsterdam"
+  },
+  {
+    "id": 29,
+    "query": "Can you plan a budget trip to Paris for $1000-$2000?",
+    "response": "Budget Trip to Paris:\n1. Day 1: Explore sightseeing.\n2. Day 2: Enjoy art museums.\n3. Day 3: Continue exploring the city.\n4. Day 4: Visit nearby attractions.\n5. Day 5: Departure.\nTotal Budget: $1000-$2000",
+    "cleaned_query": "can you plan a budget trip to paris for"
+  },
+  {
+    "id": 30,
+    "query": "Can you plan a budget trip to Barcelona for $2000-$3000?",
+    "response": "Budget Trip to Barcelona:\n1. Day 1: Explore adventure sports.\n2. Day 2: Enjoy historical sites.\n3. Day 3: Continue exploring the city.\n4. Day 4: Visit nearby attractions.\n5. Day 5: Departure.\nTotal Budget: $2000-$3000",
+    "cleaned_query": "can you plan a budget trip to barcelona for"
+  },
+  {
+    "id": 31,
+    "query": "Can you plan a budget trip to Bangkok for $4000-$5000?",
+    "response": "Budget Trip to Bangkok:\n1. Day 1: Explore nature parks.\n2. Day 2: Enjoy shopping.\n3. Day 3: Continue exploring the city.\n4. Day 4: Visit nearby attractions.\n5. Day 5: Departure.\nTotal Budget: $4000-$5000",
+    "cleaned_query": "can you plan a budget trip to bangkok for"
+  },
+  {
+    "id": 32,
+    "query": "Suggest a hotel in Hong Kong",
+    "response": "Suggested Hotel in Hong Kong: InterContinental.\nIt offers great amenities and is located close to major attractions.",
+    "cleaned_query": "suggest a hotel in hong kong"
+  },
+  {
+    "id": 33,
+    "query": "Can you plan a budget trip to Sydney for $4000-$5000?",
+    "response": "Budget Trip to Sydney:\n1. Day 1: Explore nature parks.\n2. Day 2: Enjoy nightlife.\n3. Day 3: Continue exploring the city.\n4. Day 4: Visit nearby attractions.\n5. Day 5: Departure.\nTotal Budget: $4000-$5000",
+    "cleaned_query": "can you plan a budget trip to sydney for"
+  },
+  {
+    "id": 34,
+    "query": "Can you plan a budget trip to London for $3000-$4000?",
+    "response": "Budget Trip to London:\n1. Day 1: Explore culinary tours.\n2. Day 2: Enjoy sightseeing.\n3. Day 3: Continue exploring the city.\n4. Day 4: Visit nearby attractions.\n5. Day 5: Departure.\nTotal Budget: $3000-$4000",
+    "cleaned_query": "can you plan a budget trip to london for"
+  },
+  {
+    "id": 35,
+    "query": "Tell me the travel package for Los Angeles",
+    "response": "Travel Package for Los Angeles:\n1. Day 1: Explore nature parks.\n2. Day 2: Enjoy historical sites.\n3. Day 3: Continue exploring the city.\n4. Day 4: Visit nearby attractions.\n5. Day 5: Departure.\nTotal Price: $2000-$3000",
+    "cleaned_query": "tell me the travel package for los angeles"
+  },
+  {
+    "id": 36,
+    "query": "Suggest a hotel in London",
+    "response": "Suggested Hotel in London: Westin.\nIt offers great amenities and is located close to major attractions.",
+    "cleaned_query": "suggest a hotel in london"
+  },
+  {
+    "id": 37,
+    "query": "Tell me the travel package for Barcelona",
+    "response": "Travel Package for Barcelona:\n1. Day 1: Explore cultural festivals.\n2. Day 2: Enjoy shopping.\n3. Day 3: Continue exploring the city.\n4. Day 4: Visit nearby attractions.\n5. Day 5: Departure.\nTotal Price: $3000-$4000",
+    "cleaned_query": "tell me the travel package for barcelona"
+  },
+  {
+    "id": 38,
+    "query": "Tell me the travel package for Hong Kong",
+    "response": "Travel Package for Hong Kong:\n1. Day 1: Explore nature parks.\n2. Day 2: Enjoy historical sites.\n3. Day 3: Continue exploring the city.\n4. Day 4: Visit nearby attractions.\n5. Day 5: Departure.\nTotal Price: $1000-$2000",
+    "cleaned_query": "tell me the travel package for hong kong"
+  },
+  {
+    "id": 39,
+    "query": "Tell me the travel package for Sydney",
+    "response": "Travel Package for Sydney:\n1. Day 1: Explore adventure sports.\n2. Day 2: Enjoy art museums.\n3. Day 3: Continue exploring the city.\n4. Day 4: Visit nearby attractions.\n5. Day 5: Departure.\nTotal Price: $4000-$5000",
+    "cleaned_query": "tell me the travel package for sydney"
+  },
+  {
+    "id": 40,
+    "query": "Suggest a hotel in San Francisco",
+    "response": "Suggested Hotel in San Francisco: Hyatt.\nIt offers great amenities and is located close to major attractions.",
+    "cleaned_query": "suggest a hotel in san francisco"
+  },
+  {
+    "id": 41,
+    "query": "Tell me the travel package for New York",
+    "response": "Travel Package for New York:\n1. Day 1: Explore adventure sports.\n2. Day 2: Enjoy sightseeing.\n3. Day 3: Continue exploring the city.\n4. Day 4: Visit nearby attractions.\n5. Day 5: Departure.\nTotal Price: $2000-$3000",
+    "cleaned_query": "tell me the travel package for new york"
+  },
+  {
+    "id": 42,
+    "query": "Can you plan a budget trip to Amsterdam for $3000-$4000?",
+    "response": "Budget Trip to Amsterdam:\n1. Day 1: Explore culinary tours.\n2. Day 2: Enjoy sightseeing.\n3. Day 3: Continue exploring the city.\n4. Day 4: Visit nearby attractions.\n5. Day 5: Departure.\nTotal Budget: $3000-$4000",
+    "cleaned_query": "can you plan a budget trip to amsterdam for"
+  },
+  {
+    "id": 43,
+    "query": "Can you plan a budget trip to Sydney for $4000-$5000?",
+    "response": "Budget Trip to Sydney:\n1. Day 1: Explore historical sites.\n2. Day 2: Enjoy art museums.\n3. Day 3: Continue exploring the city.\n4. Day 4: Visit nearby attractions.\n5. Day 5: Departure.\nTotal Budget: $4000-$5000",
+    "cleaned_query": "can you plan a budget trip to sydney for"
+  },
+  {
+    "id": 44,
+    "query": "Suggest a hotel in Amsterdam",
+    "response": "Suggested Hotel in Amsterdam: InterContinental.\nIt offers great amenities and is located close to major attractions.",
+    "cleaned_query": "suggest a hotel in amsterdam"
+  },
+  {
+    "id": 45,
+    "query": "Tell me the travel package for Sydney",
+    "response": "Travel Package for Sydney:\n1. Day 1: Explore nightlife.\n2. Day 2: Enjoy beaches.\n3. Day 3: Continue exploring the city.\n4. Day 4: Visit nearby attractions.\n5. Day 5: Departure.\nTotal Price: $2000-$3000",
+    "cleaned_query": "tell me the travel package for sydney"
+  },
+  {
+    "id": 46,
+    "query": "Can you plan a budget trip to Tokyo for $3000-$4000?",
+    "response": "Budget Trip to Tokyo:\n1. Day 1: Explore cultural festivals.\n2. Day 2: Enjoy adventure sports.\n3. Day 3: Continue exploring the city.\n4. Day 4: Visit nearby attractions.\n5. Day 5: Departure.\nTotal Budget: $3000-$4000",
+    "cleaned_query": "can you plan a budget trip to tokyo for"
+  },
+  {
+    "id": 47,
+    "query": "Tell me the travel package for Istanbul",
+    "response": "Travel Package for Istanbul:\n1. Day 1: Explore sightseeing.\n2. Day 2: Enjoy shopping.\n3. Day 3: Continue exploring the city.\n4. Day 4: Visit nearby attractions.\n5. Day 5: Departure.\nTotal Price: $4000-$5000",
+    "cleaned_query": "tell me the travel package for istanbul"
+  },
+  {
+    "id": 48,
+    "query": "Suggest a hotel in Bangkok",
+    "response": "Suggested Hotel in Bangkok: Hilton.\nIt offers great amenities and is located close to major attractions.",
+    "cleaned_query": "suggest a hotel in bangkok"
+  },
+  {
+    "id": 49,
+    "query": "Suggest a hotel in Rome",
+    "response": "Suggested Hotel in Rome: Radisson.\nIt offers great amenities and is located close to major attractions.",
+    "cleaned_query": "suggest a hotel in rome"
+  },
+  {
+    "id": 50,
+    "query": "Tell me the travel package for Los Angeles",
+    "response": "Travel Package for Los Angeles:\n1. Day 1: Explore shopping.\n2. Day 2: Enjoy nature parks.\n3. Day 3: Continue exploring the city.\n4. Day 4: Visit nearby attractions.\n5. Day 5: Departure.\nTotal Price: $4000-$5000",
+    "cleaned_query": "tell me the travel package for los angeles"
+  },
+  {
+    "id": 51,
+    "query": "Tell me the travel package for New York",
+    "response": "Travel Package for New York:\n1. Day 1: Explore art museums.\n2. Day 2: Enjoy cultural festivals.\n3. Day 3: Continue exploring the city.\n4. Day 4: Visit nearby attractions.\n5. Day 5: Departure.\nTotal Price: $1000-$2000",
+    "cleaned_query": "tell me the travel package for new york"
+  },
+  {
+    "id": 52,
+    "query": "Can you plan a budget trip to Rome for $3000-$4000?",
+    "response": "Budget Trip to Rome:\n1. Day 1: Explore culinary tours.\n2. Day 2: Enjoy shopping.\n3. Day 3: Continue exploring the city.\n4. Day 4: Visit nearby attractions.\n5. Day 5: Departure.\nTotal Budget: $3000-$4000",
+    "cleaned_query": "can you plan a budget trip to rome for"
+  },
+  {
+    "id": 53,
+    "query": "Can you plan a budget trip to Los Angeles for $1000-$2000?",
+    "response": "Budget Trip to Los Angeles:\n1. Day 1: Explore cultural festivals.\n2. Day 2: Enjoy adventure sports.\n3. Day 3: Continue exploring the city.\n4. Day 4: Visit nearby attractions.\n5. Day 5: Departure.\nTotal Budget: $1000-$2000",
+    "cleaned_query": "can you plan a budget trip to los angeles for"
+  },
+  {
+    "id": 54,
+    "query": "Suggest a hotel in Bangkok",
+    "response": "Suggested Hotel in Bangkok: Waldorf Astoria.\nIt offers great amenities and is located close to major attractions.",
+    "cleaned_query": "suggest a hotel in bangkok"
+  },
+  {
+    "id": 55,
+    "query": "Tell me the travel package for Sydney",
+    "response": "Travel Package for Sydney:\n1. Day 1: Explore historical sites.\n2. Day 2: Enjoy shopping.\n3. Day 3: Continue exploring the city.\n4. Day 4: Visit nearby attractions.\n5. Day 5: Departure.\nTotal Price: $1000-$2000",
+    "cleaned_query": "tell me the travel package for sydney"
+  },
+  {
+    "id": 56,
+    "query": "Can you plan a budget trip to Tokyo for $2000-$3000?",
+    "response": "Budget Trip to Tokyo:\n1. Day 1: Explore historical sites.\n2. Day 2: Enjoy culinary tours.\n3. Day 3: Continue exploring the city.\n4. Day 4: Visit nearby attractions.\n5. Day 5: Departure.\nTotal Budget: $2000-$3000",
+    "cleaned_query": "can you plan a budget trip to tokyo for"
+  },
+  {
+    "id": 57,
+    "query": "Tell me the travel package for Paris",
+    "response": "Travel Package for Paris:\n1. Day 1: Explore historical sites.\n2. Day 2: Enjoy sightseeing.\n3. Day 3: Continue exploring the city.\n4. Day 4: Visit nearby attractions.\n5. Day 5: Departure.\nTotal Price: $4000-$5000",
+    "cleaned_query": "tell me the travel package for paris"
+  },
+  {
+    "id": 58,
+    "query": "Suggest a hotel in New York",
+    "response": "Suggested Hotel in New York: Hilton.\nIt offers great amenities and is located close to major attractions.",
+    "cleaned_query": "suggest a hotel in new york"
+  },
+  {
+    "id": 59,
+    "query": "Suggest a hotel in Dubai",
+    "response": "Suggested Hotel in Dubai: Waldorf Astoria.\nIt offers great amenities and is located close to major attractions.",
+    "cleaned_query": "suggest a hotel in dubai"
+  },
+  {
+    "id": 60,
+    "query": "Suggest a hotel in Tokyo",
+    "response": "Suggested Hotel in Tokyo: Westin.\nIt offers great amenities and is located close to major attractions.",
+    "cleaned_query": "suggest a hotel in tokyo"
+  },
+  {
+    "id": 61,
+    "query": "Can you plan a budget trip to San Francisco for $1000-$2000?",
+    "response": "Budget Trip to San Francisco:\n1. Day 1: Explore art museums.\n2. Day 2: Enjoy adventure sports.\n3. Day 3: Continue exploring the city.\n4. Day 4: Visit nearby attractions.\n5. Day 5: Departure.\nTotal Budget: $1000-$2000",
+    "cleaned_query": "can you plan a budget trip to san francisco for"
+  },
+  {
+    "id": 62,
+    "query": "Suggest a hotel in Tokyo",
+    "response": "Suggested Hotel in Tokyo: St. Regis.\nIt offers great amenities and is located close to major attractions.",
+    "cleaned_query": "suggest a hotel in tokyo"
+  },
+  {
+    "id": 63,
+    "query": "Suggest a hotel in Amsterdam",
+    "response": "Suggested Hotel in Amsterdam: Hyatt.\nIt offers great amenities and is located close to major attractions.",
+    "cleaned_query": "suggest a hotel in amsterdam"
+  },
+  {
+    "id": 64,
+    "query": "Tell me the travel package for Tokyo",
+    "response": "Travel Package for Tokyo:\n1. Day 1: Explore art museums.\n2. Day 2: Enjoy nature parks.\n3. Day 3: Continue exploring the city.\n4. Day 4: Visit nearby attractions.\n5. Day 5: Departure.\nTotal Price: $1000-$2000",
+    "cleaned_query": "tell me the travel package for tokyo"
+  },
+  {
+    "id": 65,
+    "query": "Suggest a hotel in London",
+    "response": "Suggested Hotel in London: Mandarin Oriental.\nIt offers great amenities and is located close to major attractions.",
+    "cleaned_query": "suggest a hotel in london"
+  },
+  {
+    "id": 66,
+    "query": "Suggest a hotel in Istanbul",
+    "response": "Suggested Hotel in Istanbul: Marriott.\nIt offers great amenities and is located close to major attractions.",
+    "cleaned_query": "suggest a hotel in istanbul"
+  },
+  {
+    "id": 67,
+    "query": "Can you plan a budget trip to Sydney for $4000-$5000?",
+    "response": "Budget Trip to Sydney:\n1. Day 1: Explore art museums.\n2. Day 2: Enjoy cultural festivals.\n3. Day 3: Continue exploring the city.\n4. Day 4: Visit nearby attractions.\n5. Day 5: Departure.\nTotal Budget: $4000-$5000",
+    "cleaned_query": "can you plan a budget trip to sydney for"
+  },
+  {
+    "id": 68,
+    "query": "Suggest a hotel in Barcelona",
+    "response": "Suggested Hotel in Barcelona: Ritz-Carlton.\nIt offers great amenities and is located close to major attractions.",
+    "cleaned_query": "suggest a hotel in barcelona"
+  },
+  {
+    "id": 69,
+    "query": "Can you plan a budget trip to Hong Kong for $1000-$2000?",
+    "response": "Budget Trip to Hong Kong:\n1. Day 1: Explore adventure sports.\n2. Day 2: Enjoy sightseeing.\n3. Day 3: Continue exploring the city.\n4. Day 4: Visit nearby attractions.\n5. Day 5: Departure.\nTotal Budget: $1000-$2000",
+    "cleaned_query": "can you plan a budget trip to hong kong for"
+  },
+  {
+    "id": 70,
+    "query": "Can you plan a budget trip to Bangkok for $1000-$2000?",
+    "response": "Budget Trip to Bangkok:\n1. Day 1: Explore historical sites.\n2. Day 2: Enjoy culinary tours.\n3. Day 3: Continue exploring the city.\n4. Day 4: Visit nearby attractions.\n5. Day 5: Departure.\nTotal Budget: $1000-$2000",
+    "cleaned_query": "can you plan a budget trip to bangkok for"
+  },
+  {
+    "id": 71,
+    "query": "Can you plan a budget trip to Barcelona for $3000-$4000?",
+    "response": "Budget Trip to Barcelona:\n1. Day 1: Explore nature parks.\n2. Day 2: Enjoy culinary tours.\n3. Day 3: Continue exploring the city.\n4. Day 4: Visit nearby attractions.\n5. Day 5: Departure.\nTotal Budget: $3000-$4000",
+    "cleaned_query": "can you plan a budget trip to barcelona for"
+  },
+  {
+    "id": 72,
+    "query": "Can you plan a budget trip to Sydney for $3000-$4000?",
+    "response": "Budget Trip to Sydney:\n1. Day 1: Explore shopping.\n2. Day 2: Enjoy beaches.\n3. Day 3: Continue exploring the city.\n4. Day 4: Visit nearby attractions.\n5. Day 5: Departure.\nTotal Budget: $3000-$4000",
+    "cleaned_query": "can you plan a budget trip to sydney for"
+  },
+  {
+    "id": 73,
+    "query": "Tell me the travel package for Bangkok",
+    "response": "Travel Package for Bangkok:\n1. Day 1: Explore beaches.\n2. Day 2: Enjoy culinary tours.\n3. Day 3: Continue exploring the city.\n4. Day 4: Visit nearby attractions.\n5. Day 5: Departure.\nTotal Price: $4000-$5000",
+    "cleaned_query": "tell me the travel package for bangkok"
+  },
+  {
+    "id": 74,
+    "query": "Tell me the travel package for Bangkok",
+    "response": "Travel Package for Bangkok:\n1. Day 1: Explore historical sites.\n2. Day 2: Enjoy cultural festivals.\n3. Day 3: Continue exploring the city.\n4. Day 4: Visit nearby attractions.\n5. Day 5: Departure.\nTotal Price: $1000-$2000",
+    "cleaned_query": "tell me the travel package for bangkok"
+  },
+  {
+    "id": 75,
+    "query": "Suggest a hotel in Tokyo",
+    "response": "Suggested Hotel in Tokyo: Marriott.\nIt offers great amenities and is located close to major attractions.",
+    "cleaned_query": "suggest a hotel in tokyo"
+  },
+  {
+    "id": 76,
+    "query": "Suggest a hotel in Singapore",
+    "response": "Suggested Hotel in Singapore: Waldorf Astoria.\nIt offers great amenities and is located close to major attractions.",
+    "cleaned_query": "suggest a hotel in singapore"
+  },
+  {
+    "id": 77,
+    "query": "Tell me the travel package for Barcelona",
+    "response": "Travel Package for Barcelona:\n1. Day 1: Explore nightlife.\n2. Day 2: Enjoy adventure sports.\n3. Day 3: Continue exploring the city.\n4. Day 4: Visit nearby attractions.\n5. Day 5: Departure.\nTotal Price: $2000-$3000",
+    "cleaned_query": "tell me the travel package for barcelona"
+  },
+  {
+    "id": 78,
+    "query": "Suggest a hotel in Rome",
+    "response": "Suggested Hotel in Rome: Park Hyatt.\nIt offers great amenities and is located close to major attractions.",
+    "cleaned_query": "suggest a hotel in rome"
+  },
+  {
+    "id": 79,
+    "query": "Tell me the travel package for New York",
+    "response": "Travel Package for New York:\n1. Day 1: Explore art museums.\n2. Day 2: Enjoy beaches.\n3. Day 3: Continue exploring the city.\n4. Day 4: Visit nearby attractions.\n5. Day 5: Departure.\nTotal Price: $4000-$5000",
+    "cleaned_query": "tell me the travel package for new york"
+  },
+  {
+    "id": 80,
+    "query": "Suggest a hotel in Los Angeles",
+    "response": "Suggested Hotel in Los Angeles: Hilton.\nIt offers great amenities and is located close to major attractions.",
+    "cleaned_query": "suggest a hotel in los angeles"
+  },
+  {
+    "id": 81,
+    "query": "Can you plan a budget trip to San Francisco for $1000-$2000?",
+    "response": "Budget Trip to San Francisco:\n1. Day 1: Explore shopping.\n2. Day 2: Enjoy adventure sports.\n3. Day 3: Continue exploring the city.\n4. Day 4: Visit nearby attractions.\n5. Day 5: Departure.\nTotal Budget: $1000-$2000",
+    "cleaned_query": "can you plan a budget trip to san francisco for"
+  },
+  {
+    "id": 82,
+    "query": "Can you plan a budget trip to Rome for $3000-$4000?",
+    "response": "Budget Trip to Rome:\n1. Day 1: Explore nature parks.\n2. Day 2: Enjoy shopping.\n3. Day 3: Continue exploring the city.\n4. Day 4: Visit nearby attractions.\n5. Day 5: Departure.\nTotal Budget: $3000-$4000",
+    "cleaned_query": "can you plan a budget trip to rome for"
+  },
+  {
+    "id": 83,
+    "query": "Tell me the travel package for London",
+    "response": "Travel Package for London:\n1. Day 1: Explore art museums.\n2. Day 2: Enjoy cultural festivals.\n3. Day 3: Continue exploring the city.\n4. Day 4: Visit nearby attractions.\n5. Day 5: Departure.\nTotal Price: $4000-$5000",
+    "cleaned_query": "tell me the travel package for london"
+  },
+  {
+    "id": 84,
+    "query": "Can you plan a budget trip to Hong Kong for $2000-$3000?",
+    "response": "Budget Trip to Hong Kong:\n1. Day 1: Explore art museums.\n2. Day 2: Enjoy nightlife.\n3. Day 3: Continue exploring the city.\n4. Day 4: Visit nearby attractions.\n5. Day 5: Departure.\nTotal Budget: $2000-$3000",
+    "cleaned_query": "can you plan a budget trip to hong kong for"
+  },
+  {
+    "id": 85,
+    "query": "Can you plan a budget trip to Dubai for $1000-$2000?",
+    "response": "Budget Trip to Dubai:\n1. Day 1: Explore culinary tours.\n2. Day 2: Enjoy beaches.\n3. Day 3: Continue exploring the city.\n4. Day 4: Visit nearby attractions.\n5. Day 5: Departure.\nTotal Budget: $1000-$2000",
+    "cleaned_query": "can you plan a budget trip to dubai for"
+  },
+  {
+    "id": 86,
+    "query": "Tell me the travel package for Bangkok",
+    "response": "Travel Package for Bangkok:\n1. Day 1: Explore nightlife.\n2. Day 2: Enjoy adventure sports.\n3. Day 3: Continue exploring the city.\n4. Day 4: Visit nearby attractions.\n5. Day 5: Departure.\nTotal Price: $2000-$3000",
+    "cleaned_query": "tell me the travel package for bangkok"
+  },
+  {
+    "id": 87,
+    "query": "Can you plan a budget trip to Bangkok for $4000-$5000?",
+    "response": "Budget Trip to Bangkok:\n1. Day 1: Explore art museums.\n2. Day 2: Enjoy cultural festivals.\n3. Day 3: Continue exploring the city.\n4. Day 4: Visit nearby attractions.\n5. Day 5: Departure.\nTotal Budget: $4000-$5000",
+    "cleaned_query": "can you plan a budget trip to bangkok for"
+  },
+  {
+    "id": 88,
+    "query": "Tell me the travel package for Rome",
+    "response": "Travel Package for Rome:\n1. Day 1: Explore historical sites.\n2. Day 2: Enjoy nature parks.\n3. Day 3: Continue exploring the city.\n4. Day 4: Visit nearby attractions.\n5. Day 5: Departure.\nTotal Price: $3000-$4000",
+    "cleaned_query": "tell me the travel package for rome"
+  },
+  {
+    "id": 89,
+    "query": "Tell me the travel package for San Francisco",
+    "response": "Travel Package for San Francisco:\n1. Day 1: Explore nightlife.\n2. Day 2: Enjoy cultural festivals.\n3. Day 3: Continue exploring the city.\n4. Day 4: Visit nearby attractions.\n5. Day 5: Departure.\nTotal Price: $1000-$2000",
+    "cleaned_query": "tell me the travel package for san francisco"
+  },
+  {
+    "id": 90,
+    "query": "Can you plan a budget trip to Barcelona for $2000-$3000?",
+    "response": "Budget Trip to Barcelona:\n1. Day 1: Explore culinary tours.\n2. Day 2: Enjoy shopping.\n3. Day 3: Continue exploring the city.\n4. Day 4: Visit nearby attractions.\n5. Day 5: Departure.\nTotal Budget: $2000-$3000",
+    "cleaned_query": "can you plan a budget trip to barcelona for"
+  },
+  {
+    "id": 91,
+    "query": "Tell me the travel package for Istanbul",
+    "response": "Travel Package for Istanbul:\n1. Day 1: Explore shopping.\n2. Day 2: Enjoy adventure sports.\n3. Day 3: Continue exploring the city.\n4. Day 4: Visit nearby attractions.\n5. Day 5: Departure.\nTotal Price: $4000-$5000",
+    "cleaned_query": "tell me the travel package for istanbul"
+  },
+  {
+    "id": 92,
+    "query": "Can you plan a budget trip to New York for $4000-$5000?",
+    "response": "Budget Trip to New York:\n1. Day 1: Explore adventure sports.\n2. Day 2: Enjoy shopping.\n3. Day 3: Continue exploring the city.\n4. Day 4: Visit nearby attractions.\n5. Day 5: Departure.\nTotal Budget: $4000-$5000",
+    "cleaned_query": "can you plan a budget trip to new york for"
+  },
+  {
+    "id": 93,
+    "query": "Suggest a hotel in Rome",
+    "response": "Suggested Hotel in Rome: Hyatt.\nIt offers great amenities and is located close to major attractions.",
+    "cleaned_query": "suggest a hotel in rome"
+  },
+  {
+    "id": 94,
+    "query": "Suggest a hotel in Los Angeles",
+    "response": "Suggested Hotel in Los Angeles: Hyatt.\nIt offers great amenities and is located close to major attractions.",
+    "cleaned_query": "suggest a hotel in los angeles"
+  },
+  {
+    "id": 95,
+    "query": "Tell me the travel package for San Francisco",
+    "response": "Travel Package for San Francisco:\n1. Day 1: Explore nightlife.\n2. Day 2: Enjoy adventure sports.\n3. Day 3: Continue exploring the city.\n4. Day 4: Visit nearby attractions.\n5. Day 5: Departure.\nTotal Price: $1000-$2000",
+    "cleaned_query": "tell me the travel package for san francisco"
+  },
+  {
+    "id": 96,
+    "query": "Suggest a hotel in Rome",
+    "response": "Suggested Hotel in Rome: Sheraton.\nIt offers great amenities and is located close to major attractions.",
+    "cleaned_query": "suggest a hotel in rome"
+  },
+  {
+    "id": 97,
+    "query": "Tell me the travel package for New York",
+    "response": "Travel Package for New York:\n1. Day 1: Explore beaches.\n2. Day 2: Enjoy nightlife.\n3. Day 3: Continue exploring the city.\n4. Day 4: Visit nearby attractions.\n5. Day 5: Departure.\nTotal Price: $3000-$4000",
+    "cleaned_query": "tell me the travel package for new york"
+  },
+  {
+    "id": 98,
+    "query": "Tell me the travel package for Amsterdam",
+    "response": "Travel Package for Amsterdam:\n1. Day 1: Explore sightseeing.\n2. Day 2: Enjoy beaches.\n3. Day 3: Continue exploring the city.\n4. Day 4: Visit nearby attractions.\n5. Day 5: Departure.\nTotal Price: $3000-$4000",
+    "cleaned_query": "tell me the travel package for amsterdam"
+  },
+  {
+    "id": 99,
+    "query": "Can you plan a budget trip to Rome for $4000-$5000?",
+    "response": "Budget Trip to Rome:\n1. Day 1: Explore nature parks.\n2. Day 2: Enjoy historical sites.\n3. Day 3: Continue exploring the city.\n4. Day 4: Visit nearby attractions.\n5. Day 5: Departure.\nTotal Budget: $4000-$5000",
+    "cleaned_query": "can you plan a budget trip to rome for"
+  },
+  {
+    "id": 100,
+    "query": "Suggest a hotel in Amsterdam",
+    "response": "Suggested Hotel in Amsterdam: Holiday Inn.\nIt offers great amenities and is located close to major attractions.",
+    "cleaned_query": "suggest a hotel in amsterdam"
+  },
+  {
+    "id": 101,
+    "query": "Hello",
+    "response": "Hi there! How can I assist you today?",
+    "cleaned_query": "hello"
+  },
+  {
+    "id": 102,
+    "query": "Goodbye",
+    "response": "Goodbye! Have a great day!",
+    "cleaned_query": "goodbye"
+  },
+  {
+    "id": 103,
+    "query": "What can you do?",
+    "response": "I can help you with travel packages, hotel suggestions, flight details, and much more! Let me know what you need.",
+    "cleaned_query": "what can you do"
+  },
+  {
+    "id": 104,
+    "query": "Can you help me book a flight?",
+    "response": "Of course! Please provide your destination and travel dates, and I’ll assist you with the best options.",
+    "cleaned_query": "can you help me book a flight"
+  },
+  {
+    "id": 105,
+    "query": "How are you?",
+    "response": "I’m just a bot, but I’m here to make your travel plans easier! How can I help you today?",
+    "cleaned_query": "how are you"
+  },
+  {
+    "id": 106,
+    "query": "Tell me a joke",
+    "response": "Why don’t we tell secrets on airplanes? Because they might fly out!",
+    "cleaned_query": "tell me a joke"
+  },
+  {
+    "id": 107,
+    "query": "Thank you",
+    "response": "You’re welcome! Happy to assist you.",
+    "cleaned_query": "thank you"
+  },
+  {
+    "id": 108,
+    "query": "Do you have any travel tips?",
+    "response": "Sure! Always pack light, keep your documents handy, and explore local cuisine for a great experience.",
+    "cleaned_query": "do you have any travel tips"
+  },
+  {
+    "id": 109,
+    "query": "What’s the best time to visit Paris?",
+    "response": "The best time to visit Paris is from April to June and October to early November when the weather is mild.",
+    "cleaned_query": "what’s the best time to visit paris"
+  },
+  {
+    "id": 110,
+    "query": "Tell me the travel package for Delhi",
+    "response": "Travel Package for Delhi: 1. Day 1: Explore historical sites. 2. Day 2: Visit markets. 3. Day 3: Enjoy street food. 4. Day 4: Visit nearby attractions. 5. Day 5: Departure. Total Price: $1500-$2000",
+    "cleaned_query": "tell me the travel package for delhi"
+  },
+  {
+    "id": 111,
+    "query": "Tell me the travel package for Mumbai",
+    "response": "Travel Package for Mumbai: 1. Day 1: Explore Marine Drive. 2. Day 2: Visit Gateway of India. 3. Day 3: Enjoy Bollywood tour. 4. Day 4: Visit Elephanta Caves. 5. Day 5: Departure. Total Price: $1800-$2500",
+    "cleaned_query": "tell me the travel package for mumbai"
+  },
+  {
+    "id": 112,
+    "query": "Tell me the travel package for Bangalore",
+    "response": "Travel Package for Bangalore: 1. Day 1: Explore Lalbagh Botanical Garden. 2. Day 2: Visit Cubbon Park. 3. Day 3: Enjoy shopping at MG Road. 4. Day 4: Visit nearby attractions. 5. Day 5: Departure. Total Price: $1700-$2300",
+    "cleaned_query": "tell me the travel package for bangalore"
+  },
+  {
+    "id": 113,
+    "query": "Tell me the travel package for Chennai",
+    "response": "Travel Package for Chennai: 1. Day 1: Explore Marina Beach. 2. Day 2: Visit Kapaleeshwarar Temple. 3. Day 3: Enjoy local cuisine. 4. Day 4: Visit nearby attractions. 5. Day 5: Departure. Total Price: $1600-$2200",
+    "cleaned_query": "tell me the travel package for chennai"
+  },
+  {
+    "id": 114,
+    "query": "Tell me the travel package for Kolkata",
+    "response": "Travel Package for Kolkata: 1. Day 1: Explore Victoria Memorial. 2. Day 2: Visit Howrah Bridge. 3. Day 3: Enjoy local sweets. 4. Day 4: Visit nearby attractions. 5. Day 5: Departure. Total Price: $1500-$2000",
+    "cleaned_query": "tell me the travel package for kolkata"
+  },
+  {
+    "id": 115,
+    "query": "Tell me the travel package for Hyderabad",
+    "response": "Travel Package for Hyderabad: 1. Day 1: Explore Charminar. 2. Day 2: Visit Golconda Fort. 3. Day 3: Enjoy Biryani. 4. Day 4: Visit nearby attractions. 5. Day 5: Departure. Total Price: $1600-$2200",
+    "cleaned_query": "tell me the travel package for hyderabad"
+  },
+  {
+    "id": 116,
+    "query": "Tell me the travel package for Jaipur",
+    "response": "Travel Package for Jaipur: 1. Day 1: Explore Amber Fort. 2. Day 2: Visit Hawa Mahal. 3. Day 3: Enjoy local shopping. 4. Day 4: Visit nearby attractions. 5. Day 5: Departure. Total Price: $1500-$2000",
+    "cleaned_query": "tell me the travel package for jaipur"
+  },
+  {
+    "id": 117,
+    "query": "Tell me the travel package for Ahmedabad",
+    "response": "Travel Package for Ahmedabad: 1. Day 1: Explore Sabarmati Ashram. 2. Day 2: Visit Akshardham Temple. 3. Day 3: Enjoy local cuisine. 4. Day 4: Visit nearby attractions. 5. Day 5: Departure. Total Price: $1400-$1900",
+    "cleaned_query": "tell me the travel package for ahmedabad"
+  },
+  {
+    "id": 118,
+    "query": "Tell me the travel package for Pune",
+    "response": "Travel Package for Pune: 1. Day 1: Explore Shaniwar Wada. 2. Day 2: Visit Aga Khan Palace. 3. Day 3: Enjoy local food. 4. Day 4: Visit nearby attractions. 5. Day 5: Departure. Total Price: $1500-$2000",
+    "cleaned_query": "tell me the travel package for pune"
+  },
+  {
+    "id": 119,
+    "query": "Suggest a hotel in Delhi",
+    "response": "Suggested Hotel in Delhi: The Imperial. It offers luxury amenities and is located in the heart of the city.",
+    "cleaned_query": "suggest a hotel in delhi"
+  },
+  {
+    "id": 120,
+    "query": "Suggest a hotel in Mumbai",
+    "response": "Suggested Hotel in Mumbai: Taj Mahal Palace. It offers world-class service and is located near major attractions.",
+    "cleaned_query": "suggest a hotel in mumbai"
+  },
+  {
+    "id": 121,
+    "query": "Suggest a hotel in Bangalore",
+    "response": "Suggested Hotel in Bangalore: ITC Gardenia. It offers luxury and proximity to major attractions.",
+    "cleaned_query": "suggest a hotel in bangalore"
+  },
+  {
+    "id": 122,
+    "query": "Suggest a hotel in Chennai",
+    "response": "Suggested Hotel in Chennai: The Leela Palace. It offers luxury amenities and beautiful views.",
+    "cleaned_query": "suggest a hotel in chennai"
+  },
+  {
+    "id": 123,
+    "query": "What are the top attractions in Agra?",
+    "response": "Top attractions in Agra include the Taj Mahal, Agra Fort, and Fatehpur Sikri. Let me know if you'd like travel packages to explore these!",
+    "cleaned_query": "what are the top attractions in agra"
+  },
+  {
+    "id": 124,
+    "query": "What is the best time to visit Udaipur?",
+    "response": "The best time to visit Udaipur is between October and March when the weather is pleasant for sightseeing and enjoying the lakes.",
+    "cleaned_query": "what is the best time to visit udaipur"
+  },
+  {
+    "id": 125,
+    "query": "Suggest a weekend getaway near Delhi",
+    "response": "For a weekend getaway near Delhi, consider Agra, Jaipur, Rishikesh, or Neemrana. Let me know if you'd like more details!",
+    "cleaned_query": "suggest a weekend getaway near delhi"
+  },
+  {
+    "id": 126,
+    "query": "What are the best beaches in Goa?",
+    "response": "Some of the best beaches in Goa include Baga Beach, Calangute Beach, Anjuna Beach, and Palolem Beach. Would you like me to suggest a travel package?",
+    "cleaned_query": "what are the best beaches in goa"
+  },
+  {
+    "id": 127,
+    "query": "Tell me the top attractions in Varanasi",
+    "response": "Top attractions in Varanasi include Kashi Vishwanath Temple, Assi Ghat, Dashashwamedh Ghat, and the Sarnath Museum. Let me know if you'd like a travel package!",
+    "cleaned_query": "tell me the top attractions in varanasi"
+  },
+  {
+    "id": 128,
+    "query": "What are the best shopping spots in Jaipur?",
+    "response": "The best shopping spots in Jaipur include Johari Bazaar, Bapu Bazaar, Tripolia Bazaar, and Chandpole Bazaar. Can I help you plan your shopping tour?",
+    "cleaned_query": "what are the best shopping spots in jaipur"
+  },
+  {
+    "id": 129,
+    "query": "What festivals can I experience in Kerala?",
+    "response": "In Kerala, you can experience festivals like Onam, Thrissur Pooram, and Nehru Trophy Boat Race. Let me know if you'd like to plan your visit around these events!",
+    "cleaned_query": "what festivals can i experience in kerala"
+  },
+  {
+    "id": 130,
+    "query": "What are the best trekking spots in Himachal Pradesh?",
+    "response": "The best trekking spots in Himachal Pradesh include Triund Trek, Hampta Pass, Pin Parvati Trek, and Beas Kund. Would you like help planning your adventure?",
+    "cleaned_query": "what are the best trekking spots in himachal pradesh"
+  },
+  {
+    "id": 131,
+    "query": "Suggest a luxury train journey in India",
+    "response": "Consider the Palace on Wheels or Maharajas' Express for a luxurious train journey through India's heritage and landscapes. Shall I share more details?",
+    "cleaned_query": "suggest a luxury train journey in india"
+  },
+  {
+    "id": 132,
+    "query": "What are the top hill stations in South India?",
+    "response": "Top hill stations in South India include Munnar, Ooty, Coorg, and Kodaikanal. Would you like me to suggest travel packages to these destinations?",
+    "cleaned_query": "what are the top hill stations in south india"
+  },
+  {
+    "id": 133,
+    "query": "What are the famous dishes in Lucknow?",
+    "response": "Famous dishes in Lucknow include Tunday Kebabs, Biryani, Sheermal, and Kulfi. Let me know if you'd like a culinary tour!",
+    "cleaned_query": "what are the famous dishes in lucknow"
+  },
+  {
+    "id": 134,
+    "query": "Tell me about wildlife sanctuaries in Rajasthan",
+    "response": "Popular wildlife sanctuaries in Rajasthan include Ranthambore National Park, Sariska Tiger Reserve, and Keoladeo National Park. Interested in a wildlife tour?",
+    "cleaned_query": "tell me about wildlife sanctuaries in rajasthan"
+  },
+  {
+    "id": 135,
+    "query": "What are the cultural experiences in Gujarat?",
+    "response": "In Gujarat, experience cultural gems like the Rann Utsav, Navratri Garba, and visits to the Somnath Temple and Gir National Park. Can I help plan your trip?",
+    "cleaned_query": "what are the cultural experiences in gujarat"
+  },
+  {
+    "id": 136,
+    "query": "What are the famous temples in Tamil Nadu?",
+    "response": "Famous temples in Tamil Nadu include Meenakshi Temple, Brihadeeswarar Temple, Rameswaram Temple, and Kanchipuram Temples. Would you like to explore a temple tour?",
+    "cleaned_query": "what are the famous temples in tamil nadu"
+  },
+  {
+    "id": 137,
+    "query": "What are the adventure activities in Rishikesh?",
+    "response": "In Rishikesh, you can enjoy activities like river rafting, bungee jumping, zip-lining, and trekking. Shall I assist you with booking an adventure trip?",
+    "cleaned_query": "what are the adventure activities in rishikesh"
+  },
+  {
+    "id": 138,
+    "query": "What are the best places to visit in Mysore?",
+    "response": "The best places to visit in Mysore include Mysore Palace, Brindavan Gardens, Chamundi Hills, and St. Philomena's Church. Want help planning your visit?",
+    "cleaned_query": "what are the best places to visit in mysore"
+  },
+  {
+    "id": 139,
+    "query": "Tell me about the Ajanta and Ellora caves",
+    "response": "The Ajanta and Ellora Caves in Maharashtra are UNESCO World Heritage Sites known for their ancient rock-cut architecture and paintings. Interested in exploring them?",
+    "cleaned_query": "tell me about the ajanta and ellora caves"
+  },
+  {
+    "id": 140,
+    "query": "What are the best activities in Andaman Islands?",
+    "response": "In the Andaman Islands, you can enjoy scuba diving, snorkeling, beach hopping, and visiting Cellular Jail. Let me know if you'd like a customized itinerary!",
+    "cleaned_query": "what are the best activities in andaman islands"
+  },
+  {
+    "id": 141,
+    "query": "What are the must-visit places in Amritsar?",
+    "response": "Must-visit places in Amritsar include the Golden Temple, Jallianwala Bagh, and Wagah Border. Would you like a travel package?",
+    "cleaned_query": "what are the must-visit places in amritsar"
+  },
+  {
+    "id": 142,
+    "query": "What are the top attractions in Chandigarh?",
+    "response": "Top attractions in Chandigarh include Rock Garden, Sukhna Lake, Rose Garden, and Capitol Complex. Need help planning your visit?",
+    "cleaned_query": "what are the top attractions in chandigarh"
+  },
+  {
+    "id": 143,
+    "query": "Tell me the travel package for London",
+    "response": "Travel Package for London: 1. Day 1: Explore Buckingham Palace and Westminster. 2. Day 2: Visit the British Museum and Tower of London. 3. Day 3: Enjoy a Thames River Cruise. 4. Day 4: Explore markets and local shopping. 5. Day 5: Departure. Total Price: $2500-$3500",
+    "cleaned_query": "tell me the travel package for london"
+  },
+  {
+    "id": 144,
+    "query": "Suggest a hotel in Tokyo",
+    "response": "Suggested Hotel in Tokyo: Shinjuku Granbell Hotel. It offers modern amenities and is located in a vibrant district.",
+    "cleaned_query": "suggest a hotel in tokyo"
+  },
+  {
+    "id": 145,
+    "query": "Tell me the travel package for Sydney",
+    "response": "Travel Package for Sydney: 1. Day 1: Explore Sydney Opera House and Harbour Bridge. 2. Day 2: Visit Bondi Beach and Taronga Zoo. 3. Day 3: Enjoy Darling Harbour. 4. Day 4: Explore Blue Mountains. 5. Day 5: Departure. Total Price: $3000-$4000",
+    "cleaned_query": "tell me the travel package for sydney"
+  },
+  {
+    "id": 146,
+    "query": "Suggest a hotel in Dubai",
+    "response": "Suggested Hotel in Dubai: Burj Al Arab. It provides luxurious amenities and stunning views of the Arabian Gulf.",
+    "cleaned_query": "suggest a hotel in dubai"
+  },
+  {
+    "id": 147,
+    "query": "Tell me the travel package for New York",
+    "response": "Travel Package for New York: 1. Day 1: Explore Times Square and Central Park. 2. Day 2: Visit the Statue of Liberty and Ellis Island. 3. Day 3: Experience the Empire State Building and Broadway. 4. Day 4: Enjoy shopping and dining. 5. Day 5: Departure. Total Price: $3000-$4500",
+    "cleaned_query": "tell me the travel package for new york"
+  },
+  {
+    "id": 148,
+    "query": "Suggest a hotel in Paris",
+    "response": "Suggested Hotel in Paris: Le Bristol. Known for its exceptional service and prime location near key attractions.",
+    "cleaned_query": "suggest a hotel in paris"
+  },
+  {
+    "id": 149,
+    "query": "Tell me the travel package for Bangkok",
+    "response": "Travel Package for Bangkok: 1. Day 1: Visit Grand Palace and Wat Arun. 2. Day 2: Explore Chatuchak Market and Chinatown. 3. Day 3: Enjoy a river cruise and local cuisine. 4. Day 4: Visit floating markets. 5. Day 5: Departure. Total Price: $1500-$2500",
+    "cleaned_query": "tell me the travel package for bangkok"
+  },
+  {
+    "id": 150,
+    "query": "Suggest a hotel in Rome",
+    "response": "Suggested Hotel in Rome: Hotel de Russie. It offers luxury accommodations and is located near key attractions like the Spanish Steps.",
+    "cleaned_query": "suggest a hotel in rome"
+  },
+  {
+    "id": 151,
+    "query": "Tell me the travel package for Istanbul",
+    "response": "Travel Package for Istanbul: 1. Day 1: Explore Hagia Sophia and Blue Mosque. 2. Day 2: Visit Topkapi Palace and Grand Bazaar. 3. Day 3: Enjoy a Bosphorus cruise. 4. Day 4: Experience local food and culture. 5. Day 5: Departure. Total Price: $2000-$3000",
+    "cleaned_query": "tell me the travel package for istanbul"
+  },
+  {
+    "id": 152,
+    "query": "Suggest a hotel in Sydney",
+    "response": "Suggested Hotel in Sydney: Shangri-La Hotel. Offers luxurious amenities and stunning views of the Opera House and Harbour Bridge.",
+    "cleaned_query": "suggest a hotel in sydney"
+  },
+  {
+    "id": 153,
+    "query": "Tell me the travel package for Cape Town",
+    "response": "Travel Package for Cape Town: 1. Day 1: Explore Table Mountain and V&A Waterfront. 2. Day 2: Visit Robben Island and local vineyards. 3. Day 3: Enjoy Cape Point and Boulders Beach. 4. Day 4: Experience township tours. 5. Day 5: Departure. Total Price: $2500-$3500",
+    "cleaned_query": "tell me the travel package for cape town"
+  },
+  {
+    "id": 154,
+    "query": "Suggest a hotel in New York",
+    "response": "Suggested Hotel in New York: The Plaza Hotel. A historic luxury hotel located near Central Park and Fifth Avenue.",
+    "cleaned_query": "suggest a hotel in new york"
+  },
+  {
+    "id": 155,
+    "query": "Tell me the travel package for Mumbai",
+    "response": "Travel Package for Mumbai: 1. Day 1: Visit Gateway of India and Marine Drive. 2. Day 2: Explore Elephanta Caves and local markets. 3. Day 3: Enjoy a Bollywood tour. 4. Day 4: Visit Sanjay Gandhi National Park. 5. Day 5: Departure. Total Price: $1200-$2000",
+    "cleaned_query": "tell me the travel package for mumbai"
+  },
+  {
+    "id": 156,
+    "query": "Suggest a hotel in Delhi",
+    "response": "Suggested Hotel in Delhi: The Imperial. A luxurious hotel with rich history and excellent amenities near Connaught Place.",
+    "cleaned_query": "suggest a hotel in delhi"
+  },
+  {
+    "id": 157,
+    "query": "Tell me the travel package for Jaipur",
+    "response": "Travel Package for Jaipur: 1. Day 1: Explore Amer Fort and City Palace. 2. Day 2: Visit Hawa Mahal and Jantar Mantar. 3. Day 3: Enjoy local markets and cuisine. 4. Day 4: Visit Nahargarh Fort and Jaipur Zoo. 5. Day 5: Departure. Total Price: $1000-$1800",
+    "cleaned_query": "tell me the travel package for jaipur"
+  },
+  {
+    "id": 158,
+    "query": "Suggest a hotel in Bengaluru",
+    "response": "Suggested Hotel in Bengaluru: The Leela Palace. A luxurious hotel known for its elegant architecture and prime location.",
+    "cleaned_query": "suggest a hotel in bengaluru"
+  },
+  {
+    "id": 159,
+    "query": "Tell me the travel package for Goa",
+    "response": "Travel Package for Goa: 1. Day 1: Relax on Baga Beach and explore Panaji. 2. Day 2: Visit Old Goa churches and spice plantations. 3. Day 3: Enjoy water sports at Calangute Beach. 4. Day 4: Explore local markets and nightlife. 5. Day 5: Departure. Total Price: $800-$1500",
+    "cleaned_query": "tell me the travel package for goa"
+  },
+  {
+    "id": 160,
+    "query": "Suggest a hotel in Chennai",
+    "response": "Suggested Hotel in Chennai: ITC Grand Chola. Offers luxury accommodations and is located near major attractions.",
+    "cleaned_query": "suggest a hotel in chennai"
+  },
+  {
+    "id": 161,
+    "query": "Tell me the travel package for Kerala",
+    "response": "Travel Package for Kerala: 1. Day 1: Explore Kochi and local markets. 2. Day 2: Visit Munnar tea gardens. 3. Day 3: Experience Alleppey houseboat. 4. Day 4: Relax in Kovalam beaches. 5. Day 5: Departure. Total Price: $1200-$2000",
+    "cleaned_query": "tell me the travel package for kerala"
+  },
+  {
+    "id": 162,
+    "query": "Suggest a hotel in Agra",
+    "response": "Suggested Hotel in Agra: The Oberoi Amarvilas. A luxury hotel offering views of the Taj Mahal.",
+    "cleaned_query": "suggest a hotel in agra"
+  },
+  {
+    "id": 163,
+    "query": "Tell me the travel package for Varanasi",
+    "response": "Travel Package for Varanasi: 1. Day 1: Visit Kashi Vishwanath Temple. 2. Day 2: Experience the Ganga Aarti at Dashashwamedh Ghat. 3. Day 3: Explore Sarnath. 4. Day 4: Enjoy a boat ride on the Ganges. 5. Day 5: Departure. Total Price: $1000-$1500",
+    "cleaned_query": "tell me the travel package for varanasi"
+  },
+  {
+    "id": 164,
+    "query": "Suggest a hotel in Hyderabad",
+    "response": "Suggested Hotel in Hyderabad: Taj Falaknuma Palace. Offers royal treatment and is close to major landmarks.",
+    "cleaned_query": "suggest a hotel in hyderabad"
+  },
+  {
+    "id": 165,
+    "query": "Tell me the travel package for Udaipur",
+    "response": "Travel Package for Udaipur: 1. Day 1: Visit City Palace and Lake Pichola. 2. Day 2: Explore Saheliyon-ki-Bari and Jag Mandir. 3. Day 3: Enjoy Shilpgram and Monsoon Palace. 4. Day 4: Relax by Fateh Sagar Lake. 5. Day 5: Departure. Total Price: $1100-$1800",
+    "cleaned_query": "tell me the travel package for udaipur"
+  },
+  {
+    "id": 166,
+    "query": "Suggest a hotel in Kolkata",
+    "response": "Suggested Hotel in Kolkata: The Oberoi Grand. A heritage hotel offering modern luxury and located in the heart of the city.",
+    "cleaned_query": "suggest a hotel in kolkata"
+  },
+  {
+    "id": 167,
+    "query": "Tell me the travel package for Amritsar",
+    "response": "Travel Package for Amritsar: 1. Day 1: Visit the Golden Temple. 2. Day 2: Explore Jallianwala Bagh and Wagah Border. 3. Day 3: Experience Partition Museum. 4. Day 4: Visit local markets. 5. Day 5: Departure. Total Price: $900-$1400",
+    "cleaned_query": "tell me the travel package for amritsar"
+  },
+  {
+    "id": 168,
+    "query": "Suggest a hotel in Shimla",
+    "response": "Suggested Hotel in Shimla: Wildflower Hall. A luxurious resort offering stunning views of the Himalayas.",
+    "cleaned_query": "suggest a hotel in shimla"
+  },
+  {
+    "id": 169,
+    "query": "Tell me the travel package for Rishikesh",
+    "response": "Travel Package for Rishikesh: 1. Day 1: Visit Laxman Jhula and Ram Jhula. 2. Day 2: Experience Ganga Aarti at Triveni Ghat. 3. Day 3: Enjoy river rafting and yoga retreats. 4. Day 4: Explore nearby Neer Garh waterfalls. 5. Day 5: Departure. Total Price: $800-$1300",
+    "cleaned_query": "tell me the travel package for rishikesh"
+  },
+  {
+    "id": 170,
+    "query": "Suggest a hotel in Ahmedabad",
+    "response": "Suggested Hotel in Ahmedabad: Hyatt Regency. Offers modern amenities and is located near the Sabarmati Riverfront.",
+    "cleaned_query": "suggest a hotel in ahmedabad"
+  },
+  {
+    "id": 171,
+    "query": "Tell me the travel package for Darjeeling",
+    "response": "Travel Package for Darjeeling: 1. Day 1: Explore Tiger Hill and Batasia Loop. 2. Day 2: Visit tea gardens and Himalayan Mountaineering Institute. 3. Day 3: Enjoy a toy train ride. 4. Day 4: Relax at Peace Pagoda. 5. Day 5: Departure. Total Price: $1000-$1600",
+    "cleaned_query": "tell me the travel package for darjeeling"
+  },
+  {
+    "id": 172,
+    "query": "Suggest a hotel in Guwahati",
+    "response": "Suggested Hotel in Guwahati: Radisson Blu. Offers excellent facilities and is located near the Brahmaputra River.",
+    "cleaned_query": "suggest a hotel in guwahati"
+  },
+  {
+    "id": 173,
+    "query": "Tell me the travel package for Mysore",
+    "response": "Travel Package for Mysore: 1. Day 1: Visit Mysore Palace and St. Philomena's Church. 2. Day 2: Explore Chamundi Hills and Brindavan Gardens. 3. Day 3: Enjoy local markets and silk shops. 4. Day 4: Visit Ranganathittu Bird Sanctuary. 5. Day 5: Departure. Total Price: $900-$1500",
+    "cleaned_query": "tell me the travel package for mysore"
+  },
+  {
+    "id": 174,
+    "query": "Suggest a hotel in Pune",
+    "response": "Suggested Hotel in Pune: JW Marriott. Offers luxurious accommodations and is close to key landmarks.",
+    "cleaned_query": "suggest a hotel in pune"
+  },
+  {
+    "id": 175,
+    "query": "Tell me the travel package for Ladakh",
+    "response": "Travel Package for Ladakh: 1. Day 1: Explore Leh market and Shanti Stupa. 2. Day 2: Visit Nubra Valley. 3. Day 3: Experience Pangong Lake. 4. Day 4: Explore monasteries like Hemis and Thiksey. 5. Day 5: Departure. Total Price: $1500-$2500",
+    "cleaned_query": "tell me the travel package for ladakh"
+  },
+  {
+    "id": 176,
+    "query": "Suggest a hotel in Chandigarh",
+    "response": "Suggested Hotel in Chandigarh: Taj Chandigarh. Known for its excellent service and prime location.",
+    "cleaned_query": "suggest a hotel in chandigarh"
+  },
+  {
+    "id": 177,
+    "query": "Tell me the travel package for Ooty",
+    "response": "Travel Package for Ooty: 1. Day 1: Visit Ooty Lake and Botanical Gardens. 2. Day 2: Explore Doddabetta Peak and tea estates. 3. Day 3: Enjoy a toy train ride. 4. Day 4: Relax at Emerald Lake. 5. Day 5: Departure. Total Price: $900-$1400",
+    "cleaned_query": "tell me the travel package for ooty"
+  },
+  {
+    "id": 178,
+    "query": "Suggest a hotel in Bhubaneswar",
+    "response": "Suggested Hotel in Bhubaneswar: Mayfair Lagoon. A luxurious hotel offering serene surroundings and excellent facilities.",
+    "cleaned_query": "suggest a hotel in bhubaneswar"
+  },
+  {
+    "id": 179,
+    "query": "Tell me the travel package for Khajuraho",
+    "response": "Travel Package for Khajuraho: 1. Day 1: Explore Western and Eastern Group of Temples. 2. Day 2: Visit Raneh Falls and Panna National Park. 3. Day 3: Enjoy light and sound show at the temples. 4. Day 4: Relax and explore local markets. 5. Day 5: Departure. Total Price: $1000-$1500",
+    "cleaned_query": "tell me the travel package for khajuraho"
+  },
+  {
+    "id": 180,
+    "query": "Suggest a hotel in Coimbatore",
+    "response": "Suggested Hotel in Coimbatore: Vivanta by Taj. Offers excellent hospitality and is located near key attractions.",
+    "cleaned_query": "suggest a hotel in coimbatore"
+  },
+  {
+    "id": 181,
+    "query": "Tell me about India Gate's history",
+    "response": "India Gate, located in New Delhi, is a war memorial dedicated to soldiers who died during World War I. Designed by Edwin Lutyens, it was completed in 1931 and stands as a symbol of sacrifice.",
+    "cleaned_query": "tell me about india gate history"
+  },
+  {
+    "id": 182,
+    "query": "What is the best time to visit Kashmir?",
+    "response": "The best time to visit Kashmir is between March and October when the weather is pleasant, and the valleys are lush and blooming with flowers.",
+    "cleaned_query": "best time to visit kashmir"
+  },
+  {
+    "id": 183,
+    "query": "Explain the significance of Mysore Dasara",
+    "response": "Mysore Dasara is a 10-day festival celebrated during Navaratri, symbolizing the victory of good over evil. The Mysore Palace is illuminated, and cultural events and a grand procession take place.",
+    "cleaned_query": "significance of mysore dasara"
+  },
+  {
+    "id": 184,
+    "query": "What are the must-try dishes in Hyderabad?",
+    "response": "In Hyderabad, you must try biryani, haleem, kebabs, double ka meetha, and qubani ka meetha for an authentic taste of the city's cuisine.",
+    "cleaned_query": "must try dishes in hyderabad"
+  },
+  {
+    "id": 185,
+    "query": "How to reach Sikkim from Delhi?",
+    "response": "To reach Sikkim from Delhi, you can take a flight to Bagdogra Airport, followed by a taxi or shared vehicle to Gangtok. Alternatively, a train to New Jalpaiguri and onward road journey is also an option.",
+    "cleaned_query": "how to reach sikkim from delhi"
+  },
+  {
+    "id": 186,
+    "query": "What are the top attractions in Ahmedabad?",
+    "response": "Top attractions in Ahmedabad include Sabarmati Ashram, Adalaj Stepwell, Kankaria Lake, Akshardham Temple, and Sidi Saiyyed Mosque.",
+    "cleaned_query": "top attractions in ahmedabad"
+  },
+  {
+    "id": 187,
+    "query": "Tell me about the cultural significance of Pushkar Fair",
+    "response": "Pushkar Fair, held annually in Rajasthan, is one of the world's largest camel and livestock fairs. It also includes cultural events, music, and traditional competitions.",
+    "cleaned_query": "cultural significance of pushkar fair"
+  },
+  {
+    "id": 188,
+    "query": "What is unique about Meghalaya's living root bridges?",
+    "response": "Meghalaya's living root bridges are handcrafted by the Khasi and Jaintia tribes using the aerial roots of rubber trees. They are sustainable and can last for centuries.",
+    "cleaned_query": "unique about meghalaya living root bridges"
+  },
+  {
+    "id": 189,
+    "query": "What should I pack for a trip to Ladakh?",
+    "response": "For Ladakh, pack warm clothing, sunscreen, sunglasses, sturdy trekking shoes, a reusable water bottle, and any required medications.",
+    "cleaned_query": "what to pack for ladakh trip"
+  },
+  {
+    "id": 190,
+    "query": "What is the story behind Jaipur's Hawa Mahal?",
+    "response": "Hawa Mahal, or 'Palace of Winds,' was built in 1799 by Maharaja Sawai Pratap Singh. It was designed for royal women to observe street festivals without being seen.",
+    "cleaned_query": "story behind hawa mahal"
+  },
+  {
+    "id": 191,
+    "query": "Why is Varanasi called the spiritual capital of India?",
+    "response": "Varanasi is called the spiritual capital of India due to its association with Hindu rituals, Ganga Aarti, Kashi Vishwanath Temple, and being a place for moksha or liberation.",
+    "cleaned_query": "why varanasi spiritual capital"
+  },
+  {
+    "id": 192,
+    "query": "What are the unique features of Andaman's Radhanagar Beach?",
+    "response": "Radhanagar Beach on Havelock Island is famous for its pristine white sand, turquoise waters, and being rated among the best beaches in Asia.",
+    "cleaned_query": "unique features of radhanagar beach"
+  },
+  {
+    "id": 193,
+    "query": "How is Pongal celebrated in Tamil Nadu?",
+    "response": "Pongal is celebrated with the cooking of the Pongal dish, decoration of houses, traditional music and dance, and offering prayers to the Sun God for a bountiful harvest.",
+    "cleaned_query": "pongal celebration in tamil nadu"
+  },
+  {
+    "id": 194,
+    "query": "What are the famous temples in Tamil Nadu?",
+    "response": "Famous temples in Tamil Nadu include Meenakshi Temple, Brihadeeswarar Temple, Rameswaram Temple, and Kanchipuram Temples, known for their architecture and cultural significance.",
+    "cleaned_query": "famous temples in tamil nadu"
+  },
+  {
+    "id": 195,
+    "query": "What is special about Kerala's houseboat experience?",
+    "response": "Kerala's houseboats offer a serene journey through the backwaters, showcasing lush greenery, traditional villages, and local cuisine.",
+    "cleaned_query": "special about kerala houseboat experience"
+  },
+  {
+    "id": 196,
+    "query": "Recommend good restaurants in Delhi",
+    "response": "Here are some top restaurants in Delhi: 1. Bukhara (ITC Maurya, Chanakyapuri) - Famous for North Indian cuisine. 2. Indian Accent (The Lodhi) - Known for contemporary Indian dishes. 3. Karim’s (Jama Masjid) - Renowned for Mughlai delicacies. 4. Olive Bar & Kitchen (Mehrauli) - European and Mediterranean cuisine. 5. Saravana Bhavan (Connaught Place) - Popular for South Indian food.",
+    "cleaned_query": "recommend good restaurants in delhi"
+  },
+  {
+    "id": 197,
+    "query": "Suggest popular restaurants in Mumbai",
+    "response": "Top restaurants in Mumbai include: 1. Leopold Café (Colaba) - Iconic café with multi-cuisine options. 2. The Bombay Canteen (Lower Parel) - Known for modern Indian dishes. 3. Trishna (Fort) - Famous for seafood, especially butter garlic crab. 4. Peshawri (ITC Maratha, Andheri) - Specializes in North-West Frontier cuisine. 5. Café Madras (Matunga) - Renowned for South Indian breakfasts.",
+    "cleaned_query": "suggest popular restaurants in mumbai"
+  },
+  {
+    "id": 198,
+    "query": "Where can I eat in Bangalore?",
+    "response": "Here are great restaurants in Bangalore: 1. MTR (Basavanagudi) - Famous for South Indian meals. 2. Karavalli (Gateway Hotel, Residency Road) - Offers authentic coastal cuisine. 3. Vidyarthi Bhavan (Gandhi Bazaar) - Legendary for crispy dosas. 4. Toit (Indiranagar) - A popular brewpub with great food. 5. Ebony (MG Road) - Known for its rooftop dining and fusion menu.",
+    "cleaned_query": "where to eat in bangalore"
+  },
+  {
+    "id": 199,
+    "query": "List top restaurants in Chennai",
+    "response": "Top restaurants in Chennai: 1. Dakshin (ITC Grand Chola, Guindy) - Traditional South Indian cuisine. 2. Murugan Idli Shop (T. Nagar) - Famous for soft idlis and chutneys. 3. Annalakshmi (Egmore) - Vegetarian restaurant with a cultural ambiance. 4. Absolute Barbecues (T. Nagar) - Popular for live grills and buffets. 5. Zuka (Mylapore) - A haven for chocolate lovers.",
+    "cleaned_query": "list top restaurants in chennai"
+  },
+  {
+    "id": 200,
+    "query": "Recommend restaurants in Hyderabad",
+    "response": "Top restaurants in Hyderabad: 1. Paradise (Secunderabad) - Known for Hyderabadi biryani. 2. Bawarchi (RTC Cross Road) - Another great spot for biryani. 3. Chutneys (Jubilee Hills) - Famous for its wide variety of chutneys. 4. Peshawri (ITC Kakatiya, Begumpet) - Renowned for kebabs and tandoor dishes. 5. Café Bahar (Himayat Nagar) - Popular for traditional Mughlai food.",
+    "cleaned_query": "recommend restaurants in hyderabad"
+  },
+  {
+    "id": 201,
+    "query": "Suggest good restaurants in Jaipur",
+    "response": "Top restaurants in Jaipur: 1. Laxmi Mishtan Bhandar (Johari Bazaar) - Famous for traditional Rajasthani thalis. 2. 1135 AD (Amber Fort) - Offers royal dining with stunning views. 3. Handi Restaurant (MI Road) - Known for Rajasthani curries and tandoor dishes. 4. Chokhi Dhani (Tonk Road) - Ethnic village-themed dining. 5. Bar Palladio (Narain Niwas Palace) - Offers Italian cuisine in a royal ambiance.",
+    "cleaned_query": "suggest good restaurants in jaipur"
+  },
+  {
+    "id": 202,
+    "query": "What are the best restaurants in Kolkata?",
+    "response": "Best restaurants in Kolkata: 1. Peter Cat (Park Street) - Famous for Chelo Kebabs. 2. Mocambo (Park Street) - Known for Continental and Mughlai dishes. 3. 6 Ballygunge Place (Ballygunge) - Renowned for Bengali cuisine. 4. Arsalan (Park Circus) - Popular for Kolkata biryani. 5. Flurys (Park Street) - Iconic for breakfast and desserts.",
+    "cleaned_query": "best restaurants in kolkata"
+  },
+  {
+    "id": 203,
+    "query": "Recommend good places to eat in Pune",
+    "response": "Here are some great restaurants in Pune: 1. Vaishali (Fergusson College Road) - Famous for South Indian snacks. 2. German Bakery (Koregaon Park) - Popular for baked goods and breakfasts. 3. Malaka Spice (Koregaon Park) - Offers Southeast Asian cuisine. 4. Shabree (FC Road) - Known for Maharashtrian thalis. 5. The Bounty Sizzlers (Deccan Gymkhana) - Famous for sizzlers.",
+    "cleaned_query": "recommend good places to eat in pune"
+  },
+  {
+    "id": 204,
+    "query": "What are popular restaurants in Goa?",
+    "response": "Top restaurants in Goa: 1. Thalassa (Siolim) - Famous for Greek food and sea views. 2. Britto's (Baga Beach) - Known for seafood and desserts. 3. Mum’s Kitchen (Panaji) - Offers authentic Goan dishes. 4. Gunpowder (Assagao) - Known for South Indian and Goan fusion cuisine. 5. Martin’s Corner (Betalbatim) - Renowned for Goan seafood specialties.",
+    "cleaned_query": "popular restaurants in goa"
+  },
+  {
+    "id": 205,
+    "query": "Suggest top restaurants in Lucknow",
+    "response": "Top restaurants in Lucknow: 1. Tunday Kababi (Aminabad) - Famous for Galouti Kebabs. 2. Royal Café (Hazratganj) - Known for basket chaat. 3. Dastarkhwan (Lalbagh) - Offers authentic Mughlai cuisine. 4. Oudhyana (Taj Mahal Hotel, Gomti Nagar) - Luxury Awadhi dining. 5. Rahim’s Kulcha Nihari (Chowk) - Renowned for traditional breakfast dishes.",
+    "cleaned_query": "suggest top restaurants in lucknow"
+  },
+  {
+    "id": 206,
+    "query": "Where can I experience nightlife in Mumbai?",
+    "response": "Here are some top nightlife spots in Mumbai: 1. Tryst (Lower Parel) - A popular nightclub with vibrant vibes. 2. Social (Khar) - Known for quirky cocktails and a lively atmosphere. 3. Aer (Worli) - A rooftop bar with stunning city views. 4. Toto’s Garage (Bandra) - A unique garage-themed pub. 5. Kitty Su (The Lalit, Andheri) - Known for high-energy parties and international DJs.",
+    "cleaned_query": "where to experience nightlife in mumbai"
+  },
+  {
+    "id": 207,
+    "query": "Suggest party places in Bangalore",
+    "response": "Here are some great party places in Bangalore: 1. Skyye (UB City) - A rooftop club with great music. 2. High Ultra Lounge (Malleswaram) - Offers panoramic views and DJ nights. 3. Toit (Indiranagar) - Popular for its craft beers and upbeat ambiance. 4. Ice (Vivanta by Taj, MG Road) - Known for its poolside parties. 5. XU (The Leela Palace) - A trendy club for dance enthusiasts.",
+    "cleaned_query": "suggest party places in bangalore"
+  },
+  {
+    "id": 208,
+    "query": "What are the best adventure activities in Rishikesh?",
+    "response": "Top adventure activities in Rishikesh include: 1. River Rafting - A thrilling experience on the Ganges. 2. Bungee Jumping (Mohanchatti) - Experience a 83-meter free fall. 3. Ziplining - Fly over the lush forests and rivers. 4. Trekking - Trails like Neer Garh waterfall trek. 5. Camping - Stay by the riverside with campfire experiences.",
+    "cleaned_query": "best adventure activities in rishikesh"
+  },
+  {
+    "id": 209,
+    "query": "Tell me about Goa's party scene",
+    "response": "Goa's party scene highlights: 1. Tito’s (Baga Beach) - A legendary nightclub. 2. Curlies (Anjuna Beach) - Known for beachside parties. 3. Club Cubana (Arpora) - Offers great music and rooftop vibes. 4. Hilltop (Vagator) - Famous for its trance parties. 5. SinQ (Candolim) - A poolside party hotspot.",
+    "cleaned_query": "tell me about goa party scene"
+  },
+  {
+    "id": 210,
+    "query": "Where can I go for adventure activities in Ladakh?",
+    "response": "Top adventure activities in Ladakh: 1. Trekking - Trails like Chadar Trek and Markha Valley Trek. 2. River Rafting - On the Zanskar River. 3. Biking - Ride along the famous Leh-Manali Highway. 4. Camping - Experience Pangong Lake under the stars. 5. Mountain Climbing - Expeditions like Stok Kangri.",
+    "cleaned_query": "adventure activities in ladakh"
+  },
+  {
+    "id": 211,
+    "query": "What are the top places for nightlife in Delhi?",
+    "response": "Here are the best nightlife spots in Delhi: 1. Hauz Khas Social (Hauz Khas Village) - A popular bar and café. 2. Kitty Su (The Lalit) - Known for high-energy parties. 3. Summer House Café (Hauz Khas) - Offers live music and DJs. 4. Privee (Connaught Place) - A luxury club for party lovers. 5. Imperfecto (Noida) - Known for its eclectic ambiance and music.",
+    "cleaned_query": "top places for nightlife in delhi"
+  },
+  {
+    "id": 212,
+    "query": "Suggest adventure activities in Jaipur",
+    "response": "Top adventure activities in Jaipur include: 1. Hot Air Balloon Rides - Over forts and palaces. 2. ATV Rides - Off-roading near the Aravalli Hills. 3. Camel Safaris - Experience the desert vibe. 4. Ziplining - At Neemrana Fort. 5. Trekking - Trails like Nahargarh Fort Trek.",
+    "cleaned_query": "adventure activities in jaipur"
+  },
+  {
+    "id": 213,
+    "query": "What are the best party places in Pune?",
+    "response": "Top party places in Pune: 1. Mi-A-Mi (JW Marriott) - Known for its vibrant DJ nights. 2. Penthouze (Koregaon Park) - A rooftop club with great ambiance. 3. The House of Medici (Westin Pune) - Luxury and lively dance floors. 4. High Spirits (Koregaon Park) - Famous for live music and gigs. 5. Playboy Beer Garden (Baner) - A spacious outdoor bar.",
+    "cleaned_query": "best party places in pune"
+  },
+  {
+    "id": 214,
+    "query": "Where can I try adventure activities in Manali?",
+    "response": "Top adventure activities in Manali: 1. Paragliding - At Solang Valley. 2. Skiing - At Rohtang Pass during winter. 3. River Rafting - On the Beas River. 4. Zorbing - At Solang Valley. 5. Trekking - Trails like Hampta Pass and Beas Kund.",
+    "cleaned_query": "adventure activities in manali"
+  },
+  {
+    "id": 215,
+    "query": "What are the best nightlife spots in Hyderabad?",
+    "response": "Top nightlife spots in Hyderabad: 1. Bottles and Chimney (Begumpet) - A lively pub. 2. Hylife Brewing Company (Jubilee Hills) - Known for its rooftop ambiance. 3. 10 Downing Street (Begumpet) - A classic English-style pub. 4. Prost Brewpub (Jubilee Hills) - Known for craft beers. 5. Over The Moon (Gachibowli) - Offers a luxury lounge experience.",
+    "cleaned_query": "best nightlife spots in hyderabad"
+  }
+]

@@ -1,0 +1,122 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Plant Explore</title>
+   <link rel="stylesheet" href="css/plants.css">
+  <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+  <script nomodule src="https://unpkg.com/@google/model-viewer/dist/model-viewer-legacy.js"></script>
+
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <div class="logo">
+        <img src="/images/logo.png" alt="Logo">
+      </div>
+      <h1>PLANT EXPLORE</h1>
+      <div class="right-controls">
+        <input type="text" placeholder="SEARCH" class="search-bar">
+        <span class="bookmark" onclick="showBookmarks()">&#128278;</span>
+      </div>
+    </header>
+
+    <!-- Tabs -->
+    <nav class="tabs">
+      <button class="active" onclick="switchSection(this, 'view3D')">3D VIEW</button>
+      <button onclick="switchSection(this, 'medicinal')">MEDICINAL PARTS</button>
+      <button onclick="window.location.href='/plantInfo'">PLANT INFO</button>
+    </nav>
+
+    <!-- Content -->
+    <section class="content" id="content">
+  <!-- 3D View Cards -->
+
+
+  <div class="card">
+    <model-viewer src="/3D-model/alovera.glb" alt="Aloevera" auto-rotate camera-controls></model-viewer>
+    <p>Aloevera</p>
+    <span class="card-bookmark">&#128278;</span>
+  </div>
+
+  <div class="card">
+    <model-viewer src="/3D-model/amla.glb" alt="Amla" auto-rotate camera-controls></model-viewer>
+    <p>Amla</p>
+    <span class="card-bookmark">&#128278;</span>
+  </div>
+
+  <div class="card">
+    <model-viewer src="/3D-model/bhrahmi.glb" alt="Brahmi" auto-rotate camera-controls></model-viewer>
+    <p>Brahmi</p>
+    <span class="card-bookmark">&#128278;</span>
+  </div>
+
+  <div class="card">
+    <model-viewer src="/3D-model/Cardamom.glb" alt="Cardamom" auto-rotate camera-controls></model-viewer>
+    <p>Cardamom</p>
+    <span class="card-bookmark">&#128278;</span>
+  </div>
+
+  <div class="card">
+    <model-viewer src="/3D-model/Cinnamon.glb" alt="Cinnamon" auto-rotate camera-controls></model-viewer>
+    <p>Cinnamon</p>
+    <span class="card-bookmark">&#128278;</span>
+  </div>
+
+  <div class="card">
+    <model-viewer src="/3D-model/clove.glb" alt="Clove" auto-rotate camera-controls></model-viewer>
+    <p>Clove</p>
+    <span class="card-bookmark">&#128278;</span>
+  </div>
+
+
+  <div class="card">
+    <model-viewer src="/3D-model/giloy.glb" alt="Giloy" auto-rotate camera-controls></model-viewer>
+    <p>Giloy</p>
+    <span class="card-bookmark">&#128278;</span>
+  </div>
+
+  <div class="card">
+    <model-viewer src="/3D-model/ginger_prop.glb" alt="Ginger" auto-rotate camera-controls></model-viewer>
+    <p>Ginger</p>
+    <span class="card-bookmark">&#128278;</span>
+  </div>
+
+  <div class="card">
+    <model-viewer src="/3D-model/acb.glb" alt="ACB" auto-rotate camera-controls></model-viewer>
+    <p>Hibiscus</p>
+    <span class="card-bookmark">&#128278;</span>
+  </div>
+
+  <div class="card">
+    <model-viewer src="/3D-model/licorice.glb" alt="Licorice" auto-rotate camera-controls></model-viewer>
+    <p>Licorice</p>
+    <span class="card-bookmark">&#128278;</span>
+  </div>
+
+  <div class="card">
+    <model-viewer src="/3D-model/neem_tree.glb" alt="Neem Tree" auto-rotate camera-controls></model-viewer>
+    <p>Neem Tree</p>
+    <span class="card-bookmark">&#128278;</span>
+  </div>
+
+  <div class="card">
+    <model-viewer src="/3D-model/tulsi.glb" alt="Tulsi" auto-rotate camera-controls></model-viewer>
+    <p>Tulsi</p>
+    <span class="card-bookmark">&#128278;</span>
+  </div>
+</section>
+  </div>
+
+  <!-- inject route for JS -->
+<!--<script>
+  window.PLANT_INFO_URL = "{{ url_for('plant_info') }}";
+  console.log("PLANT_INFO_URL (templated):", window.PLANT_INFO_URL);
+</script> -->
+
+<script src="js/plants.js"></script>
+</body>
+</html>

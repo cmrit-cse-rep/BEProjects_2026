@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Learning Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .progress-bar {
+            background: linear-gradient(90deg, #4ade80, #22c55e);
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+        .achievement-badge {
+            background: linear-gradient(45deg, #fbbf24, #f59e0b);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        .insight-card {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+        }
+        .recommendation-card {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+        }
+    </style>
+</head>
+<body class="p-6">
+    <div class="max-w-7xl mx-auto">
+        <!-- Header -->
+        <div class="glass-card rounded-2xl p-6 mb-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-3xl font-bold text-white">Learning Dashboard</h1>
+                    <p class="text-gray-200 mt-2">Welcome back, <span id="userName">Student</span>!</p>
+                </div>
+                <div class="text-right">
+                    <div class="text-2xl font-bold text-white" id="currentStreak">0</div>
+                    <div class="text-sm text-gray-200">Day Streak</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Overview Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+            <div class="glass-card rounded-xl p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-200 text-sm">Total Quizzes</p>
+                        <p class="text-2xl font-bold text-white" id="totalQuizzes">0</p>
+                    </div>
+                    <div class="text-3xl">📊</div>
+                </div>
+            </div>
+            <div class="glass-card rounded-xl p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-200 text-sm">Average Score</p>
+                        <p class="text-2xl font-bold text-white" id="averageScore">0%</p>
+                    </div>
+                    <div class="text-3xl">🎯</div>
+                </div>
+            </div>
+            <div class="glass-card rounded-xl p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-200 text-sm">Improvement Rate</p>
+                        <p class="text-2xl font-bold text-white" id="improvementRate">0%</p>
+                    </div>
+                    <div class="text-3xl">📈</div>
+                </div>
+            </div>
+            <div class="glass-card rounded-xl p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-200 text-sm">Time Spent</p>
+                        <p class="text-2xl font-bold text-white" id="timeSpent">0h</p>
+                    </div>
+                    <div class="text-3xl">⏱️</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Progress Overview -->
+            <div class="lg:col-span-2">
+                <div class="glass-card rounded-xl p-6 mb-6">
+                    <h2 class="text-xl font-bold text-white mb-4">Subject Progress</h2>
+                    <div id="subjectProgress" class="space-y-4">
+                        <!-- Subject progress bars will be populated here -->
+                    </div>
+                </div>
+
+                <!-- Performance Chart -->
+                <div class="glass-card rounded-xl p-6">
+                    <h2 class="text-xl font-bold text-white mb-4">Performance Trend</h2>
+                    <canvas id="performanceChart" width="400" height="200"></canvas>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="space-y-6">
+                <!-- Achievements -->
+                <div class="glass-card rounded-xl p-6">
+                    <h2 class="text-xl font-bold text-white mb-4">Achievements</h2>
+                    <div id="achievements" class="space-y-3">
+                        <!-- Achievements will be populated here -->
+                    </div>
+                </div>
+
+                <!-- Insights -->
+                <div class="glass-card rounded-xl p-6">
+                    <h2 class="text-xl font-bold text-white mb-4">Insights</h2>
+                    <div id="insights" class="space-y-3">
+                        <!-- Insights will be populated here -->
+                    </div>
+                </div>
+
+                <!-- Recommendations -->
+                <div class="glass-card rounded-xl p-6">
+                    <h2 class="text-xl font-bold text-white mb-4">Recommendations</h2>
+                    <div id="recommendations" class="space-y-3">
+                        <!-- Recommendations will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Study Plan Section -->
+        <div class="glass-card rounded-xl p-6 mt-6">
+            <h2 class="text-xl font-bold text-white mb-4">Dynamic Study Plan</h2>
+            <div id="studyPlan" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- Study plan items will be populated here -->
+            </div>
+        </div>
+
+        <!-- Adaptive Quiz Generation Section -->
+        <div class="glass-card rounded-xl p-6 mt-6">
+            <h2 class="text-xl font-bold text-white mb-4">Next Adaptive Quiz</h2>
+            <p class="text-gray-200 mb-4">Based on your performance, we'll generate a personalized quiz to help you improve.</p>
+            <div class="flex flex-wrap gap-4">
+                <button onclick="generateAdaptiveQuiz('Artificial Intelligence')" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition-colors">
+                    AI Quiz
+                </button>
+                <button onclick="generateAdaptiveQuiz('Data Structures')" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg transition-colors">
+                    DS Quiz
+                </button>
+                <button onclick="generateAdaptiveQuiz('Algorithms')" class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg transition-colors">
+                    Algorithms Quiz
+                </button>
+                <button onclick="generateAdaptiveQuiz('Operating Systems')" class="bg-orange-600 hover:bg-orange-700 text-white px-6 py-3 rounded-lg transition-colors">
+                    OS Quiz
+                </button>
+            </div>
+            <div id="adaptiveQuizResult" class="mt-4">
+                <!-- Adaptive quiz result will be shown here -->
+            </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="glass-card rounded-xl p-6 mt-6">
+            <h2 class="text-xl font-bold text-white mb-4">Recent Activity</h2>
+            <div id="recentActivity" class="space-y-3">
+                <!-- Recent activity will be populated here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let performanceChart;
+
+        // Load dashboard data
+        async function loadDashboard() {
+            try {
+                const params = new URLSearchParams(window.location.search);
+                const attemptId = params.get('attempt');
+
+                const response = await fetch('/api/enhanced/dashboard-simple');
+                const data = await response.json();
+                
+                if (data.success) {
+                    populateDashboard(data.dashboard);
+                } else {
+                    console.error('Failed to load dashboard:', data.error);
+                }
+
+                if (attemptId) {
+                    const fb = await fetch(`/api/enhanced/quiz-feedback-test/${attemptId}`);
+                    const fbData = await fb.json();
+                    if (fbData.success) {
+                        // Prepend feedback insights into insights section
+                        const insightsEl = document.getElementById('insights');
+                        const perf = fbData.feedback.overallPerformance;
+                        const msg = document.createElement('div');
+                        msg.className = 'insight-card rounded-lg p-3';
+                        msg.innerHTML = `
+                            <div class="font-bold">Latest Attempt</div>
+                            <div class="text-sm opacity-90">${perf.message}</div>
+                        `;
+                        insightsEl.prepend(msg);
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading dashboard:', error);
+            }
+        }
+
+        function populateDashboard(dashboard) {
+            // Update header
+            document.getElementById('userName').textContent = dashboard.user.name;
+            document.getElementById('currentStreak').textContent = dashboard.overview.streak;
+
+            // Update overview stats
+            document.getElementById('totalQuizzes').textContent = dashboard.overview.totalQuizzes;
+            document.getElementById('averageScore').textContent = dashboard.overview.averageScore + '%';
+            document.getElementById('improvementRate').textContent = '+' + dashboard.overview.improvementRate.toFixed(1) + '%';
+            document.getElementById('timeSpent').textContent = Math.round(dashboard.overview.timeSpent / 3600) + 'h';
+
+            // Populate subject progress
+            populateSubjectProgress(dashboard.progress.subjects);
+
+            // Populate achievements
+            populateAchievements(dashboard.achievements);
+
+            // Populate insights
+            populateInsights(dashboard.insights);
+
+            // Populate recommendations
+            populateRecommendations(dashboard.recommendations);
+
+            // Populate study plan
+            populateStudyPlan(dashboard.studyPlan);
+
+            // Populate recent activity
+            populateRecentActivity(dashboard.recentActivity);
+
+            // Create performance chart
+            createPerformanceChart(dashboard.recentActivity);
+        }
+
+        function populateSubjectProgress(subjects) {
+            const container = document.getElementById('subjectProgress');
+            container.innerHTML = '';
+
+            subjects.forEach(subject => {
+                const progressBar = document.createElement('div');
+                progressBar.className = 'mb-4';
+                progressBar.innerHTML = `
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-white font-medium">${subject.name}</span>
+                        <span class="text-gray-200">${subject.progress}%</span>
+                    </div>
+                    <div class="w-full bg-gray-700 rounded-full h-3">
+                        <div class="progress-bar h-3 rounded-full" style="width: ${subject.progress}%"></div>
+                    </div>
+                `;
+                container.appendChild(progressBar);
+            });
+        }
+
+        function populateAchievements(achievements) {
+            const container = document.getElementById('achievements');
+            container.innerHTML = '';
+
+            achievements.forEach(achievement => {
+                const badge = document.createElement('div');
+                badge.className = 'achievement-badge rounded-lg p-3 text-white';
+                badge.innerHTML = `
+                    <div class="flex items-center space-x-3">
+                        <span class="text-2xl">${achievement.icon}</span>
+                        <div>
+                            <div class="font-bold">${achievement.title}</div>
+                            <div class="text-sm opacity-90">${achievement.description}</div>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(badge);
+            });
+        }
+
+        function populateInsights(insights) {
+            const container = document.getElementById('insights');
+            container.innerHTML = '';
+
+            insights.forEach(insight => {
+                const card = document.createElement('div');
+                card.className = 'insight-card rounded-lg p-3';
+                card.innerHTML = `
+                    <div class="flex items-start space-x-3">
+                        <span class="text-2xl">${insight.icon}</span>
+                        <div>
+                            <div class="font-bold">${insight.title}</div>
+                            <div class="text-sm opacity-90">${insight.message}</div>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function populateRecommendations(recommendations) {
+            const container = document.getElementById('recommendations');
+            container.innerHTML = '';
+
+            recommendations.forEach(rec => {
+                const card = document.createElement('div');
+                card.className = 'recommendation-card rounded-lg p-3';
+                card.innerHTML = `
+                    <div class="flex items-start space-x-3">
+                        <span class="text-2xl">💡</span>
+                        <div>
+                            <div class="font-bold">${rec.title}</div>
+                            <div class="text-sm opacity-90">${rec.message}</div>
+                            <button class="mt-2 bg-white bg-opacity-20 px-3 py-1 rounded text-sm hover:bg-opacity-30 transition">
+                                Learn More
+                            </button>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function populateStudyPlan(studyPlan) {
+            const container = document.getElementById('studyPlan');
+            container.innerHTML = '';
+
+            studyPlan.forEach(plan => {
+                const card = document.createElement('div');
+                card.className = 'glass-card rounded-lg p-4';
+                card.innerHTML = `
+                    <div class="text-white">
+                        <div class="font-bold mb-2">${plan.subject}</div>
+                        <div class="text-sm text-gray-200 mb-3">${plan.topic}</div>
+                        <div class="flex items-center justify-between">
+                            <span class="px-2 py-1 rounded text-xs ${
+                                plan.priority === 'high' ? 'bg-red-500' : 
+                                plan.priority === 'medium' ? 'bg-yellow-500' : 'bg-green-500'
+                            }">${plan.priority}</span>
+                            <span class="text-xs text-gray-200">${new Date(plan.deadline).toLocaleDateString()}</span>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function populateRecentActivity(activities) {
+            const container = document.getElementById('recentActivity');
+            container.innerHTML = '';
+
+            activities.forEach(activity => {
+                const item = document.createElement('div');
+                item.className = 'flex items-center justify-between p-3 glass-card rounded-lg';
+                item.innerHTML = `
+                    <div class="flex items-center space-x-3">
+                        <span class="text-2xl">📝</span>
+                        <div>
+                            <div class="text-white font-medium">${activity.quizTitle}</div>
+                            <div class="text-sm text-gray-200">${activity.subject} • ${activity.score}%</div>
+                        </div>
+                    </div>
+                    <div class="text-sm text-gray-200">
+                        ${new Date(activity.completedAt).toLocaleDateString()}
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function createPerformanceChart(activities) {
+            const ctx = document.getElementById('performanceChart').getContext('2d');
+            
+            if (performanceChart) {
+                performanceChart.destroy();
+            }
+
+            const labels = activities.slice(0, 10).reverse().map(activity => 
+                new Date(activity.completedAt).toLocaleDateString()
+            );
+            const scores = activities.slice(0, 10).reverse().map(activity => activity.score);
+
+            performanceChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Quiz Scores',
+                        data: scores,
+                        borderColor: '#4ade80',
+                        backgroundColor: 'rgba(74, 222, 128, 0.1)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: 'white'
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: {
+                                color: 'white'
+                            },
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                color: 'white'
+                            },
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Generate adaptive quiz based on performance
+        async function generateAdaptiveQuiz(subject) {
+            const resultDiv = document.getElementById('adaptiveQuizResult');
+            resultDiv.innerHTML = '<div class="text-blue-300">🔄 Generating adaptive quiz...</div>';
+            
+            try {
+                const response = await fetch(`/api/quiz/adaptive-test/${encodeURIComponent(subject)}?totalQuestions=5`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    const quiz = data.quiz;
+                    resultDiv.innerHTML = `
+                        <div class="bg-green-600 text-white p-4 rounded-lg">
+                            <h3 class="font-bold text-lg mb-2">✅ Adaptive Quiz Generated!</h3>
+                            <p class="mb-3">Personalized ${subject} quiz with ${quiz.questions.length} questions</p>
+                            <div class="space-y-2 mb-4">
+                                <div class="text-sm">
+                                    <strong>Quiz ID:</strong> ${quiz._id}
+                                </div>
+                                <div class="text-sm">
+                                    <strong>Questions:</strong> ${quiz.questions.length}
+                                </div>
+                                <div class="text-sm">
+                                    <strong>Type:</strong> ${quiz.quizType || 'adaptive'}
+                                </div>
+                            </div>
+                            <button onclick="startAdaptiveQuiz('${quiz._id}')" class="bg-white text-green-600 px-4 py-2 rounded-lg font-bold hover:bg-gray-100 transition-colors">
+                                Start Quiz
+                            </button>
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="bg-red-600 text-white p-4 rounded-lg">
+                            <h3 class="font-bold text-lg mb-2">❌ Failed to Generate Quiz</h3>
+                            <p>Error: ${data.error || 'Unknown error'}</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="bg-red-600 text-white p-4 rounded-lg">
+                        <h3 class="font-bold text-lg mb-2">❌ Error</h3>
+                        <p>Failed to generate adaptive quiz: ${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Start the adaptive quiz
+        function startAdaptiveQuiz(quizId) {
+            window.location.href = `/quiz?quizId=${quizId}`;
+        }
+
+        // Load dashboard on page load
+        document.addEventListener('DOMContentLoaded', loadDashboard);
+    </script>
+</body>
+</html>

@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mindful AI - Mental Health Articles</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <link rel="stylesheet" href="css/header.css"/>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary: #05445e;
+      --secondary: #189ab4;
+      --accent: #75e6da;
+      --light: #d4f1f4;
+      --white: #ffffff;
+      --gray-100: #f3f4f6;
+      --gray-300: #d1d5db;
+      --gray-600: #4b5563;
+      --gray-800: #1f2937;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      color: var(--primary);
+      background: linear-gradient(180deg, rgba(212, 241, 244, 0.3) 0%, rgba(255, 255, 255, 1) 100%);
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+
+    /* Navbar */
+    nav {
+      background: var(--white);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+    }
+
+    .navbar-container {
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: var(--primary);
+      gap: 0.5rem;
+    }
+
+    .logo-img {
+      height: 44px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    .logo-icon {
+      color: var(--secondary);
+      font-size: 1.5rem;
+    }
+
+    .nav-links {
+      display: flex;
+      list-style: none;
+      gap: 1rem;
+    }
+
+    .nav-link {
+      padding: 0.5rem 1rem;
+      text-decoration: none;
+      color: var(--primary);
+      font-weight: 500;
+      border-radius: 0.25rem;
+      transition: all 0.2s;
+    }
+
+    .nav-link:hover {
+      background: var(--light);
+    }
+
+    .nav-link.active {
+      background: var(--secondary);
+      color: var(--white);
+    }
+
+    /* Main Content */
+    main {
+      padding-top: 100px;
+      padding-bottom: 3rem;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    .page-subtitle {
+      text-align: center;
+      font-size: 1rem;
+      color: var(--gray-600);
+      margin-bottom: 3rem;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* Category Filter */
+    .category-filter {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .category-btn {
+      padding: 0.5rem 1rem;
+      border: none;
+      background: var(--light);
+      color: var(--primary);
+      border-radius: 999px;
+      cursor: pointer;
+      font-weight: 500;
+      font-size: 0.875rem;
+      transition: all 0.2s;
+    }
+
+    .category-btn:hover {
+      background: var(--accent);
+    }
+
+    .category-btn.active {
+      background: var(--secondary);
+      color: var(--white);
+    }
+
+    /* Articles Grid */
+    .articles-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .article-card {
+      background: var(--white);
+      border-radius: 0.5rem;
+      overflow: hidden;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .article-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+    }
+
+    .article-image {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      background: var(--light);
+    }
+
+    .article-content {
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+
+    .article-category {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      background: var(--light);
+      color: var(--primary);
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      width: fit-content;
+    }
+
+    .article-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      color: var(--primary);
+      line-height: 1.4;
+    }
+
+    .article-excerpt {
+      font-size: 0.9rem;
+      color: var(--gray-600);
+      margin-bottom: 1rem;
+      flex-grow: 1;
+      line-height: 1.5;
+    }
+
+    .article-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+      color: var(--secondary);
+      border-top: 1px solid var(--gray-300);
+      padding-top: 1rem;
+    }
+
+    .read-btn {
+      background: var(--secondary);
+      color: var(--white);
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 0.25rem;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.85rem;
+      transition: background 0.2s;
+    }
+
+    .read-btn:hover {
+      background: var(--primary);
+    }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      overflow: auto;
+    }
+
+    .modal.active {
+      display: block;
+    }
+
+    .modal-content {
+      background: var(--white);
+      margin: 5% auto;
+      padding: 0;
+      width: 90%;
+      max-width: 800px;
+      border-radius: 0.5rem;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+      overflow: hidden;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal-header {
+      background: var(--primary);
+      color: var(--white);
+      padding: 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-header h2 {
+      margin: 0;
+      font-size: 1.75rem;
+    }
+
+    .close-modal {
+      background: none;
+      border: none;
+      color: var(--white);
+      font-size: 1.5rem;
+      cursor: pointer;
+      padding: 0;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .close-modal:hover {
+      color: var(--accent);
+    }
+
+    .modal-body {
+      padding: 2rem;
+    }
+
+    .modal-body p {
+      margin-bottom: 1rem;
+      line-height: 1.7;
+      color: var(--gray-800);
+    }
+
+    .modal-body h3 {
+      color: var(--primary);
+      margin-top: 1.5rem;
+      margin-bottom: 0.75rem;
+      font-size: 1.1rem;
+    }
+
+    .modal-body ul, .modal-body ol {
+      margin-left: 1.5rem;
+      margin-bottom: 1rem;
+      color: var(--gray-800);
+      line-height: 1.7;
+    }
+
+    .modal-body li {
+      margin-bottom: 0.5rem;
+    }
+
+    /* Footer */
+    footer {
+      background: var(--primary);
+      color: var(--white);
+      padding: 2rem;
+      text-align: center;
+      margin-top: 3rem;
+    }
+
+    footer p {
+      margin: 0.5rem 0;
+      font-size: 0.9rem;
+    }
+
+    footer a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 1.75rem;
+      }
+
+      .articles-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .modal-content {
+        width: 95%;
+        margin: 20% auto;
+      }
+
+      .nav-links {
+        gap: 0.5rem;
+      }
+
+      .nav-link {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.9rem;
+      }
+    }
+
+    .no-articles {
+      text-align: center;
+      padding: 3rem;
+      color: var(--gray-600);
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav>
+    <div class="container">
+      <div class="navbar-container">
+        <div class="logo">
+          <img src="https://i.ibb.co/ksr38h61/Mindful-Logo.png" alt="Mindful AI Logo" class="logo-img">
+          <span>Mindful AI</span>
+        </div>
+        <ul class="nav-links">
+          <li><a href="landingpage.html" class="nav-link active" aria-label="Home">Home</a></li>
+            <li><a href="articles.html" class="nav-link">Articles</a></li>
+            <li><a href="resources.html" class="nav-link">Resources</a></li>
+            <li><a href="dashboard.html" class="nav-link"> Dashboard</a></li>
+            <li><a href="services.html" class="nav-link">Services</a></li>
+            <li><a href="community.html" class="nav-link">Community</a></li>
+            <li><a href="about.html" class="nav-link">About</a></li>
+            <li><a href="settings.html" class="nav-link">Settings</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main>
+    <div class="container">
+      <h1>Mental Health Articles</h1>
+      <p class="page-subtitle">Discover insights, strategies, and stories to help you understand and navigate mental health.</p>
+
+      <!-- Controls: Search / Sort / Category Filter -->
+      <div style="display:flex;flex-wrap:wrap;gap:1rem;align-items:center;justify-content:space-between;margin-bottom:1rem;">
+        <div style="flex:1;min-width:220px;display:flex;gap:0.5rem;align-items:center">
+          <input id="searchInput" type="search" placeholder="Search articles, topics or keywords" style="flex:1;padding:0.5rem 0.75rem;border:1px solid var(--gray-300);border-radius:6px;font-size:0.95rem;">
+          <select id="sortSelect" style="padding:0.5rem;border:1px solid var(--gray-300);border-radius:6px;font-size:0.95rem;">
+            <option value="newest">Sort: Newest</option>
+            <option value="oldest">Sort: Oldest</option>
+            <option value="title">Sort: Title (A–Z)</option>
+          </select>
+        </div>
+        <div style="display:flex;gap:0.5rem;align-items:center">
+          <select id="categoryFilter" style="padding:0.5rem;border:1px solid var(--gray-300);border-radius:6px;font-size:0.95rem;">
+            <option value="all">All Categories</option>
+          </select>
+          <button id="clearFilters" class="nav-link" style="background:var(--gray-100);border-radius:6px;padding:0.5rem 0.75rem;">Clear</button>
+        </div>
+      </div>
+
+      <!-- Articles Grid -->
+      <div class="articles-grid" id="articlesGrid"></div>
+
+      <!-- No Articles Message -->
+      <div class="no-articles" id="noArticles" style="display: none;">
+        <p>No articles found in this category.</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- Modal -->
+  <div class="modal" id="articleModal" aria-hidden="true">
+    <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-header">
+        <h2 id="modalTitle"></h2>
+        <button id="modalClose" class="close-modal" aria-label="Close">&times;</button>
+      </div>
+      <div class="modal-body" id="modalBody">
+        <div style="display:flex;gap:1rem;flex-wrap:wrap;">
+          <div style="flex:1;min-width:220px;max-width:320px;">
+                        <img id="modalImage" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect fill='%23e0e0e0' width='400' height='300'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' font-family='Arial' font-size='18' fill='%23999'%3EArticle Image%3C/text%3E%3C/svg%3E" alt="Article image" style="width:100%;height:auto;border-radius:10px;margin-bottom:15px;">
+          </div>
+          <div style="flex:2;min-width:260px;">
+            <p id="modalSource" style="color:var(--secondary);margin-bottom:0.5rem;font-weight:600;"></p>
+            <p id="modalSummary" style="color:var(--gray-800);line-height:1.6;"></p>
+            <div style="margin-top:1rem;display:flex;gap:0.5rem;">
+              <button id="modalRead" class="read-btn">Open Source</button>
+              <button id="modalBookmark" class="read-btn" style="background:var(--gray-300);color:var(--primary);">Save</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <p>&copy; <span id="year"></span> Mindful AI. All rights reserved.</p>
+      <p><a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a> · <a href="contact.html">Contact</a></p>
+    </div>
+  </footer>
+
+  <script src="articles.js"></script>
+</body>
+</html>
