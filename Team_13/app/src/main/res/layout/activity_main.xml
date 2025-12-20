@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fff9e9"
+    tools:context=".MainActivity">
+
+    <!-- App Bar with Hamburger Menu Icon -->
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="4dp"
+        app:elevation="4dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@android:color/transparent">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@android:color/transparent"
+            app:titleTextColor="?attr/colorOnSurface">
+
+            <!-- Hamburger menu icon aligned left -->
+            <ImageButton
+                android:id="@+id/hamburgerButton"
+                android:layout_width="44dp"
+                android:layout_height="55dp"
+                android:layout_gravity="start|center_vertical"
+                android:layout_marginStart="9dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Menu"
+                android:src="@drawable/ic_menu"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true" />
+        </com.google.android.material.appbar.MaterialToolbar>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <!-- Scrollable Content -->
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/nestedScroll"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/appBarLayout"
+        app:layout_constraintBottom_toTopOf="@+id/logo_and_text">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingTop="32dp"
+            android:paddingBottom="32dp"
+            android:paddingEnd="32dp"
+            android:paddingStart="0dp">
+
+            <!-- Horizontally centered "Hi User" text with id -->
+            <LinearLayout
+                android:layout_width="410dp"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal">
+
+                <TextView
+                    android:id="@+id/greetingText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:text="Hi User"
+                    android:textAlignment="center"
+                    android:textColor="#000000"
+                    android:textSize="48sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <!-- Other screen content below -->
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- Centered Red Button (SOS) -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/sosButton"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        app:cardCornerRadius="150dp"
+        app:cardElevation="8dp"
+        app:cardBackgroundColor="#931f1d"
+        app:strokeColor="?attr/colorOutline"
+        android:clipChildren="false"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="SOS"
+            android:textColor="#FFFFFFFF"
+            android:textSize="100sp"
+            android:textStyle="normal"
+            android:gravity="center"
+            android:elevation="8dp"
+            android:fontFamily="@font/cooper_hewitt_book" />
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Bottom Logo and "everwatch" Text -->
+    <LinearLayout
+        android:id="@+id/logo_and_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:id="@+id/logo"
+            android:layout_width="24dp"
+            android:layout_height="30dp"
+            android:src="@drawable/everwatch_logo"
+            android:contentDescription="App Logo"
+            android:layout_marginEnd="8dp" />
+
+        <TextView
+            android:id="@+id/everwatchText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="everwatch"
+            android:textSize="30sp"
+            android:textColor="#70a36b"
+            android:textAlignment="center"
+            android:lineSpacingExtra="4dp"
+            android:alpha="0.8" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

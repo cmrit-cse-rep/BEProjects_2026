@@ -1,8 +1,0 @@
-Flask
-tensorflow
-numpy
-opencv-python-headless
-Pillow
-Werkzeug
-xhtml2pdf
-gunicorn

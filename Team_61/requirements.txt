@@ -1,5 +1,0 @@
-streamlit
-roboflow
-numpy
-requests
-opencv-python-headless

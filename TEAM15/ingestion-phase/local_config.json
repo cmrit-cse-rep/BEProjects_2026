@@ -1,8 +1,0 @@
-{
-  "mongo_uri": "mongodb+srv://ishaanroopesh0102:6eShFuC0pNnFFNGm@cluster0.biujjg4.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",
-  "chroma_path": "vector_db/chroma",
-  "ollama_model": "llama3",
-  "ollama_base_url": "http://localhost:11434",
-  "num_similar_cases": 3,
-  "embedding_max_length": 512
-}
