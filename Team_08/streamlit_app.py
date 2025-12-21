@@ -407,8 +407,8 @@ st.title("🏀 CourtVision: AI Basketball Analytics")
 st.markdown("Upload a basketball video to get AI-powered tracking, stats, and predictions.")
 
 # Model Constants
-HUGGINGFACE_DETECTOR_URL = "https://huggingface.co/matheshvishnu/courtvision-best-pt/resolve/main/best.pt"
-DEFAULT_POSE_MODEL_NAME = "yolov8n-pose.pt" 
+HUGGINGFACE_DETECTOR_URL = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+DEFAULT_POSE_MODEL_NAME = "xxxxxxxxxxxxxxxxxxxxxxxxx" 
 
 # --- Main Layout: Two Columns for Settings ---
 st.markdown("### 1. Upload & Configure")
