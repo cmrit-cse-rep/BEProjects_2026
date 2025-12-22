@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>CSV Preprocessing App</title>
+  <link rel="stylesheet" href="/static/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>CSV Preprocessing App</h1>
+      <p>Upload a file to preview its contents and shape.</p>
+    </div>
+
+    <form id="uploadForm">
+      <label for="fileInput" class="custom-file-upload">
+        <i class="fas fa-file-csv"></i> Choose CSV File
+      </label>
+      <span id="fileNameDisplay" class="file-name-display">No file selected</span>
+      <input type="file" id="fileInput" accept=".csv" class="hidden" />
+
+      <button type="submit" id="submitBtn">
+        <span class="btn-text">Upload & Process</span>
+        <div class="spinner hidden"></div>
+      </button>
+    </form>
+
+    <div id="result" class="hidden result-section">
+      <h2>Processed Data</h2>
+      <p id="shape"></p>
+      <div class="table-container">
+        <table id="previewTable"></table>
+      </div>
+    </div>
+
+    <div id="error" class="hidden error"></div>
+  </div>
+
+  <script src="/static/script.js"></script>
+</body>
+</html>
