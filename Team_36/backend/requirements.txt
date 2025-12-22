@@ -1,0 +1,21 @@
+fastapi>=0.109.0
+uvicorn>=0.27.0
+python-dotenv>=1.0.0
+groq>=0.4.2
+playwright>=1.41.0
+beautifulsoup4>=4.12.3
+lxml>=5.1.0
+pydantic>=2.7.0
+httpx>=0.26.0
+python-multipart>=0.0.6
+gnews>=0.3.7
+transformers>=4.36.2
+# Use torch >= 2.6 for security (CVE-2025-32434)
+# Install with: pip install torch --index-url https://download.pytorch.org/whl/cpu
+torch>=2.6.0
+numpy>=1.24.0
+gtts>=2.5.0
+requests>=2.32.3
+safetensors>=0.4.3
+protobuf>=4.25.0
+googlesearch-python>=1.2.3

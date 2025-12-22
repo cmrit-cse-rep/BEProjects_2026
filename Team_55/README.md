@@ -1,3 +1,4 @@
+
 # SMART TOURISM GUIDE
 
 Smart Tourism Guide is a full-stack web application that generates **personalized, day-wise travel itineraries** using **Google Gemini AI**.  
